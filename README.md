@@ -30,7 +30,7 @@
 ---
 
 <p align="center">
-  <img src="screenshot.png" alt="AETHER — Library & Visualizer" width="100%"/>
+  <video src="demo.mp4" autoplay loop muted playsinline width="100%"></video>
 </p>
 
 ---

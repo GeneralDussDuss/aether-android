@@ -20,6 +20,7 @@
 
 const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, session, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 let mainWindow = null;
 let tray = null;
@@ -199,8 +200,48 @@ ipcMain.handle('open-files-dialog', async (_event, title, extensions) => {
   return result.filePaths;
 });
 
+// Wallpaper Engine: scan workshop folder for video wallpapers with metadata
+ipcMain.handle('scan-wallpaper-engine', () => {
+  const wpPaths = [
+    path.join('C:', 'Program Files (x86)', 'Steam', 'steamapps', 'workshop', 'content', '431960'),
+    path.join('D:', 'SteamLibrary', 'steamapps', 'workshop', 'content', '431960'),
+    path.join('E:', 'SteamLibrary', 'steamapps', 'workshop', 'content', '431960'),
+  ];
+  let wpRoot = null;
+  for (const p of wpPaths) {
+    if (fs.existsSync(p)) { wpRoot = p; break; }
+  }
+  if (!wpRoot) return [];
+  const results = [];
+  try {
+    const dirs = fs.readdirSync(wpRoot);
+    for (const dir of dirs) {
+      const dirPath = path.join(wpRoot, dir);
+      if (!fs.statSync(dirPath).isDirectory()) continue;
+      const files = fs.readdirSync(dirPath);
+      const mp4 = files.find(f => f.toLowerCase().endsWith('.mp4'));
+      if (!mp4) continue;
+      let title = dir;
+      const projFile = path.join(dirPath, 'project.json');
+      if (fs.existsSync(projFile)) {
+        try {
+          const proj = JSON.parse(fs.readFileSync(projFile, 'utf-8'));
+          if (proj.title) title = proj.title;
+        } catch(e) {}
+      }
+      results.push({
+        id: dir,
+        title: title,
+        path: path.join(dirPath, mp4).replace(/\\/g, '/'),
+      });
+    }
+  } catch(e) {
+    console.error('Wallpaper Engine scan error:', e);
+  }
+  return results;
+});
+
 // Electric Sheep: scan folder for video files (runs in main process, no sandbox issue)
-const fs = require('fs');
 ipcMain.handle('scan-sheep-folder', (_event, folderPath) => {
   try {
     if (!fs.existsSync(folderPath)) return [];

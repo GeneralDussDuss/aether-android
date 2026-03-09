@@ -29,4 +29,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openFolderDialog: (title) => ipcRenderer.invoke('open-folder-dialog', title),
   // Native file picker dialog (multi-select)
   openFilesDialog: (title, extensions) => ipcRenderer.invoke('open-files-dialog', title, extensions),
+  // Wallpaper Engine: scan workshop folder for video wallpapers
+  scanWallpaperEngine: () => ipcRenderer.invoke('scan-wallpaper-engine'),
 });
