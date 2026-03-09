@@ -2050,6 +2050,18 @@ body::after {
       <div class="viz-label">VISUALIZER</div>
       <div class="viz-scene-name" id="vizSceneName">FRACTAL FLAME</div>
       <button class="viz-expand" title="Fullscreen"><svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+      <div id="wpOpacityControl" style="display:none;position:absolute;bottom:12px;left:16px;z-index:3;align-items:flex-start;gap:6px;flex-direction:column;background:rgba(9,9,15,0.75);border:1px solid var(--purple-dim);border-radius:6px;padding:6px 10px;backdrop-filter:blur(8px);opacity:0;transition:opacity 0.3s;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-family:var(--font-mono);font-size:0.5rem;color:var(--purple-muted);letter-spacing:0.05em;min-width:22px;">VIZ</span>
+          <input type="range" id="wpVizOpacity" min="0" max="100" value="60" style="width:65px;height:3px;accent-color:var(--purple-bright);cursor:pointer;">
+          <span id="wpVizOpacityVal" style="font-family:var(--font-mono);font-size:0.5rem;color:var(--purple-muted);min-width:24px;">60%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-family:var(--font-mono);font-size:0.5rem;color:var(--purple-muted);letter-spacing:0.05em;min-width:22px;">BG</span>
+          <input type="range" id="wpBgOpacity" min="0" max="100" value="100" style="width:65px;height:3px;accent-color:var(--purple-bright);cursor:pointer;">
+          <span id="wpBgOpacityVal" style="font-family:var(--font-mono);font-size:0.5rem;color:var(--purple-muted);min-width:24px;">100%</span>
+        </div>
+      </div>
     </div>
 
     <!-- DYNAMIC CONTENT AREA -->
@@ -4695,6 +4707,47 @@ document.getElementById('settWpClear').addEventListener('click', () => {
     }
   } catch(e) { console.warn('WP settings load failed:', e); }
 })();
+
+// Wallpaper opacity sliders
+let wpVizOpacity = parseFloat(localStorage.getItem('aether_wp_viz_opacity') ?? '0.6');
+let wpBgOpacity = parseFloat(localStorage.getItem('aether_wp_bg_opacity') ?? '1');
+
+function showWpOpacityControl(show) {
+  const ctrl = document.getElementById('wpOpacityControl');
+  ctrl.style.display = show ? 'flex' : 'none';
+  ctrl.style.opacity = show ? '1' : '0';
+}
+
+document.getElementById('wpVizOpacity').addEventListener('input', (e) => {
+  wpVizOpacity = e.target.value / 100;
+  document.getElementById('wpVizOpacityVal').textContent = e.target.value + '%';
+  localStorage.setItem('aether_wp_viz_opacity', wpVizOpacity);
+});
+
+document.getElementById('wpBgOpacity').addEventListener('input', (e) => {
+  wpBgOpacity = e.target.value / 100;
+  document.getElementById('wpBgOpacityVal').textContent = e.target.value + '%';
+  document.getElementById('wpVideo').style.opacity = wpBgOpacity;
+  localStorage.setItem('aether_wp_bg_opacity', wpBgOpacity);
+});
+
+// Restore saved slider values
+(function restoreWpOpacity() {
+  const vizSlider = document.getElementById('wpVizOpacity');
+  const bgSlider = document.getElementById('wpBgOpacity');
+  vizSlider.value = Math.round(wpVizOpacity * 100);
+  bgSlider.value = Math.round(wpBgOpacity * 100);
+  document.getElementById('wpVizOpacityVal').textContent = vizSlider.value + '%';
+  document.getElementById('wpBgOpacityVal').textContent = bgSlider.value + '%';
+})();
+
+// Hover to reveal opacity control
+document.getElementById('vizPanel').addEventListener('mouseenter', () => {
+  if (wpActiveId) showWpOpacityControl(true);
+});
+document.getElementById('vizPanel').addEventListener('mouseleave', () => {
+  showWpOpacityControl(false);
+});
 
 // ============ FILTER ============
 document.getElementById('filterInput').addEventListener('input', (e) => {
@@ -8542,7 +8595,8 @@ function drawViz(time) {
     if (wpActiveId && wpVid.src) {
       wpVid.style.display = 'block';
       if (wpVid.paused) wpVid.play().catch(() => {});
-      vizCanvas.style.opacity = '0.6'; // Let wallpaper bleed through
+      vizCanvas.style.opacity = wpVizOpacity; // Let wallpaper bleed through
+      wpVid.style.opacity = wpBgOpacity;
     } else {
       wpVid.style.display = 'none';
       vizCanvas.style.opacity = '1';
