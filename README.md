@@ -30,7 +30,7 @@
 ---
 
 <p align="center">
-  <video src="demo.mp4" autoplay loop muted playsinline width="100%"></video>
+  <video src="demo.mp4" autoplay loop muted playsinline controls width="100%"></video>
 </p>
 
 ---
