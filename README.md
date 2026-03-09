@@ -29,6 +29,12 @@
 
 ---
 
+<p align="center">
+  <img src="screenshot.png" alt="AETHER — Library & Visualizer" width="100%"/>
+</p>
+
+---
+
 <br/>
 
 ## `> WHAT IS THIS`
