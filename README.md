@@ -21,6 +21,12 @@
   <strong>OLED-black. Tron-purple. 17 real-time generative visualizers. Rhythmic Binaural Brainwave Layering Engine. Zero compromise.</strong>
 </p>
 
+<p align="center">
+  <a href="https://github.com/EmperorBadussy/charon">
+    <img src="https://img.shields.io/badge/Companion-CHARON-06B6D4?style=flat-square&labelColor=000000" alt="CHARON"/>
+  </a>
+</p>
+
 ---
 
 <br/>
@@ -298,6 +304,21 @@ Outputs to `dist/` — NSIS installer for Windows x64.
 - [x] Lyrics integration (LRCLIB)
 - [ ] Scrobbling (Last.fm / ListenBrainz)
 - [ ] Plugin system for custom visualizers
+
+<br/>
+
+## `> COMPANION APP`
+
+AETHER is one half of a two-app ecosystem:
+
+| | AETHER | CHARON |
+|---|--------|--------|
+| **Purpose** | Play your library | Build your library |
+| **Color** | Tron Purple | Styx Cyan |
+| **Backend** | Navidrome (Subsonic API) | Tidal (tidalapi + tiddl) |
+| **Repo** | You're here | [EmperorBadussy/charon](https://github.com/EmperorBadussy/charon) |
+
+**AETHER** plays. **CHARON** harvests. Search Tidal's catalog, queue albums/artists in lossless, and CHARON downloads them straight into your Navidrome library — where AETHER picks them up automatically.
 
 <br/>
 
