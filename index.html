@@ -3093,7 +3093,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     { name: 'Toggle Declassified Mode', action: function() { document.getElementById('declassifiedBtn').click(); } },
     { name: 'Visit GitHub', action: function() { window.open('https://github.com/EmperorBadussy/aether', '_blank'); } },
     { name: 'Visit CHARON', action: function() { portalNavigate('https://emperorbadussy.github.io/charon/'); }, portal: true },
-    { name: 'Visit FACELESS', action: function() { portalNavigate('https://emperorbadussy.github.io/phantom-face/'); }, portal: true },
+    { name: 'Visit HYDRA', action: function() { portalNavigate('https://emperorbadussy.github.io/hydra/'); }, portal: true },
     { name: 'Visit THE SUITE Hub', action: function() { portalNavigate('https://emperorbadussy.github.io/suite/'); }, portal: true }
   ];
 
@@ -3173,7 +3173,7 @@ function portalNavigate(url) {
   setTimeout(function() { window.location.href = url; }, 600);
 }
 (function() {
-  var suiteHosts = ['emperorbadussy.github.io/charon', 'emperorbadussy.github.io/phantom-face', 'emperorbadussy.github.io/suite'];
+  var suiteHosts = ['emperorbadussy.github.io/charon', 'emperorbadussy.github.io/hydra', 'emperorbadussy.github.io/suite'];
   document.addEventListener('click', function(e) {
     var link = e.target.closest('a[href]');
     if (!link) return;
