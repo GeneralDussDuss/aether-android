@@ -1755,9 +1755,174 @@ body::after {
   42% { text-shadow: 2px 0 var(--purple-bright), -2px 0 var(--purple-core); clip-path: inset(15% 0 55% 0); }
   44% { text-shadow: var(--glow-neon); clip-path: none; }
 }
+/* ============ LOADING SCREEN ============ */
+@keyframes loadGlitch {
+  0% { color: #B76EFF; text-shadow: none; }
+  25% { color: #D4A0FF; text-shadow: -2px 0 #7B2FBE, 2px 0 #9D4EDD; }
+  50% { color: #9D4EDD; text-shadow: 2px 0 #B76EFF, -1px 0 #D4A0FF; }
+  75% { color: #B76EFF; text-shadow: -1px 0 #D4A0FF, 1px 0 #7B2FBE; }
+  100% { color: #D4A0FF; text-shadow: none; }
+}
+
+/* ============ DECLASSIFIED MODE ============ */
+.declassified-toggle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--purple-bright);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--purple-vivid);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  margin-left: 0.5rem;
+}
+.declassified-toggle:hover {
+  background: var(--purple-core);
+  color: var(--purple-white);
+  box-shadow: var(--glow-medium);
+}
+
+body.declassified,
+body.declassified * {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+body.declassified {
+  background: #000 !important;
+}
+body.declassified h1,
+body.declassified h2,
+body.declassified h3,
+body.declassified h4,
+body.declassified h5,
+body.declassified h6,
+body.declassified .section-title,
+body.declassified .hero-title,
+body.declassified .download-title,
+body.declassified .nav-logo,
+body.declassified .footer-logo {
+  color: #0f0 !important;
+  text-shadow: 0 0 8px rgba(0,255,0,0.5) !important;
+}
+body.declassified p,
+body.declassified span,
+body.declassified a,
+body.declassified li,
+body.declassified div,
+body.declassified .hero-sub,
+body.declassified .hero-tagline,
+body.declassified .nav-links a,
+body.declassified .footer-tagline,
+body.declassified .footer-copy {
+  color: #0a0 !important;
+}
+body.declassified img,
+body.declassified canvas,
+body.declassified .viz-preview {
+  filter: grayscale(1) contrast(1.4) !important;
+}
+body.declassified *,
+body.declassified *::before,
+body.declassified *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+body.declassified .scroll-progress {
+  background: #0f0 !important;
+  box-shadow: 0 0 8px rgba(0,255,0,0.6) !important;
+}
+body.declassified .declassified-toggle {
+  border-color: #0f0 !important;
+  color: #0f0 !important;
+}
+
+/* ============ COMMAND PALETTE ============ */
+.cmd-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 20vh;
+}
+.cmd-overlay.open {
+  display: flex;
+}
+.cmd-box {
+  width: 90%;
+  max-width: 520px;
+  background: var(--bg-raised);
+  border: 1px solid var(--purple-dim);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(123,47,190,0.3);
+}
+.cmd-input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: var(--bg-input);
+  border: none;
+  border-bottom: 1px solid var(--purple-dim);
+  color: var(--purple-white);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  outline: none;
+}
+.cmd-input::placeholder {
+  color: var(--purple-muted);
+}
+.cmd-results {
+  max-height: 300px;
+  overflow-y: auto;
+  list-style: none;
+}
+.cmd-item {
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--purple-hot);
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.cmd-item:hover,
+.cmd-item.active {
+  background: var(--purple-core);
+  color: var(--purple-white);
+}
+.cmd-item-key {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--purple-muted);
+  margin-left: auto;
+}
+
+/* ============ PORTAL TRANSITION ============ */
+@keyframes portalWarp {
+  0% { transform: scale(1); filter: brightness(1) blur(0); opacity: 1; }
+  50% { transform: scale(0.95); filter: brightness(1.5) blur(2px); opacity: 0.8; }
+  100% { transform: scale(0.5); filter: brightness(3) blur(12px); opacity: 0; }
+}
+body.portal-out {
+  animation: portalWarp 0.6s var(--ease-smooth) forwards;
+}
 </style>
 </head>
 <body>
+<!-- ============ LOADING SCREEN ============ -->
+<div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#09090F;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 0.5s,visibility 0.5s">
+  <div style="font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.5rem);color:#B76EFF;letter-spacing:0.3em;animation:loadGlitch 0.15s infinite">AETHER</div>
+  <div style="width:200px;height:2px;background:#0F0F1A;margin-top:1.5rem;border-radius:1px;overflow:hidden">
+    <div id="loadBar" style="width:0%;height:100%;background:linear-gradient(90deg,#B76EFF,#D4A0FF);transition:width 0.3s"></div>
+  </div>
+</div>
+
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- ============ ELECTRON TITLEBAR ============ -->
@@ -1791,6 +1956,7 @@ body::after {
     <li><a href="#tech">Tech</a></li>
     <li><a href="https://emperorbadussy.github.io/charon/" target="_blank" style="color:rgba(34,211,238,0.8);">CHARON</a></li>
     <li><a href="#download" class="nav-cta">DOWNLOAD</a></li>
+    <li><button class="declassified-toggle" id="declassifiedBtn">[CLASSIFIED]</button></li>
   </ul>
   <button class="menu-toggle" id="menuToggle" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -2355,6 +2521,14 @@ body::after {
   </div>
 </footer>
 
+<!-- ============ COMMAND PALETTE ============ -->
+<div class="cmd-overlay" id="cmdOverlay">
+  <div class="cmd-box">
+    <input class="cmd-input" id="cmdInput" type="text" placeholder="Type a command..." autocomplete="off">
+    <ul class="cmd-results" id="cmdResults"></ul>
+  </div>
+</div>
+
 <script>
 // ============ HERO TITLE CHARACTER ANIMATION ============
 (function() {
@@ -2868,6 +3042,150 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     requestAnimationFrame(drawTrail);
   }
   drawTrail();
+})();
+
+// ============ LOADING SCREEN ============
+(function() {
+  var bar = document.getElementById('loadBar');
+  var screen = document.getElementById('loadingScreen');
+  var progress = 0;
+  function advance() {
+    progress += Math.random() * 15 + 5;
+    if (progress > 100) progress = 100;
+    bar.style.width = progress + '%';
+    if (progress < 100) {
+      setTimeout(advance, Math.random() * 200 + 80);
+    } else {
+      setTimeout(function() {
+        screen.style.opacity = '0';
+        screen.style.visibility = 'hidden';
+        setTimeout(function() { screen.remove(); }, 500);
+      }, 300);
+    }
+  }
+  advance();
+})();
+
+// ============ DECLASSIFIED MODE ============
+(function() {
+  var btn = document.getElementById('declassifiedBtn');
+  btn.addEventListener('click', function() {
+    document.body.classList.toggle('declassified');
+    btn.textContent = document.body.classList.contains('declassified') ? '[DECLASSIFIED]' : '[CLASSIFIED]';
+  });
+})();
+
+// ============ COMMAND PALETTE ============
+(function() {
+  var overlay = document.getElementById('cmdOverlay');
+  var input = document.getElementById('cmdInput');
+  var results = document.getElementById('cmdResults');
+  var activeIdx = -1;
+
+  var commands = [
+    { name: 'Go to Top', action: function() { window.scrollTo({ top: 0, behavior: 'smooth' }); } },
+    { name: 'Navigate to Visualizers', action: function() { document.getElementById('visualizers').scrollIntoView({ behavior: 'smooth' }); } },
+    { name: 'Navigate to Binaural', action: function() { document.getElementById('binaural').scrollIntoView({ behavior: 'smooth' }); } },
+    { name: 'Navigate to Features', action: function() { document.getElementById('features').scrollIntoView({ behavior: 'smooth' }); } },
+    { name: 'Navigate to Tech', action: function() { document.getElementById('tech').scrollIntoView({ behavior: 'smooth' }); } },
+    { name: 'Navigate to Engine', action: function() { document.getElementById('engine').scrollIntoView({ behavior: 'smooth' }); } },
+    { name: 'Navigate to Download', action: function() { document.getElementById('download').scrollIntoView({ behavior: 'smooth' }); } },
+    { name: 'Toggle Declassified Mode', action: function() { document.getElementById('declassifiedBtn').click(); } },
+    { name: 'Visit GitHub', action: function() { window.open('https://github.com/EmperorBadussy/aether', '_blank'); } },
+    { name: 'Visit CHARON', action: function() { portalNavigate('https://emperorbadussy.github.io/charon/'); }, portal: true },
+    { name: 'Visit FACELESS', action: function() { portalNavigate('https://emperorbadussy.github.io/phantom-face/'); }, portal: true },
+    { name: 'Visit THE SUITE Hub', action: function() { portalNavigate('https://emperorbadussy.github.io/suite/'); }, portal: true }
+  ];
+
+  function open() {
+    overlay.classList.add('open');
+    input.value = '';
+    activeIdx = -1;
+    render('');
+    setTimeout(function() { input.focus(); }, 50);
+  }
+  function close() {
+    overlay.classList.remove('open');
+    input.value = '';
+  }
+  function render(query) {
+    var q = query.toLowerCase();
+    var filtered = commands.filter(function(c) { return c.name.toLowerCase().indexOf(q) !== -1; });
+    results.innerHTML = '';
+    activeIdx = -1;
+    filtered.forEach(function(cmd, i) {
+      var li = document.createElement('li');
+      li.className = 'cmd-item';
+      li.textContent = cmd.name;
+      if (cmd.portal) {
+        var badge = document.createElement('span');
+        badge.className = 'cmd-item-key';
+        badge.textContent = 'PORTAL';
+        li.appendChild(badge);
+      }
+      li.addEventListener('click', function() { cmd.action(); close(); });
+      li.addEventListener('mouseenter', function() {
+        activeIdx = i;
+        updateActive(filtered);
+      });
+      results.appendChild(li);
+    });
+  }
+  function updateActive(filtered) {
+    var items = results.querySelectorAll('.cmd-item');
+    items.forEach(function(el, i) {
+      el.classList.toggle('active', i === activeIdx);
+    });
+  }
+
+  input.addEventListener('input', function() { render(input.value); });
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      if (overlay.classList.contains('open')) { close(); } else { open(); }
+    }
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') { close(); return; }
+    var items = results.querySelectorAll('.cmd-item');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIdx = (activeIdx + 1) % items.length;
+      updateActive();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIdx = (activeIdx - 1 + items.length) % items.length;
+      updateActive();
+    } else if (e.key === 'Enter' && activeIdx >= 0 && activeIdx < items.length) {
+      e.preventDefault();
+      items[activeIdx].click();
+    }
+  });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) close();
+  });
+})();
+
+// ============ INTER-SITE PORTAL EFFECT ============
+function portalNavigate(url) {
+  document.body.classList.add('portal-out');
+  setTimeout(function() { window.location.href = url; }, 600);
+}
+(function() {
+  var suiteHosts = ['emperorbadussy.github.io/charon', 'emperorbadussy.github.io/phantom-face', 'emperorbadussy.github.io/suite'];
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[href]');
+    if (!link) return;
+    var href = link.getAttribute('href') || '';
+    for (var i = 0; i < suiteHosts.length; i++) {
+      if (href.indexOf(suiteHosts[i]) !== -1) {
+        e.preventDefault();
+        portalNavigate(href);
+        return;
+      }
+    }
+  });
 })();
 </script>
 </body>
