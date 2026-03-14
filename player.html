@@ -9013,34 +9013,41 @@ document.querySelector('[data-action="queue"]').addEventListener('click', () => 
   document.getElementById('queuePanel').classList.toggle('open');
 });
 
-// ============ DNA OVERLAY ============
-document.querySelector('[data-action="dna"]').addEventListener('click', () => {
-  const overlay = document.getElementById('dnaOverlay');
-  overlay.classList.add('open');
-  renderDNAFingerprint();
-});
-document.getElementById('dnaClose').addEventListener('click', () => {
-  document.getElementById('dnaOverlay').classList.remove('open');
-});
-document.getElementById('dnaOverlay').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('dnaOverlay')) {
-    document.getElementById('dnaOverlay').classList.remove('open');
-  }
-});
-document.getElementById('dnaSaveBtn').addEventListener('click', () => {
-  const canvas = document.getElementById('dnaCanvas');
-  const link = document.createElement('a');
-  const t = currentQueue[currentQueueIndex];
-  link.download = (t ? t.title + ' - DNA' : 'music-dna') + '.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-  showToast('DNA fingerprint saved');
-});
-document.getElementById('dnaBadge').addEventListener('click', () => {
-  document.getElementById('dnaOverlay').classList.add('open');
-  renderDNAFingerprint();
-});
-document.getElementById('queueClose').addEventListener('click', () => {
+// ============ DNA OVERLAY (deferred — elements are in dynamic HTML below) ============
+window.addEventListener('DOMContentLoaded', () => {
+  const dnaAction = document.querySelector('[data-action="dna"]');
+  if (dnaAction) dnaAction.addEventListener('click', () => {
+    const overlay = document.getElementById('dnaOverlay');
+    if (overlay) { overlay.classList.add('open'); renderDNAFingerprint(); }
+  });
+  const dnaCloseBtn = document.getElementById('dnaClose');
+  if (dnaCloseBtn) dnaCloseBtn.addEventListener('click', () => {
+    const overlay = document.getElementById('dnaOverlay');
+    if (overlay) overlay.classList.remove('open');
+  });
+  const dnaOverlay = document.getElementById('dnaOverlay');
+  if (dnaOverlay) dnaOverlay.addEventListener('click', (e) => {
+    if (e.target === dnaOverlay) dnaOverlay.classList.remove('open');
+  });
+  const dnaSaveBtn = document.getElementById('dnaSaveBtn');
+  if (dnaSaveBtn) dnaSaveBtn.addEventListener('click', () => {
+    const canvas = document.getElementById('dnaCanvas');
+    if (!canvas) return;
+    const link = document.createElement('a');
+    const t = currentQueue[currentQueueIndex];
+    link.download = (t ? t.title + ' - DNA' : 'music-dna') + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('DNA fingerprint saved');
+  });
+  const dnaBadge = document.getElementById('dnaBadge');
+  if (dnaBadge) dnaBadge.addEventListener('click', () => {
+    const overlay = document.getElementById('dnaOverlay');
+    if (overlay) { overlay.classList.add('open'); renderDNAFingerprint(); }
+  });
+}); // end DOMContentLoaded for DNA overlay
+
+document.getElementById('queueClose')?.addEventListener('click', () => {
   document.getElementById('queuePanel').classList.remove('open');
 });
 
