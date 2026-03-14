@@ -140,6 +140,10 @@ process.on('uncaughtException', (err) => {
   console.error('UNCAUGHT:', err);
 });
 
+// Force Chromium to use the default Windows audio output (fixes silent audio on some systems)
+app.commandLine.appendSwitch('disable-features', 'AudioServiceSandbox');
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+
 app.whenReady().then(() => {
   createWindow();
   createTray();

@@ -31,7 +31,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "icon.ico"
@@ -42,5 +44,8 @@
       "installerIcon": "icon.ico",
       "uninstallerIcon": "icon.ico"
     }
+  },
+  "dependencies": {
+    "essentia.js": "^0.1.3"
   }
 }
