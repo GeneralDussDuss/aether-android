@@ -1179,6 +1179,136 @@ body {
   line-height: 1.5;
 }
 
+/* ============ DJ MODE ============ */
+
+.dj-section {
+  background: var(--bg-surface);
+  border-top: 1px solid rgba(255,45,123,0.15);
+  border-bottom: 1px solid rgba(255,45,123,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.dj-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255,45,123,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.dj-hero-visual {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0 2.5rem;
+  flex-wrap: wrap;
+}
+.dj-deck-preview {
+  background: var(--bg-raised);
+  border: 1px solid rgba(255,45,123,0.2);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  min-width: 220px;
+  text-align: center;
+  position: relative;
+  transition: var(--transition-normal);
+}
+.dj-deck-preview:hover {
+  border-color: rgba(255,45,123,0.5);
+  box-shadow: 0 0 30px rgba(255,45,123,0.15), 0 0 60px rgba(255,45,123,0.05);
+  transform: translateY(-4px);
+}
+.dj-deck-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: rgba(255,45,123,0.7);
+  margin-bottom: 0.75rem;
+}
+.dj-deck-bpm {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--purple-white);
+  line-height: 1;
+}
+.dj-deck-bpm span {
+  font-size: 0.8rem;
+  color: var(--purple-muted);
+  font-weight: 400;
+  margin-left: 0.3rem;
+}
+.dj-deck-key {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: rgba(0,220,245,0.8);
+  margin-top: 0.5rem;
+}
+.dj-crossfader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 80px;
+}
+.dj-crossfader-track {
+  width: 4px;
+  height: 80px;
+  background: var(--purple-dim);
+  border-radius: 2px;
+  position: relative;
+}
+.dj-crossfader-knob {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF2D7B, var(--purple-vivid));
+  box-shadow: 0 0 12px rgba(255,45,123,0.5);
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  animation: cf-slide 3s ease-in-out infinite;
+}
+@keyframes cf-slide {
+  0%, 100% { top: 25%; }
+  50% { top: 75%; }
+}
+.dj-crossfader-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--purple-muted);
+}
+.dj-transition-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.dj-transition-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(255,45,123,0.2);
+  border-radius: 20px;
+  color: rgba(255,45,123,0.8);
+  background: rgba(255,45,123,0.05);
+  letter-spacing: 0.05em;
+  transition: var(--transition-fast);
+}
+.dj-transition-badge:hover {
+  background: rgba(255,45,123,0.15);
+  border-color: rgba(255,45,123,0.4);
+  box-shadow: 0 0 12px rgba(255,45,123,0.2);
+  color: #FF2D7B;
+}
+
 /* ============ TECH STACK ============ */
 
 .tech-section {
@@ -1952,6 +2082,7 @@ body.portal-out {
   <ul class="nav-links">
     <li><a href="#visualizers">Visualizers</a></li>
     <li><a href="#binaural">Binaural</a></li>
+    <li><a href="#djmode">DJ Mode</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#tech">Tech</a></li>
     <li><a href="https://emperorbadussy.github.io/charon/" target="_blank" style="color:rgba(34,211,238,0.8);">CHARON</a></li>
@@ -1966,6 +2097,7 @@ body.portal-out {
 <div class="mobile-overlay" id="mobileMenu">
   <a href="#visualizers" onclick="closeMobile()">VISUALIZERS</a>
   <a href="#binaural" onclick="closeMobile()">BINAURAL</a>
+  <a href="#djmode" onclick="closeMobile()">DJ MODE</a>
   <a href="#features" onclick="closeMobile()">FEATURES</a>
   <a href="#tech" onclick="closeMobile()">TECH</a>
   <a href="#download" onclick="closeMobile()">DOWNLOAD</a>
@@ -1981,7 +2113,7 @@ body.portal-out {
     </div>
     <h1 class="hero-title" id="heroTitle"></h1>
     <p class="hero-tagline">Not a music player — an experience.</p>
-    <p class="hero-sub">OLED-black aesthetic. Tron-purple atmosphere. 17 generative visualizers rendered in real-time on Canvas 2D. Buttery 60fps. Rhythmic Binaural Brainwave Layering Engine. Navidrome integration. This is music from 2077.</p>
+    <p class="hero-sub">OLED-black aesthetic. Tron-purple atmosphere. 17 generative visualizers rendered in real-time on Canvas 2D. Buttery 60fps. AI DJ engine with beat-phase alignment. Rhythmic Binaural Brainwave Layering Engine. Navidrome integration. This is music from 2077.</p>
     <div class="hero-buttons">
       <a href="#download" class="btn-primary">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -2230,6 +2362,113 @@ body.portal-out {
 
 <div class="section-divider"></div>
 
+<!-- ============ AI DJ MODE ============ -->
+<section class="section dj-section" id="djmode">
+  <div class="section-inner">
+    <div class="section-label reveal" style="color:rgba(255,45,123,0.8);">02 // AI DJ ENGINE</div>
+    <h2 class="section-title reveal" style="background:linear-gradient(135deg, #FF2D7B, var(--purple-vivid), #00DCF5); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Dual-Deck AI Mixing That Reads the Room</h2>
+    <p class="section-desc reveal">Not a crossfader with a timer. A real mixing engine powered by Essentia.js WASM audio intelligence. BPM detection, key analysis, beat-phase alignment, energy arc management. Seven transition patterns. Zero trainwrecks.</p>
+
+    <div class="dj-hero-visual reveal">
+      <div class="dj-deck-preview">
+        <div class="dj-deck-label">DECK A — OUTGOING</div>
+        <div class="dj-deck-bpm">128<span>BPM</span></div>
+        <div class="dj-deck-key">8B — A min</div>
+      </div>
+      <div class="dj-crossfader">
+        <div class="dj-crossfader-label">XFADE</div>
+        <div class="dj-crossfader-track">
+          <div class="dj-crossfader-knob"></div>
+        </div>
+        <div class="dj-crossfader-label">BLEND</div>
+      </div>
+      <div class="dj-deck-preview">
+        <div class="dj-deck-label">DECK B — INCOMING</div>
+        <div class="dj-deck-bpm">126<span>BPM</span></div>
+        <div class="dj-deck-key">9B — E min</div>
+      </div>
+    </div>
+
+    <div class="dj-transition-badges reveal">
+      <div class="dj-transition-badge">BLEND</div>
+      <div class="dj-transition-badge">CUT</div>
+      <div class="dj-transition-badge">ECHO OUT</div>
+      <div class="dj-transition-badge">BACKSPIN</div>
+      <div class="dj-transition-badge">FILTER SWEEP</div>
+      <div class="dj-transition-badge">DROP</div>
+      <div class="dj-transition-badge">SLAM</div>
+    </div>
+
+    <div class="features-grid" style="margin-top:2.5rem;">
+      <div class="feature-card reveal" style="transition-delay:0.05s; border-color:rgba(255,45,123,0.2);">
+        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <div class="feature-title">ESSENTIA.JS WASM ANALYSIS</div>
+        <div class="feature-text">Real audio intelligence — not guesswork. Essentia's RhythmExtractor2013 algorithm detects true BPM and key from the actual waveform. 60-second optimized segment analysis with 12s timeout failsafe.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.1s; border-color:rgba(0,220,245,0.2);">
+        <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="feature-title">BEAT-PHASE ALIGNMENT</div>
+        <div class="feature-text">Beats land on the grid — not near it. Modular arithmetic aligns the incoming track's phase to the outgoing beat grid. Micro-drift correction runs during transitions to keep them locked.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.15s; border-color:rgba(183,110,255,0.2);">
+        <div class="feature-icon" style="background:rgba(183,110,255,0.08); border-color:rgba(183,110,255,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(183,110,255,0.9);"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="feature-title">CAMELOT KEY MATCHING</div>
+        <div class="feature-text">Harmonic mixing by the book. Full Camelot wheel implementation — compatible keys scored and prioritized. No clashing transitions. Every mix sounds intentional.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.2s; border-color:rgba(255,45,123,0.2);">
+        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7"/><path d="M2 20c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7" opacity="0.4"/></svg>
+        </div>
+        <div class="feature-title">ENERGY ARC MANAGEMENT</div>
+        <div class="feature-text">Tracks set momentum across the last 3 mixes. Builds tension, allows cooldowns, avoids monotony. Percentile-based phrase classification with crest factor drop detection.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.25s; border-color:rgba(0,220,245,0.2);">
+        <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="feature-title">7 TRANSITION PATTERNS</div>
+        <div class="feature-text">Blend, cut, echo out, backspin, filter sweep, drop build, and slam. Context-aware selection based on BPM ratio, key compatibility, phrase type, and recent pattern history.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.3s; border-color:rgba(183,110,255,0.2);">
+        <div class="feature-icon" style="background:rgba(183,110,255,0.08); border-color:rgba(183,110,255,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(183,110,255,0.9);"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        </div>
+        <div class="feature-title">SMART TRACK SELECTION</div>
+        <div class="feature-text">Next track chosen by BPM affinity (half/double-time aware), key compatibility, energy trajectory, artist variety, and recency. Not random — curated by algorithm.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.35s; border-color:rgba(255,45,123,0.2);">
+        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        </div>
+        <div class="feature-title">PROGRESSIVE EQ HANDOFF</div>
+        <div class="feature-text">Highs fade first, then bass swaps, then mids restore. 5th-order Hermite interpolation on crossfader curves. Echo effects via DelayNode feedback loops with high-pass filtering.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.4s; border-color:rgba(0,220,245,0.2);">
+        <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="feature-title">FULL KEYBOARD CONTROL</div>
+        <div class="feature-text">D to toggle DJ mode. 1-7 to trigger transitions. Space for pause. Level meters, BPM sync indicator, remaining time, and transition progress — all live in the UI.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
 <!-- ============ FEATURES ============ -->
 <section class="section" id="features">
   <div class="section-inner">
@@ -2326,13 +2565,6 @@ body.portal-out {
         <div class="feature-text">Automatic lyrics fetched from LRCLIB's open database with search fallback. Powers the Lyric Rain visualizer — words materialize on beats with bass shockwaves.</div>
       </div>
 
-      <div class="feature-card reveal" style="transition-delay:0.6s; border-color:rgba(255,45,123,0.3);">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><circle cx="6" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 18h6" stroke="currentColor" stroke-width="1.5"/><path d="M6 15V6a1 1 0 0 1 1-1h4" stroke="currentColor" stroke-width="1.5"/><path d="M18 15V6a1 1 0 0 0-1-1h-4" stroke="currentColor" stroke-width="1.5"/><path d="M9 5h6" stroke="currentColor" stroke-width="1.5"/></svg>
-        </div>
-        <div class="feature-title">AI DJ MODE</div>
-        <div class="feature-text">Dual-deck mixing engine with Essentia.js AI analysis. BPM detection, Camelot key matching, 7 transition patterns, beat-phase alignment, energy arc management. Auto-DJ that actually reads the room.</div>
-      </div>
     </div>
   </div>
 </section>
