@@ -414,7 +414,7 @@ body.vertical-mode .track-list-header { grid-template-columns:30px 2fr 1fr 60px;
 .view-hidden { display:none !important; }
 
 /* ============ SONIC SIMILARITY MAP ============ */
-.sonic-map-container{position:relative;width:100%;height:calc(100vh - var(--titlebar-h) - var(--nowplaying-h) - 80px);min-height:400px}
+.sonic-map-container{position:relative;width:100%;height:calc(100vh - var(--titlebar-h) - var(--nowplaying-h) - 80px);min-height:400px;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 80px rgba(123,47,190,0.08)}
 .sonic-map-container canvas{width:100%;height:100%;display:block;cursor:grab}
 .sonic-map-container canvas:active{cursor:grabbing}
 .sonic-map-legend{position:absolute;top:12px;right:16px;background:rgba(9,9,15,0.85);border:1px solid var(--purple-dim);border-radius:8px;padding:10px 14px;backdrop-filter:blur(8px);z-index:2}
@@ -15146,12 +15146,19 @@ const sonicMap = {
   dragging: false, dragStartX: 0, dragStartY: 0, hoveredTrack: null,
   grid: {}, gridSize: 40,
   // 3D camera
-  rotY: -0.4,   // Y-axis rotation (left-right orbit)
-  rotX: 0.5,    // X-axis tilt (up-down)
-  camDist: 600,  // Camera distance
+  rotY: -0.4,
+  rotX: 0.5,
+  camDist: 600,
   autoRotate: true,
   autoRotateSpeed: 0.002,
   animFrame: null,
+  // Visual FX
+  time: 0,
+  stars: [],   // Background starfield
+  trails: [],  // Particle trails from currently playing track
+  pulsePhase: 0,
+  nowPlayingId: null,
+  connectionLines: true,  // Draw lines between similar tracks
 };
 
 function camelotToHue(camelot) {
@@ -15221,6 +15228,19 @@ function buildSpatialIndex() {
   }
 }
 
+// Generate starfield once
+function initStarfield(count) {
+  sonicMap.stars = [];
+  for (var i = 0; i < count; i++) {
+    sonicMap.stars.push({
+      x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() * 2 - 1,
+      brightness: 0.2 + Math.random() * 0.6,
+      twinkleSpeed: 0.5 + Math.random() * 3,
+      size: 0.3 + Math.random() * 1.2,
+    });
+  }
+}
+
 function drawSonicMap() {
   var canvas = sonicMap.canvas, ctx = sonicMap.ctx, tracks = sonicMap.tracks;
   if (!canvas || !ctx) return;
@@ -15229,118 +15249,287 @@ function drawSonicMap() {
   canvas.height = canvas.clientHeight * dpr;
   ctx.scale(dpr, dpr);
   var cw = canvas.clientWidth, ch = canvas.clientHeight;
+  sonicMap.time += 0.016; // ~60fps
+  sonicMap.pulsePhase += 0.03;
 
-  // Background with subtle radial gradient
-  var bgGrad = ctx.createRadialGradient(cw/2, ch/2, 0, cw/2, ch/2, Math.max(cw, ch) * 0.7);
-  bgGrad.addColorStop(0, '#0a0a14');
-  bgGrad.addColorStop(1, '#000000');
-  ctx.fillStyle = bgGrad;
+  // Track currently playing for highlight
+  if (currentQueue[currentQueueIndex]) sonicMap.nowPlayingId = currentQueue[currentQueueIndex].id;
+
+  // ===== BACKGROUND: Deep space with nebula glow =====
+  ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, cw, ch);
 
-  // Draw 3D grid (floor plane at y=-1)
-  ctx.strokeStyle = 'rgba(54, 32, 80, 0.25)';
-  ctx.lineWidth = 0.5;
+  // Nebula clouds — subtle colored fog
+  var nebula1 = project3D(0.3, 0.2, -0.5, cw, ch);
+  var nebGrad1 = ctx.createRadialGradient(nebula1.sx, nebula1.sy, 0, nebula1.sx, nebula1.sy, 250 * sonicMap.zoom);
+  nebGrad1.addColorStop(0, 'rgba(123, 47, 190, 0.06)');
+  nebGrad1.addColorStop(0.5, 'rgba(75, 20, 140, 0.03)');
+  nebGrad1.addColorStop(1, 'transparent');
+  ctx.fillStyle = nebGrad1;
+  ctx.fillRect(0, 0, cw, ch);
+
+  var nebula2 = project3D(-0.4, -0.1, 0.6, cw, ch);
+  var nebGrad2 = ctx.createRadialGradient(nebula2.sx, nebula2.sy, 0, nebula2.sx, nebula2.sy, 200 * sonicMap.zoom);
+  nebGrad2.addColorStop(0, 'rgba(0, 180, 220, 0.04)');
+  nebGrad2.addColorStop(0.6, 'rgba(0, 100, 150, 0.02)');
+  nebGrad2.addColorStop(1, 'transparent');
+  ctx.fillStyle = nebGrad2;
+  ctx.fillRect(0, 0, cw, ch);
+
+  var nebula3 = project3D(0.6, 0.5, 0.2, cw, ch);
+  var nebGrad3 = ctx.createRadialGradient(nebula3.sx, nebula3.sy, 0, nebula3.sx, nebula3.sy, 180 * sonicMap.zoom);
+  nebGrad3.addColorStop(0, 'rgba(255, 45, 123, 0.035)');
+  nebGrad3.addColorStop(1, 'transparent');
+  ctx.fillStyle = nebGrad3;
+  ctx.fillRect(0, 0, cw, ch);
+
+  // ===== STARFIELD: twinkling background stars =====
+  if (sonicMap.stars.length === 0) initStarfield(200);
+  for (var si = 0; si < sonicMap.stars.length; si++) {
+    var star = sonicMap.stars[si];
+    var sp = project3D(star.x * 3, star.y * 3, star.z * 3, cw, ch);
+    if (sp.scale < 0.05) continue;
+    var twinkle = star.brightness * (0.6 + 0.4 * Math.sin(sonicMap.time * star.twinkleSpeed + si));
+    var starSize = star.size * sp.scale * 0.8;
+    if (starSize < 0.3) continue;
+    ctx.beginPath();
+    ctx.arc(sp.sx, sp.sy, starSize, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200, 180, 255, ' + (twinkle * 0.5) + ')';
+    ctx.fill();
+  }
+
+  // ===== 3D GRID FLOOR with glow lines =====
   for (var gx = -1; gx <= 1; gx += 0.25) {
     var p1 = project3D(gx, -1, -1, cw, ch);
     var p2 = project3D(gx, -1, 1, cw, ch);
+    var gridAlpha = gx === 0 ? 0.2 : 0.08;
+    ctx.strokeStyle = 'rgba(123, 47, 190, ' + gridAlpha + ')';
+    ctx.lineWidth = gx === 0 ? 1 : 0.5;
     ctx.beginPath(); ctx.moveTo(p1.sx, p1.sy); ctx.lineTo(p2.sx, p2.sy); ctx.stroke();
   }
   for (var gz = -1; gz <= 1; gz += 0.25) {
     var p3 = project3D(-1, -1, gz, cw, ch);
     var p4 = project3D(1, -1, gz, cw, ch);
+    var gridAlpha2 = gz === 0 ? 0.2 : 0.08;
+    ctx.strokeStyle = 'rgba(123, 47, 190, ' + gridAlpha2 + ')';
+    ctx.lineWidth = gz === 0 ? 1 : 0.5;
     ctx.beginPath(); ctx.moveTo(p3.sx, p3.sy); ctx.lineTo(p4.sx, p4.sy); ctx.stroke();
   }
 
-  // Draw 3D axes
-  var origin = project3D(-1, -1, -1, cw, ch);
-  var xEnd = project3D(1, -1, -1, cw, ch);
-  var yEnd = project3D(-1, 1, -1, cw, ch);
-  var zEnd = project3D(-1, -1, 1, cw, ch);
+  // ===== BACK WALL grid (z = -1 plane) =====
+  for (var wx = -1; wx <= 1; wx += 0.5) {
+    var w1 = project3D(wx, -1, -1, cw, ch);
+    var w2 = project3D(wx, 1, -1, cw, ch);
+    ctx.strokeStyle = 'rgba(75, 30, 120, 0.06)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(w1.sx, w1.sy); ctx.lineTo(w2.sx, w2.sy); ctx.stroke();
+  }
+  for (var wy = -1; wy <= 1; wy += 0.5) {
+    var w3 = project3D(-1, wy, -1, cw, ch);
+    var w4 = project3D(1, wy, -1, cw, ch);
+    ctx.strokeStyle = 'rgba(75, 30, 120, 0.06)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(w3.sx, w3.sy); ctx.lineTo(w4.sx, w4.sy); ctx.stroke();
+  }
 
-  ctx.lineWidth = 1;
-  // X axis (Energy) — magenta
-  ctx.strokeStyle = 'rgba(255, 45, 123, 0.5)';
+  // ===== 3D AXES with gradient glow =====
+  var origin = project3D(-1, -1, -1, cw, ch);
+  var xEnd = project3D(1.15, -1, -1, cw, ch);
+  var yEnd = project3D(-1, 1.15, -1, cw, ch);
+  var zEnd = project3D(-1, -1, 1.15, cw, ch);
+
+  // X axis (Energy) — magenta with glow
+  ctx.shadowColor = 'rgba(255, 45, 123, 0.4)';
+  ctx.shadowBlur = 6;
+  ctx.strokeStyle = 'rgba(255, 45, 123, 0.6)';
+  ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(origin.sx, origin.sy); ctx.lineTo(xEnd.sx, xEnd.sy); ctx.stroke();
-  // Y axis (BPM) — purple
-  ctx.strokeStyle = 'rgba(183, 110, 255, 0.5)';
+  // Y axis (BPM) — purple with glow
+  ctx.shadowColor = 'rgba(183, 110, 255, 0.4)';
+  ctx.strokeStyle = 'rgba(183, 110, 255, 0.6)';
   ctx.beginPath(); ctx.moveTo(origin.sx, origin.sy); ctx.lineTo(yEnd.sx, yEnd.sy); ctx.stroke();
-  // Z axis (Danceability) — cyan
-  ctx.strokeStyle = 'rgba(0, 220, 245, 0.5)';
+  // Z axis (Danceability) — cyan with glow
+  ctx.shadowColor = 'rgba(0, 220, 245, 0.4)';
+  ctx.strokeStyle = 'rgba(0, 220, 245, 0.6)';
   ctx.beginPath(); ctx.moveTo(origin.sx, origin.sy); ctx.lineTo(zEnd.sx, zEnd.sy); ctx.stroke();
+  ctx.shadowBlur = 0;
 
   // Axis labels
   ctx.font = '10px "JetBrains Mono"';
-  ctx.fillStyle = 'rgba(255, 45, 123, 0.7)';
+  ctx.fillStyle = 'rgba(255, 45, 123, 0.8)';
   ctx.fillText('ENERGY →', xEnd.sx + 5, xEnd.sy);
-  ctx.fillStyle = 'rgba(183, 110, 255, 0.7)';
+  ctx.fillStyle = 'rgba(183, 110, 255, 0.8)';
   ctx.fillText('BPM ↑', yEnd.sx - 20, yEnd.sy - 8);
-  ctx.fillStyle = 'rgba(0, 220, 245, 0.7)';
+  ctx.fillStyle = 'rgba(0, 220, 245, 0.8)';
   ctx.fillText('DANCE →', zEnd.sx + 5, zEnd.sy);
 
-  // Project all tracks and sort by depth (painter's algorithm)
+  // Axis tick marks with values
+  ctx.font = '8px "JetBrains Mono"';
+  for (var tick = 0; tick <= 1; tick += 0.5) {
+    var val = tick * 2 - 1;
+    // Energy ticks
+    var tp1 = project3D(val, -1, -1, cw, ch);
+    ctx.fillStyle = 'rgba(255, 45, 123, 0.4)';
+    ctx.fillText(tick.toFixed(1), tp1.sx - 8, tp1.sy + 14);
+    // BPM ticks
+    var bpmVal = 60 + tick * 140;
+    var tp2 = project3D(-1, val, -1, cw, ch);
+    ctx.fillStyle = 'rgba(183, 110, 255, 0.4)';
+    ctx.textAlign = 'right';
+    ctx.fillText(Math.round(bpmVal), tp2.sx - 6, tp2.sy + 3);
+    ctx.textAlign = 'left';
+  }
+
+  // ===== PROJECT ALL TRACKS =====
   var projected = [];
   for (var i = 0; i < tracks.length; i++) {
     var t = tracks[i];
     var p = project3D(t.x3d, t.y3d, t.z3d, cw, ch);
     projected.push({ idx: i, sx: p.sx, sy: p.sy, scale: p.scale, depth: p.depth, track: t });
   }
-  projected.sort(function(a, b) { return a.depth - b.depth; }); // Back to front
+  projected.sort(function(a, b) { return a.depth - b.depth; });
   sonicMap._projected = projected;
 
-  // Draw DJ mix history paths in 3D
+  // ===== CONSTELLATION LINES: connect nearby tracks with similar keys =====
+  if (sonicMap.connectionLines && projected.length < 300) {
+    ctx.globalAlpha = 0.08;
+    for (var ci = 0; ci < projected.length; ci++) {
+      var ca = projected[ci];
+      for (var cj = ci + 1; cj < projected.length; cj++) {
+        var cb = projected[cj];
+        if (ca.track.camelot === cb.track.camelot && ca.track.camelot !== '?') {
+          var cdist = Math.hypot(ca.sx - cb.sx, ca.sy - cb.sy);
+          if (cdist < 120) {
+            ctx.strokeStyle = 'hsla(' + ca.track.hue + ', 60%, 60%, 1)';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath(); ctx.moveTo(ca.sx, ca.sy); ctx.lineTo(cb.sx, cb.sy); ctx.stroke();
+          }
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // ===== DJ MIX HISTORY PATHS: glowing trails =====
   if (djMode && DJ.mixHistory.length > 0) {
-    ctx.strokeStyle = 'rgba(0, 220, 245, 0.35)';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([4, 4]);
+    ctx.shadowColor = 'rgba(0, 220, 245, 0.5)';
+    ctx.shadowBlur = 8;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
     for (var mi = 0; mi < DJ.mixHistory.length; mi++) {
       var mix = DJ.mixHistory[mi];
       var fromC = bpmCache[mix.from.id], toC = bpmCache[mix.to.id];
       if (!fromC || !toC) continue;
-      var fp = project3D(
-        (fromC.avgEnergy || 0.5) * 2 - 1,
-        ((fromC.bpm || 120) - 60) / 140 * 2 - 1,
-        (fromC.danceability || 0.5) * 2 - 1, cw, ch);
-      var tp = project3D(
-        (toC.avgEnergy || 0.5) * 2 - 1,
-        ((toC.bpm || 120) - 60) / 140 * 2 - 1,
-        (toC.danceability || 0.5) * 2 - 1, cw, ch);
-      ctx.beginPath(); ctx.moveTo(fp.sx, fp.sy); ctx.lineTo(tp.sx, tp.sy); ctx.stroke();
+      var mixAlpha = 0.15 + 0.4 * (mi / DJ.mixHistory.length); // Newer = brighter
+      ctx.strokeStyle = 'rgba(0, 220, 245, ' + mixAlpha + ')';
+      var fp = project3D((fromC.avgEnergy || 0.5) * 2 - 1, ((fromC.bpm || 120) - 60) / 140 * 2 - 1, (fromC.danceability || 0.5) * 2 - 1, cw, ch);
+      var tpp = project3D((toC.avgEnergy || 0.5) * 2 - 1, ((toC.bpm || 120) - 60) / 140 * 2 - 1, (toC.danceability || 0.5) * 2 - 1, cw, ch);
+      ctx.beginPath(); ctx.moveTo(fp.sx, fp.sy); ctx.lineTo(tpp.sx, tpp.sy); ctx.stroke();
+      // Arrow head on the most recent
+      if (mi === DJ.mixHistory.length - 1) {
+        var angle = Math.atan2(tpp.sy - fp.sy, tpp.sx - fp.sx);
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(tpp.sx, tpp.sy);
+        ctx.lineTo(tpp.sx - 8 * Math.cos(angle - 0.4), tpp.sy - 8 * Math.sin(angle - 0.4));
+        ctx.moveTo(tpp.sx, tpp.sy);
+        ctx.lineTo(tpp.sx - 8 * Math.cos(angle + 0.4), tpp.sy - 8 * Math.sin(angle + 0.4));
+        ctx.stroke();
+        ctx.setLineDash([6, 4]);
+      }
     }
     ctx.setLineDash([]);
+    ctx.shadowBlur = 0;
   }
 
-  // Draw track dots (depth-sorted, with size based on depth + danceability)
+  // ===== TRACK DOTS: with glow halos and depth effects =====
   for (var pi = 0; pi < projected.length; pi++) {
     var pt = projected[pi];
     var t2 = pt.track;
     var baseRadius = 2.5 + t2.danceability * 5;
     var radius = baseRadius * pt.scale * 1.5;
-    if (radius < 1) radius = 1;
+    if (radius < 0.8) radius = 0.8;
     var isHov = sonicMap.hoveredTrack === pt.idx;
-    // Depth-based alpha: closer = brighter
-    var depthAlpha = Math.max(0.2, Math.min(1, pt.scale * 1.5));
+    var isPlaying = t2.id === sonicMap.nowPlayingId;
+    var depthAlpha = Math.max(0.15, Math.min(1, pt.scale * 1.5));
 
-    if (isHov) {
-      // Glow ring
-      ctx.beginPath(); ctx.arc(pt.sx, pt.sy, radius + 10, 0, Math.PI * 2);
-      ctx.fillStyle = 'hsla(' + t2.hue + ', 80%, 60%, 0.2)'; ctx.fill();
-      // Connecting line to "floor"
-      var floor = project3D(t2.x3d, -1, t2.z3d, cw, ch);
-      ctx.strokeStyle = 'hsla(' + t2.hue + ', 60%, 50%, 0.15)';
-      ctx.lineWidth = 0.5;
-      ctx.setLineDash([2, 2]);
-      ctx.beginPath(); ctx.moveTo(pt.sx, pt.sy); ctx.lineTo(floor.sx, floor.sy); ctx.stroke();
-      ctx.setLineDash([]);
+    // Currently playing track: animated pulsing ring
+    if (isPlaying) {
+      var pulseR = radius + 6 + Math.sin(sonicMap.pulsePhase) * 4;
+      ctx.beginPath(); ctx.arc(pt.sx, pt.sy, pulseR + 8, 0, Math.PI * 2);
+      ctx.strokeStyle = 'hsla(' + t2.hue + ', 90%, 70%, ' + (0.15 + Math.sin(sonicMap.pulsePhase) * 0.1) + ')';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      // Inner pulse glow
+      var playGlow = ctx.createRadialGradient(pt.sx, pt.sy, radius, pt.sx, pt.sy, pulseR + 12);
+      playGlow.addColorStop(0, 'hsla(' + t2.hue + ', 80%, 60%, 0.3)');
+      playGlow.addColorStop(1, 'hsla(' + t2.hue + ', 80%, 60%, 0)');
+      ctx.fillStyle = playGlow;
+      ctx.beginPath(); ctx.arc(pt.sx, pt.sy, pulseR + 12, 0, Math.PI * 2); ctx.fill();
     }
 
+    if (isHov) {
+      // Multi-ring glow on hover
+      for (var ring = 3; ring >= 1; ring--) {
+        ctx.beginPath(); ctx.arc(pt.sx, pt.sy, radius + ring * 6, 0, Math.PI * 2);
+        ctx.fillStyle = 'hsla(' + t2.hue + ', 80%, 60%, ' + (0.06 / ring) + ')';
+        ctx.fill();
+      }
+      // Drop line to floor
+      var floor = project3D(t2.x3d, -1, t2.z3d, cw, ch);
+      ctx.strokeStyle = 'hsla(' + t2.hue + ', 50%, 50%, 0.12)';
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([2, 3]);
+      ctx.beginPath(); ctx.moveTo(pt.sx, pt.sy); ctx.lineTo(floor.sx, floor.sy); ctx.stroke();
+      ctx.setLineDash([]);
+      // Shadow on floor
+      ctx.beginPath(); ctx.arc(floor.sx, floor.sy, radius * 0.6, 0, Math.PI * 2);
+      ctx.fillStyle = 'hsla(' + t2.hue + ', 50%, 40%, 0.1)';
+      ctx.fill();
+    }
+
+    // Soft outer glow for all visible tracks
+    if (depthAlpha > 0.3) {
+      ctx.shadowColor = 'hsla(' + t2.hue + ', 80%, 55%, ' + (depthAlpha * 0.4) + ')';
+      ctx.shadowBlur = radius * 2;
+    }
+
+    // Main dot
     ctx.beginPath();
-    ctx.arc(pt.sx, pt.sy, isHov ? radius + 3 : radius, 0, Math.PI * 2);
-    ctx.fillStyle = 'hsla(' + t2.hue + ', 75%, ' + (isHov ? 72 : 55) + '%, ' + (isHov ? 1 : depthAlpha) + ')';
+    ctx.arc(pt.sx, pt.sy, isHov ? radius + 3 : (isPlaying ? radius + 2 : radius), 0, Math.PI * 2);
+    var dotLight = isHov ? 72 : (isPlaying ? 68 : 55);
+    var dotAlpha = isHov ? 1 : (isPlaying ? 0.95 : depthAlpha);
+    ctx.fillStyle = 'hsla(' + t2.hue + ', 78%, ' + dotLight + '%, ' + dotAlpha + ')';
     ctx.fill();
-    if (depthAlpha > 0.5 || isHov) {
-      ctx.strokeStyle = 'hsla(' + t2.hue + ', 80%, 75%, ' + (isHov ? 0.9 : depthAlpha * 0.4) + ')';
-      ctx.lineWidth = isHov ? 2 : 0.5;
+
+    // Border
+    if (depthAlpha > 0.3 || isHov || isPlaying) {
+      ctx.strokeStyle = 'hsla(' + t2.hue + ', 85%, 78%, ' + (isHov ? 0.9 : (isPlaying ? 0.7 : depthAlpha * 0.35)) + ')';
+      ctx.lineWidth = isHov ? 2 : (isPlaying ? 1.5 : 0.5);
       ctx.stroke();
+    }
+
+    // Inner highlight (specular)
+    if (radius > 3 && depthAlpha > 0.4) {
+      ctx.beginPath();
+      ctx.arc(pt.sx - radius * 0.25, pt.sy - radius * 0.25, radius * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, ' + (depthAlpha * 0.15) + ')';
+      ctx.fill();
+    }
+
+    ctx.shadowBlur = 0;
+  }
+
+  // ===== CURRENTLY PLAYING LABEL =====
+  if (sonicMap.nowPlayingId) {
+    var npTrack = tracks.find(function(t) { return t.id === sonicMap.nowPlayingId; });
+    if (npTrack) {
+      var npp = project3D(npTrack.x3d, npTrack.y3d, npTrack.z3d, cw, ch);
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillStyle = 'hsla(' + npTrack.hue + ', 70%, 75%, 0.8)';
+      ctx.textAlign = 'center';
+      ctx.fillText('▶ ' + npTrack.title.substring(0, 25), npp.sx, npp.sy - 18);
+      ctx.textAlign = 'left';
     }
   }
 
@@ -15353,8 +15542,9 @@ function sonicMapAnimate() {
   if (!sonicMap.canvas) return;
   if (sonicMap.autoRotate && !sonicMap.dragging) {
     sonicMap.rotY += sonicMap.autoRotateSpeed;
-    drawSonicMap();
   }
+  // Always redraw — stars twinkle, playing track pulses, nebulae shift
+  drawSonicMap();
   sonicMap.animFrame = requestAnimationFrame(sonicMapAnimate);
 }
 
