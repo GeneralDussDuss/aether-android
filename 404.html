@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — SIGNAL LOST | AETHER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #09090F;
+  color: #EED4FF;
+  font-family: 'JetBrains Mono', monospace;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+canvas#staticBg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.08;
+}
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+}
+.error-code {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(5rem, 15vw, 12rem);
+  color: #B76EFF;
+  text-shadow: 0 0 4px #B76EFF, 0 0 12px rgba(183,110,255,0.5), 0 0 30px rgba(157,78,221,0.3), 0 0 60px rgba(123,47,190,0.15);
+  animation: glitch404 3s infinite;
+  position: relative;
+}
+@keyframes glitch404 {
+  0%, 100% { text-shadow: 0 0 4px #B76EFF, 0 0 12px rgba(183,110,255,0.5), 0 0 30px rgba(157,78,221,0.3); }
+  2% { text-shadow: -4px 0 #7B2FBE, 4px 0 #D4A0FF; transform: translateX(-2px); }
+  4% { text-shadow: 0 0 4px #B76EFF; transform: translateX(0); }
+  42% { text-shadow: 3px 0 #9D4EDD, -3px 0 #B76EFF; transform: translateX(2px); }
+  44% { text-shadow: 0 0 4px #B76EFF; transform: translateX(0); }
+  80% { text-shadow: -2px 0 #D4A0FF, 2px 0 #7B2FBE; }
+  82% { text-shadow: 0 0 4px #B76EFF; }
+}
+.signal-lost {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1rem, 3vw, 1.8rem);
+  color: #D4A0FF;
+  letter-spacing: 0.2em;
+  margin-top: 0.5rem;
+  text-shadow: 0 0 8px rgba(212,160,255,0.5);
+}
+.message {
+  font-size: 0.85rem;
+  color: #9D4EDD;
+  margin-top: 1.5rem;
+  line-height: 1.8;
+  max-width: 400px;
+}
+.home-link {
+  display: inline-block;
+  margin-top: 2.5rem;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  padding: 0.8rem 2rem;
+  border: 1px solid #9D4EDD;
+  border-radius: 8px;
+  color: #EED4FF;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.home-link:hover {
+  background: #7B2FBE;
+  border-color: #B76EFF;
+  box-shadow: 0 0 20px rgba(157,78,221,0.4), 0 0 40px rgba(123,47,190,0.2);
+}
+</style>
+</head>
+<body>
+<canvas id="staticBg"></canvas>
+<div class="content">
+  <div class="error-code">404</div>
+  <div class="signal-lost">SIGNAL LOST</div>
+  <p class="message">The frequency you requested does not exist in this dimension. The signal has been lost to the void.</p>
+  <a href="./" class="home-link">RETURN TO AETHER</a>
+</div>
+<script>
+(function() {
+  var c = document.getElementById('staticBg');
+  var ctx = c.getContext('2d');
+  function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  function drawStatic() {
+    var imageData = ctx.createImageData(c.width, c.height);
+    var data = imageData.data;
+    for (var i = 0; i < data.length; i += 4) {
+      var v = Math.random() * 255;
+      data[i] = v;
+      data[i + 1] = v;
+      data[i + 2] = v;
+      data[i + 3] = 255;
+    }
+    ctx.putImageData(imageData, 0, 0);
+    requestAnimationFrame(drawStatic);
+  }
+  drawStatic();
+})();
+</script>
+</body>
+</html>
