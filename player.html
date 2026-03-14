@@ -3148,6 +3148,8 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
       <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
     <div class="sidebar-nav">
+      <!-- ═══ BROWSE ═══ -->
+      <div class="sidebar-section-label">BROWSE</div>
       <div class="nav-item active" data-view="library">
         <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
         <span class="nav-item-label">Library</span>
@@ -3164,30 +3166,6 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
         <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h6" stroke-linecap="round"/></svg>
         <span class="nav-item-label">Genres</span>
       </div>
-      <div class="nav-item" data-view="binaural">
-        <svg viewBox="0 0 24 24"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 16c0-2 1.5-5 3.5-5s2 3 3.5 3 1.5-3 3.5-3 2 3 3.5 3 1.5-3 3.5-3 3.5 3 3.5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/></svg>
-        <span class="nav-item-label">Binaural</span>
-      </div>
-      <div class="nav-item" data-view="rediscover">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
-        <span class="nav-item-label">Rediscover</span>
-      </div>
-      <div class="nav-item" data-view="daylist">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <span class="nav-item-label">Daylist</span>
-      </div>
-      <div class="nav-item" data-action="magic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M12.2 11.8L11 13M12.2 6.2L11 5"/><line x1="2" y1="22" x2="22" y2="2"/></svg>
-        <span class="nav-item-label">Magic Playlist</span>
-      </div>
-      <div class="nav-item" data-action="dj">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="8" cy="16" r="5"/><circle cx="16" cy="16" r="5"/>
-          <line x1="8" y1="11" x2="8" y2="4"/><line x1="16" y1="11" x2="16" y2="4"/>
-          <line x1="8" y1="4" x2="16" y2="4"/>
-        </svg>
-        <span class="nav-item-label">DJ Mode</span>
-      </div>
       <div class="nav-item" data-action="search">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <span class="nav-item-label">Search</span>
@@ -3196,13 +3174,41 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
         <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         <span class="nav-item-label">Queue</span>
       </div>
+
+      <!-- ═══ DISCOVER ═══ -->
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">DISCOVER</div>
+      <div class="nav-item" data-action="magic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M12.2 11.8L11 13M12.2 6.2L11 5"/><line x1="2" y1="22" x2="22" y2="2"/></svg>
+        <span class="nav-item-label">Magic Playlist</span>
+      </div>
+      <div class="nav-item" data-view="daylist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+        <span class="nav-item-label">Daylist</span>
+      </div>
+      <div class="nav-item" data-view="rediscover">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>
+        <span class="nav-item-label">Rediscover</span>
+      </div>
+      <div class="nav-item" data-view="sonicmap">
+        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2.5"/><circle cx="19" cy="14" r="1.5"/><circle cx="10" cy="18" r="1.8"/><circle cx="17" cy="8" r="1.2"/><line x1="7" y1="11" x2="10" y2="7" stroke-opacity="0.4"/><line x1="14" y1="7" x2="17" y2="8" stroke-opacity="0.4"/></svg>
+        <span class="nav-item-label">3D Map</span>
+      </div>
+
+      <!-- ═══ TOOLS ═══ -->
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">TOOLS</div>
+      <div class="nav-item" data-action="dj">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="16" r="5"/><circle cx="16" cy="16" r="5"/><line x1="8" y1="11" x2="8" y2="4"/><line x1="16" y1="11" x2="16" y2="4"/><line x1="8" y1="4" x2="16" y2="4"/></svg>
+        <span class="nav-item-label">DJ Mode</span>
+      </div>
+      <div class="nav-item" data-view="binaural">
+        <svg viewBox="0 0 24 24"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 16c0-2 1.5-5 3.5-5s2 3 3.5 3 1.5-3 3.5-3 2 3 3.5 3 1.5-3 3.5-3 3.5 3 3.5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/></svg>
+        <span class="nav-item-label">Binaural</span>
+      </div>
       <div class="nav-item" data-action="pomodoro" id="navPomodoro">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3L2 6"/><path d="M22 6l-3-3"/><line x1="12" y1="2" x2="12" y2="5"/></svg>
         <span class="nav-item-label">Focus</span>
-      </div>
-            <div class="nav-item" data-view="sonicmap">
-        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2.5"/><circle cx="19" cy="14" r="1.5"/><circle cx="10" cy="18" r="1.8"/><circle cx="17" cy="8" r="1.2"/><line x1="7" y1="11" x2="10" y2="7" stroke-opacity="0.4"/><line x1="14" y1="7" x2="17" y2="8" stroke-opacity="0.4"/></svg>
-        <span class="nav-item-label">Map</span>
       </div>
       <div class="nav-item" data-action="dna">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none"/><circle cx="12" cy="12" r="6" fill="none"/><circle cx="12" cy="12" r="3" fill="none"/></svg>
@@ -3212,7 +3218,9 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
         <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         <span class="nav-item-label">Insights</span>
       </div>
-<div class="sidebar-divider"></div>
+
+      <!-- ═══ PLAYLISTS ═══ -->
+      <div class="sidebar-divider"></div>
       <div class="sidebar-section-label">PLAYLISTS</div>
       <div id="sidebarPlaylists"></div>
       <button class="create-playlist-btn" id="createPlaylistBtn">
