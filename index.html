@@ -2367,7 +2367,7 @@ body.portal-out {
   <div class="section-inner">
     <div class="section-label reveal" style="color:rgba(255,45,123,0.8);">02 // AI DJ ENGINE</div>
     <h2 class="section-title reveal" style="background:linear-gradient(135deg, #FF2D7B, var(--purple-vivid), #00DCF5); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Dual-Deck AI Mixing That Reads the Room</h2>
-    <p class="section-desc reveal">Not a crossfader with a timer. A real mixing engine powered by Essentia.js WASM audio intelligence. BPM detection, key analysis, beat-phase alignment, energy arc management. Seven transition patterns. Zero trainwrecks.</p>
+    <p class="section-desc reveal">Not a crossfader with a timer. A real mixing engine powered by Essentia.js WASM audio intelligence. Float-precision BPM, key analysis, spectral compatibility scoring, set journey planning. Nine transition patterns. Master limiter. Background queue pre-analysis. Zero trainwrecks.</p>
 
     <div class="dj-hero-visual reveal">
       <div class="dj-deck-preview">
@@ -2397,6 +2397,8 @@ body.portal-out {
       <div class="dj-transition-badge">FILTER SWEEP</div>
       <div class="dj-transition-badge">DROP</div>
       <div class="dj-transition-badge">SLAM</div>
+      <div class="dj-transition-badge">FILTER SWEEP</div>
+      <div class="dj-transition-badge">POWER DOWN</div>
     </div>
 
     <div class="features-grid" style="margin-top:2.5rem;">
@@ -2405,7 +2407,7 @@ body.portal-out {
           <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
         </div>
         <div class="feature-title">ESSENTIA.JS WASM ANALYSIS</div>
-        <div class="feature-text">Real audio intelligence — not guesswork. Essentia's RhythmExtractor2013 algorithm detects true BPM and key from the actual waveform. 60-second optimized segment analysis with 12s timeout failsafe.</div>
+        <div class="feature-text">Float-precision BPM from RhythmExtractor2013 — not rounded integers. Key detection, danceability scoring, onset rate analysis. 60-second segment optimization. Background queue pre-analysis so every track is ready before it's needed.</div>
       </div>
 
       <div class="feature-card reveal" style="transition-delay:0.1s; border-color:rgba(0,220,245,0.2);">
@@ -2428,16 +2430,16 @@ body.portal-out {
         <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
           <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7"/><path d="M2 20c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7" opacity="0.4"/></svg>
         </div>
-        <div class="feature-title">ENERGY ARC MANAGEMENT</div>
-        <div class="feature-text">Tracks set momentum across the last 3 mixes. Builds tension, allows cooldowns, avoids monotony. Percentile-based phrase classification with crest factor drop detection.</div>
+        <div class="feature-title">SET JOURNEY PLANNING</div>
+        <div class="feature-text">Five-phase set arc: warmup → building → peak → cooldown → finale. Tracks momentum across mixes, adapts energy targets per phase. Learns from your behavior — skips = negative feedback, full plays = positive signal.</div>
       </div>
 
       <div class="feature-card reveal" style="transition-delay:0.25s; border-color:rgba(0,220,245,0.2);">
         <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
           <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         </div>
-        <div class="feature-title">7 TRANSITION PATTERNS</div>
-        <div class="feature-text">Blend, cut, echo out, backspin, filter sweep, drop build, and slam. Context-aware selection based on BPM ratio, key compatibility, phrase type, and recent pattern history.</div>
+        <div class="feature-title">9 TRANSITION PATTERNS</div>
+        <div class="feature-text">Blend, cut, bass swap, echo out, loop tease, double drop, backspin, filter sweep, power down. AI selects based on spectral compatibility, vocal clash detection, set journey phase, and pattern variety.</div>
       </div>
 
       <div class="feature-card reveal" style="transition-delay:0.3s; border-color:rgba(183,110,255,0.2);">
@@ -2445,7 +2447,7 @@ body.portal-out {
           <svg viewBox="0 0 24 24" style="stroke:rgba(183,110,255,0.9);"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
         </div>
         <div class="feature-title">SMART TRACK SELECTION</div>
-        <div class="feature-text">Next track chosen by BPM affinity (half/double-time aware), key compatibility, energy trajectory, artist variety, and recency. Not random — curated by algorithm.</div>
+        <div class="feature-text">Scored by BPM affinity (half/double-time aware), Camelot key compatibility, spectral compatibility, energy trajectory, danceability continuity, artist variety, duration filtering, and user behavior learning. Not random — curated by algorithm.</div>
       </div>
 
       <div class="feature-card reveal" style="transition-delay:0.35s; border-color:rgba(255,45,123,0.2);">
@@ -2453,15 +2455,23 @@ body.portal-out {
           <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
         </div>
         <div class="feature-title">PROGRESSIVE EQ HANDOFF</div>
-        <div class="feature-text">Highs fade first, then bass swaps, then mids restore. 5th-order Hermite interpolation on crossfader curves. Echo effects via DelayNode feedback loops with high-pass filtering.</div>
+        <div class="feature-text">DJ-standard EQ at 200Hz/1.2kHz/2.5kHz. Highs fade first, then bass swaps on the beat, then mids restore. Master limiter prevents clipping during double drops. Drift correction across all overlapping transitions.</div>
       </div>
 
       <div class="feature-card reveal" style="transition-delay:0.4s; border-color:rgba(0,220,245,0.2);">
         <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
           <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
+        <div class="feature-title">SPECTRAL INTELLIGENCE</div>
+        <div class="feature-text">16-band spectral profiling per track. Compatibility scoring detects frequency clashes before they happen. Vocal section detection prevents vocal-over-vocal trainwrecks. Structure mapping identifies intros, drops, breakdowns, and outros.</div>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:0.45s; border-color:rgba(255,45,123,0.2);">
+        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
+          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
         <div class="feature-title">FULL KEYBOARD CONTROL</div>
-        <div class="feature-text">D to toggle DJ mode. 1-7 to trigger transitions. Space for pause. Level meters, BPM sync indicator, remaining time, and transition progress — all live in the UI.</div>
+        <div class="feature-text">D to toggle DJ mode. 9 transition hotkeys. Level meters, BPM sync with spectral compatibility indicator, set journey phase display, and transition progress — all live.</div>
       </div>
     </div>
   </div>
