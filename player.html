@@ -15133,9 +15133,16 @@ document.addEventListener('keydown',(e)=>{
 // ============================================================================
 
 const sonicMap = {
-  canvas: null, ctx: null, tracks: [], offsetX: 0, offsetY: 0, zoom: 1,
+  canvas: null, ctx: null, tracks: [], zoom: 1,
   dragging: false, dragStartX: 0, dragStartY: 0, hoveredTrack: null,
   grid: {}, gridSize: 40,
+  // 3D camera
+  rotY: -0.4,   // Y-axis rotation (left-right orbit)
+  rotX: 0.5,    // X-axis tilt (up-down)
+  camDist: 600,  // Camera distance
+  autoRotate: true,
+  autoRotateSpeed: 0.002,
+  animFrame: null,
 };
 
 function camelotToHue(camelot) {
@@ -15163,125 +15170,197 @@ function buildSonicMapData() {
       camelot: cached.camelot || '?',
       danceability: cached.danceability || 0.5,
       hue: camelotToHue(cached.camelot || '?'),
+      // 3D normalized coordinates (-1 to 1)
+      x3d: (cached.avgEnergy !== undefined ? cached.avgEnergy : 0.5) * 2 - 1,        // Energy: left-right
+      y3d: ((cached.bpm || 120) - 60) / 140 * 2 - 1,                                  // BPM: bottom-top
+      z3d: (cached.danceability || 0.5) * 2 - 1,                                       // Danceability: front-back
     });
   }
 }
 
+// 3D perspective projection
+function project3D(x, y, z, cw, ch) {
+  var cosY = Math.cos(sonicMap.rotY), sinY = Math.sin(sonicMap.rotY);
+  var cosX = Math.cos(sonicMap.rotX), sinX = Math.sin(sonicMap.rotX);
+  // Rotate around Y axis (orbit)
+  var rx = x * cosY - z * sinY;
+  var rz = x * sinY + z * cosY;
+  // Rotate around X axis (tilt)
+  var ry = y * cosX - rz * sinX;
+  var rz2 = y * sinX + rz * cosX;
+  // Perspective projection
+  var fov = sonicMap.camDist * sonicMap.zoom;
+  var depth = rz2 + 3; // offset so nothing is behind camera
+  var scale = fov / (fov + depth * 100);
+  return {
+    sx: cw / 2 + rx * scale * 250,
+    sy: ch / 2 - ry * scale * 250,
+    scale: scale,
+    depth: depth
+  };
+}
+
 function buildSpatialIndex() {
   sonicMap.grid = {};
-  var canvas = sonicMap.canvas;
-  if (!canvas) return;
-  var pad = 60, w = canvas.clientWidth - pad * 2, h = canvas.clientHeight - pad * 2;
-  var cw = canvas.clientWidth, ch = canvas.clientHeight;
-  for (var i = 0; i < sonicMap.tracks.length; i++) {
-    var t = sonicMap.tracks[i];
-    var rawX = pad + t.energy * w, rawY = pad + (1 - (t.bpm - 60) / 140) * h;
-    var sx = (rawX + sonicMap.offsetX - cw/2) * sonicMap.zoom + cw/2;
-    var sy = (rawY + sonicMap.offsetY - ch/2) * sonicMap.zoom + ch/2;
-    var gx = Math.floor(sx / sonicMap.gridSize), gy = Math.floor(sy / sonicMap.gridSize);
+  if (!sonicMap.canvas || !sonicMap._projected) return;
+  for (var i = 0; i < sonicMap._projected.length; i++) {
+    var p = sonicMap._projected[i];
+    var gx = Math.floor(p.sx / sonicMap.gridSize), gy = Math.floor(p.sy / sonicMap.gridSize);
     var key = gx + ',' + gy;
     if (!sonicMap.grid[key]) sonicMap.grid[key] = [];
-    sonicMap.grid[key].push({ idx: i, sx: sx, sy: sy });
+    sonicMap.grid[key].push({ idx: p.idx, sx: p.sx, sy: p.sy });
   }
 }
 
 function drawSonicMap() {
   var canvas = sonicMap.canvas, ctx = sonicMap.ctx, tracks = sonicMap.tracks;
-  var offsetX = sonicMap.offsetX, offsetY = sonicMap.offsetY, zoom = sonicMap.zoom;
   if (!canvas || !ctx) return;
   var dpr = window.devicePixelRatio || 1;
   canvas.width = canvas.clientWidth * dpr;
   canvas.height = canvas.clientHeight * dpr;
   ctx.scale(dpr, dpr);
   var cw = canvas.clientWidth, ch = canvas.clientHeight;
-  ctx.fillStyle = '#000000';
+
+  // Background with subtle radial gradient
+  var bgGrad = ctx.createRadialGradient(cw/2, ch/2, 0, cw/2, ch/2, Math.max(cw, ch) * 0.7);
+  bgGrad.addColorStop(0, '#0a0a14');
+  bgGrad.addColorStop(1, '#000000');
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, cw, ch);
-  var pad = 60, w = cw - pad * 2, h = ch - pad * 2;
-  ctx.save();
-  ctx.translate(cw / 2, ch / 2);
-  ctx.scale(zoom, zoom);
-  ctx.translate(-cw / 2 + offsetX, -ch / 2 + offsetY);
 
-  ctx.strokeStyle = 'rgba(54, 32, 80, 0.3)';
+  // Draw 3D grid (floor plane at y=-1)
+  ctx.strokeStyle = 'rgba(54, 32, 80, 0.25)';
   ctx.lineWidth = 0.5;
-  for (var e = 0; e <= 1; e += 0.2) {
-    var x = pad + e * w;
-    ctx.beginPath(); ctx.moveTo(x, pad); ctx.lineTo(x, pad + h); ctx.stroke();
+  for (var gx = -1; gx <= 1; gx += 0.25) {
+    var p1 = project3D(gx, -1, -1, cw, ch);
+    var p2 = project3D(gx, -1, 1, cw, ch);
+    ctx.beginPath(); ctx.moveTo(p1.sx, p1.sy); ctx.lineTo(p2.sx, p2.sy); ctx.stroke();
   }
-  for (var b = 60; b <= 200; b += 20) {
-    var y = pad + (1 - (b - 60) / 140) * h;
-    ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(pad + w, y); ctx.stroke();
+  for (var gz = -1; gz <= 1; gz += 0.25) {
+    var p3 = project3D(-1, -1, gz, cw, ch);
+    var p4 = project3D(1, -1, gz, cw, ch);
+    ctx.beginPath(); ctx.moveTo(p3.sx, p3.sy); ctx.lineTo(p4.sx, p4.sy); ctx.stroke();
   }
 
-  ctx.fillStyle = 'rgba(107, 66, 160, 0.6)';
+  // Draw 3D axes
+  var origin = project3D(-1, -1, -1, cw, ch);
+  var xEnd = project3D(1, -1, -1, cw, ch);
+  var yEnd = project3D(-1, 1, -1, cw, ch);
+  var zEnd = project3D(-1, -1, 1, cw, ch);
+
+  ctx.lineWidth = 1;
+  // X axis (Energy) — magenta
+  ctx.strokeStyle = 'rgba(255, 45, 123, 0.5)';
+  ctx.beginPath(); ctx.moveTo(origin.sx, origin.sy); ctx.lineTo(xEnd.sx, xEnd.sy); ctx.stroke();
+  // Y axis (BPM) — purple
+  ctx.strokeStyle = 'rgba(183, 110, 255, 0.5)';
+  ctx.beginPath(); ctx.moveTo(origin.sx, origin.sy); ctx.lineTo(yEnd.sx, yEnd.sy); ctx.stroke();
+  // Z axis (Danceability) — cyan
+  ctx.strokeStyle = 'rgba(0, 220, 245, 0.5)';
+  ctx.beginPath(); ctx.moveTo(origin.sx, origin.sy); ctx.lineTo(zEnd.sx, zEnd.sy); ctx.stroke();
+
+  // Axis labels
   ctx.font = '10px "JetBrains Mono"';
-  ctx.textAlign = 'center';
-  for (var e2 = 0; e2 <= 1; e2 += 0.2) {
-    ctx.fillText(e2.toFixed(1), pad + e2 * w, pad + h + 18);
-  }
-  ctx.fillText('ENERGY', pad + w / 2, pad + h + 35);
-  ctx.textAlign = 'right';
-  for (var b2 = 60; b2 <= 200; b2 += 20) {
-    var y2 = pad + (1 - (b2 - 60) / 140) * h;
-    ctx.fillText(b2 + '', pad - 8, y2 + 4);
-  }
-  ctx.save();
-  ctx.translate(15, pad + h / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.textAlign = 'center';
-  ctx.fillText('BPM', 0, 0);
-  ctx.restore();
+  ctx.fillStyle = 'rgba(255, 45, 123, 0.7)';
+  ctx.fillText('ENERGY →', xEnd.sx + 5, xEnd.sy);
+  ctx.fillStyle = 'rgba(183, 110, 255, 0.7)';
+  ctx.fillText('BPM ↑', yEnd.sx - 20, yEnd.sy - 8);
+  ctx.fillStyle = 'rgba(0, 220, 245, 0.7)';
+  ctx.fillText('DANCE →', zEnd.sx + 5, zEnd.sy);
 
+  // Project all tracks and sort by depth (painter's algorithm)
+  var projected = [];
+  for (var i = 0; i < tracks.length; i++) {
+    var t = tracks[i];
+    var p = project3D(t.x3d, t.y3d, t.z3d, cw, ch);
+    projected.push({ idx: i, sx: p.sx, sy: p.sy, scale: p.scale, depth: p.depth, track: t });
+  }
+  projected.sort(function(a, b) { return a.depth - b.depth; }); // Back to front
+  sonicMap._projected = projected;
+
+  // Draw DJ mix history paths in 3D
   if (djMode && DJ.mixHistory.length > 0) {
-    ctx.strokeStyle = 'rgba(0, 220, 245, 0.4)';
+    ctx.strokeStyle = 'rgba(0, 220, 245, 0.35)';
     ctx.lineWidth = 1.5;
     ctx.setLineDash([4, 4]);
     for (var mi = 0; mi < DJ.mixHistory.length; mi++) {
       var mix = DJ.mixHistory[mi];
       var fromC = bpmCache[mix.from.id], toC = bpmCache[mix.to.id];
       if (!fromC || !toC) continue;
-      var x1 = pad + (fromC.avgEnergy || 0.5) * w;
-      var y1 = pad + (1 - ((fromC.bpm || 120) - 60) / 140) * h;
-      var x2 = pad + (toC.avgEnergy || 0.5) * w;
-      var y3 = pad + (1 - ((toC.bpm || 120) - 60) / 140) * h;
-      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y3); ctx.stroke();
+      var fp = project3D(
+        (fromC.avgEnergy || 0.5) * 2 - 1,
+        ((fromC.bpm || 120) - 60) / 140 * 2 - 1,
+        (fromC.danceability || 0.5) * 2 - 1, cw, ch);
+      var tp = project3D(
+        (toC.avgEnergy || 0.5) * 2 - 1,
+        ((toC.bpm || 120) - 60) / 140 * 2 - 1,
+        (toC.danceability || 0.5) * 2 - 1, cw, ch);
+      ctx.beginPath(); ctx.moveTo(fp.sx, fp.sy); ctx.lineTo(tp.sx, tp.sy); ctx.stroke();
     }
     ctx.setLineDash([]);
   }
 
-  for (var i = 0; i < tracks.length; i++) {
-    var t = tracks[i];
-    var tx = pad + t.energy * w;
-    var ty = pad + (1 - (t.bpm - 60) / 140) * h;
-    var radius = 3 + t.danceability * 6;
-    var isHov = sonicMap.hoveredTrack === i;
+  // Draw track dots (depth-sorted, with size based on depth + danceability)
+  for (var pi = 0; pi < projected.length; pi++) {
+    var pt = projected[pi];
+    var t2 = pt.track;
+    var baseRadius = 2.5 + t2.danceability * 5;
+    var radius = baseRadius * pt.scale * 1.5;
+    if (radius < 1) radius = 1;
+    var isHov = sonicMap.hoveredTrack === pt.idx;
+    // Depth-based alpha: closer = brighter
+    var depthAlpha = Math.max(0.2, Math.min(1, pt.scale * 1.5));
+
     if (isHov) {
-      ctx.beginPath(); ctx.arc(tx, ty, radius + 8, 0, Math.PI * 2);
-      ctx.fillStyle = 'hsla(' + t.hue + ', 80%, 60%, 0.2)'; ctx.fill();
+      // Glow ring
+      ctx.beginPath(); ctx.arc(pt.sx, pt.sy, radius + 10, 0, Math.PI * 2);
+      ctx.fillStyle = 'hsla(' + t2.hue + ', 80%, 60%, 0.2)'; ctx.fill();
+      // Connecting line to "floor"
+      var floor = project3D(t2.x3d, -1, t2.z3d, cw, ch);
+      ctx.strokeStyle = 'hsla(' + t2.hue + ', 60%, 50%, 0.15)';
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([2, 2]);
+      ctx.beginPath(); ctx.moveTo(pt.sx, pt.sy); ctx.lineTo(floor.sx, floor.sy); ctx.stroke();
+      ctx.setLineDash([]);
     }
+
     ctx.beginPath();
-    ctx.arc(tx, ty, isHov ? radius + 2 : radius, 0, Math.PI * 2);
-    ctx.fillStyle = 'hsla(' + t.hue + ', 75%, ' + (isHov ? 70 : 55) + '%, ' + (isHov ? 1 : 0.8) + ')';
+    ctx.arc(pt.sx, pt.sy, isHov ? radius + 3 : radius, 0, Math.PI * 2);
+    ctx.fillStyle = 'hsla(' + t2.hue + ', 75%, ' + (isHov ? 72 : 55) + '%, ' + (isHov ? 1 : depthAlpha) + ')';
     ctx.fill();
-    ctx.strokeStyle = 'hsla(' + t.hue + ', 80%, 75%, ' + (isHov ? 0.9 : 0.3) + ')';
-    ctx.lineWidth = isHov ? 2 : 0.5;
-    ctx.stroke();
+    if (depthAlpha > 0.5 || isHov) {
+      ctx.strokeStyle = 'hsla(' + t2.hue + ', 80%, 75%, ' + (isHov ? 0.9 : depthAlpha * 0.4) + ')';
+      ctx.lineWidth = isHov ? 2 : 0.5;
+      ctx.stroke();
+    }
   }
-  ctx.restore();
 
   var statsEl = document.getElementById('sonicMapStats');
-  if (statsEl) statsEl.textContent = tracks.length + ' TRACKS MAPPED';
+  if (statsEl) statsEl.textContent = tracks.length + ' TRACKS IN 3D SPACE';
   buildSpatialIndex();
+}
+
+function sonicMapAnimate() {
+  if (!sonicMap.canvas) return;
+  if (sonicMap.autoRotate && !sonicMap.dragging) {
+    sonicMap.rotY += sonicMap.autoRotateSpeed;
+    drawSonicMap();
+  }
+  sonicMap.animFrame = requestAnimationFrame(sonicMapAnimate);
 }
 
 function sonicMapMouseMove(e) {
   var rect = sonicMap.canvas.getBoundingClientRect();
   var mx = e.clientX - rect.left, my = e.clientY - rect.top;
   if (sonicMap.dragging) {
-    sonicMap.offsetX += (e.clientX - sonicMap.dragStartX) / sonicMap.zoom;
-    sonicMap.offsetY += (e.clientY - sonicMap.dragStartY) / sonicMap.zoom;
+    // Drag = orbit (rotate camera around scene)
+    sonicMap.rotY += (e.clientX - sonicMap.dragStartX) * 0.005;
+    sonicMap.rotX += (e.clientY - sonicMap.dragStartY) * 0.005;
+    // Clamp X rotation to avoid flipping
+    sonicMap.rotX = Math.max(-1.2, Math.min(1.2, sonicMap.rotX));
     sonicMap.dragStartX = e.clientX;
     sonicMap.dragStartY = e.clientY;
+    sonicMap.autoRotate = false; // Stop auto-rotate when user interacts
     drawSonicMap();
     return;
   }
@@ -15330,7 +15409,7 @@ function sonicMapMouseUp(e) {
 
 function sonicMapWheel(e) {
   e.preventDefault();
-  sonicMap.zoom = Math.max(0.3, Math.min(5, sonicMap.zoom * (e.deltaY > 0 ? 0.9 : 1.1)));
+  sonicMap.zoom = Math.max(0.3, Math.min(5, sonicMap.zoom * (e.deltaY > 0 ? 0.92 : 1.08)));
   drawSonicMap();
 }
 
@@ -15348,6 +15427,14 @@ async function loadSonicMapView() {
     var hue = camelotToHue(legendKeys[ki]);
     legendHTML += '<div class="sonic-map-legend-row"><div class="sonic-map-legend-dot" style="background:hsl(' + hue + ',75%,55%)"></div><div class="sonic-map-legend-label">' + legendKeys[ki] + '</div></div>';
   }
+  legendHTML += '<div style="margin-top:8px;border-top:1px solid rgba(123,47,190,0.2);padding-top:6px">';
+  legendHTML += '<div class="sonic-map-legend-title">3D AXES</div>';
+  legendHTML += '<div class="sonic-map-legend-row"><div class="sonic-map-legend-dot" style="background:rgba(255,45,123,0.8)"></div><div class="sonic-map-legend-label">X: Energy</div></div>';
+  legendHTML += '<div class="sonic-map-legend-row"><div class="sonic-map-legend-dot" style="background:rgba(183,110,255,0.8)"></div><div class="sonic-map-legend-label">Y: BPM</div></div>';
+  legendHTML += '<div class="sonic-map-legend-row"><div class="sonic-map-legend-dot" style="background:rgba(0,220,245,0.8)"></div><div class="sonic-map-legend-label">Z: Danceability</div></div>';
+  legendHTML += '</div>';
+  legendHTML += '<div style="margin-top:6px;font-family:var(--font-mono);font-size:0.5rem;color:var(--purple-muted)">DRAG to orbit · SCROLL to zoom</div>';
+  legendHTML += '<button onclick="sonicMap.autoRotate=!sonicMap.autoRotate" style="margin-top:6px;background:none;border:1px solid var(--purple-dim);border-radius:4px;color:var(--purple-bright);font-family:var(--font-mono);font-size:0.5rem;padding:3px 8px;cursor:pointer;letter-spacing:0.08em">AUTO-ROTATE</button>';
   legendHTML += '</div>';
 
   dc.innerHTML = '<div class="sonic-map-container" id="sonicMapContainer">' +
@@ -15358,9 +15445,13 @@ async function loadSonicMapView() {
   dc.classList.add('content-fade-in');
   setTimeout(function() { dc.classList.remove('content-fade-in'); }, 300);
 
+  // Cancel previous animation frame if re-entering
+  if (sonicMap.animFrame) { cancelAnimationFrame(sonicMap.animFrame); sonicMap.animFrame = null; }
+
   sonicMap.canvas = document.getElementById('sonicMapCanvas');
   sonicMap.ctx = sonicMap.canvas.getContext('2d');
-  sonicMap.offsetX = 0; sonicMap.offsetY = 0; sonicMap.zoom = 1; sonicMap.hoveredTrack = null;
+  sonicMap.zoom = 1; sonicMap.hoveredTrack = null;
+  sonicMap.rotY = -0.4; sonicMap.rotX = 0.5; sonicMap.autoRotate = true;
   sonicMap.canvas.addEventListener('mousemove', sonicMapMouseMove);
   sonicMap.canvas.addEventListener('mousedown', sonicMapMouseDown);
   sonicMap.canvas.addEventListener('mouseup', sonicMapMouseUp);
@@ -15373,6 +15464,7 @@ async function loadSonicMapView() {
   sonicMap.canvas.addEventListener('wheel', sonicMapWheel, { passive: false });
   buildSonicMapData();
   drawSonicMap();
+  sonicMapAnimate(); // Start auto-rotation loop
   new ResizeObserver(function() { drawSonicMap(); }).observe(sonicMap.canvas);
 }
 
