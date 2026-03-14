@@ -31,4 +31,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openFilesDialog: (title, extensions) => ipcRenderer.invoke('open-files-dialog', title, extensions),
   // Wallpaper Engine: scan workshop folder for video wallpapers
   scanWallpaperEngine: () => ipcRenderer.invoke('scan-wallpaper-engine'),
+  // Discord Rich Presence
+  connectDiscord: (appId) => ipcRenderer.invoke('connect-discord', appId),
+  setDiscordPresence: (trackData) => ipcRenderer.invoke('set-discord-presence', trackData),
+  clearDiscordPresence: () => ipcRenderer.invoke('clear-discord-presence'),
+  // Stem Isolation: check for pre-computed stems
+  checkStems: (opts) => ipcRenderer.invoke('check-stems', opts),
+  getStemPath: (opts) => ipcRenderer.invoke('get-stem-path', opts),
 });

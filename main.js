@@ -21,6 +21,7 @@
 const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, session, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const net = require('net');
 
 let mainWindow = null;
 let tray = null;
@@ -258,4 +259,274 @@ ipcMain.handle('scan-sheep-folder', (_event, folderPath) => {
     console.error('Sheep scan error:', e);
     return [];
   }
+});
+
+// ============ DISCORD RICH PRESENCE (Local IPC) ============
+
+// Discord Application ID — user can configure this in settings
+let discordClient = null;
+let discordConnected = false;
+let discordAppId = null;
+
+function encodeDiscordPacket(op, data) {
+  const payload = JSON.stringify(data);
+  const len = Buffer.byteLength(payload);
+  const buf = Buffer.alloc(8 + len);
+  buf.writeInt32LE(op, 0);
+  buf.writeInt32LE(len, 4);
+  buf.write(payload, 8);
+  return buf;
+}
+
+function parseDiscordPacket(buf) {
+  if (buf.length < 8) return null;
+  const op = buf.readInt32LE(0);
+  const len = buf.readInt32LE(4);
+  if (buf.length < 8 + len) return null;
+  try {
+    const data = JSON.parse(buf.slice(8, 8 + len).toString());
+    return { op, data };
+  } catch(e) {
+    return null;
+  }
+}
+
+function connectDiscord(appId) {
+  return new Promise((resolve) => {
+    if (discordClient) {
+      try { discordClient.destroy(); } catch(e) {}
+      discordClient = null;
+    }
+    discordConnected = false;
+    discordAppId = appId;
+
+    const pipePath = '\\\\.\\pipe\\discord-ipc-0';
+    let dataBuffer = Buffer.alloc(0);
+
+    discordClient = net.createConnection(pipePath, () => {
+      console.log('[Discord RPC] Connected to pipe, sending handshake...');
+      const handshake = encodeDiscordPacket(0, { v: 1, client_id: appId });
+      discordClient.write(handshake);
+    });
+
+    discordClient.on('data', (chunk) => {
+      dataBuffer = Buffer.concat([dataBuffer, chunk]);
+      const packet = parseDiscordPacket(dataBuffer);
+      if (packet) {
+        dataBuffer = dataBuffer.slice(8 + Buffer.byteLength(JSON.stringify(packet.data)));
+        if (packet.op === 1 && packet.data.cmd === 'DISPATCH' && packet.data.evt === 'READY') {
+          console.log('[Discord RPC] Handshake complete, user:', packet.data.data?.user?.username);
+          discordConnected = true;
+          resolve({ connected: true });
+        }
+      }
+    });
+
+    discordClient.on('error', (err) => {
+      console.warn('[Discord RPC] Connection error:', err.message);
+      discordConnected = false;
+      discordClient = null;
+      resolve({ connected: false });
+    });
+
+    discordClient.on('close', () => {
+      console.log('[Discord RPC] Connection closed');
+      discordConnected = false;
+      discordClient = null;
+    });
+
+    // Timeout after 5s
+    setTimeout(() => {
+      if (!discordConnected) {
+        resolve({ connected: false });
+      }
+    }, 5000);
+  });
+}
+
+function setDiscordActivity(trackData) {
+  if (!discordClient || !discordConnected) return { connected: false };
+
+  const nonce = Math.random().toString(36).slice(2, 12);
+  const activity = {
+    details: trackData.title ? `${trackData.title}` : 'Idle',
+    state: trackData.artist ? `by ${trackData.artist}` : undefined,
+    timestamps: {},
+    assets: {
+      large_image: 'aether_logo',
+      large_text: trackData.album || 'AETHER',
+      small_image: trackData.playing ? 'play' : 'pause',
+      small_text: trackData.playing ? 'Playing' : 'Paused'
+    }
+  };
+
+  if (trackData.playing && trackData.duration > 0) {
+    const now = Math.floor(Date.now() / 1000);
+    activity.timestamps.start = now - Math.floor(trackData.elapsed || 0);
+    activity.timestamps.end = now + Math.floor(trackData.duration - (trackData.elapsed || 0));
+  }
+
+  const payload = encodeDiscordPacket(1, {
+    cmd: 'SET_ACTIVITY',
+    args: { pid: process.pid, activity },
+    nonce
+  });
+
+  try {
+    discordClient.write(payload);
+    return { connected: true };
+  } catch(e) {
+    discordConnected = false;
+    return { connected: false };
+  }
+}
+
+function clearDiscordActivity() {
+  if (!discordClient || !discordConnected) return { connected: false };
+  const nonce = Math.random().toString(36).slice(2, 12);
+  const payload = encodeDiscordPacket(1, {
+    cmd: 'SET_ACTIVITY',
+    args: { pid: process.pid, activity: null },
+    nonce
+  });
+  try {
+    discordClient.write(payload);
+    return { connected: true };
+  } catch(e) {
+    return { connected: false };
+  }
+}
+
+ipcMain.handle('connect-discord', async (_event, appId) => {
+  return await connectDiscord(appId);
+});
+
+ipcMain.handle('set-discord-presence', (_event, trackData) => {
+  return setDiscordActivity(trackData);
+});
+
+ipcMain.handle('clear-discord-presence', () => {
+  return clearDiscordActivity();
+});
+
+// Clean up Discord connection on app quit
+app.on('before-quit', () => {
+  if (discordClient) {
+    try {
+      clearDiscordActivity();
+      discordClient.destroy();
+    } catch(e) {}
+    discordClient = null;
+  }
+});
+
+// ============ STEM ISOLATION — File System Checks ============
+
+ipcMain.handle('check-stems', (_event, opts) => {
+  const { stemsFolder, trackId, title, artist } = opts;
+  if (!stemsFolder || !fs.existsSync(stemsFolder)) return { found: false };
+
+  const stemFiles = ['vocals', 'drums', 'bass', 'other'];
+  const stemExts = ['.wav', '.flac', '.mp3', '.ogg', '.m4a'];
+
+  // Strategy 1: Check by track ID
+  const idFolder = path.join(stemsFolder, trackId);
+  if (fs.existsSync(idFolder)) {
+    const paths = {};
+    let foundAll = true;
+    for (const stem of stemFiles) {
+      let found = false;
+      for (const ext of stemExts) {
+        const p = path.join(idFolder, stem + ext);
+        if (fs.existsSync(p)) {
+          paths[stem] = p.replace(/\\/g, '/');
+          found = true;
+          break;
+        }
+      }
+      if (!found) foundAll = false;
+    }
+    if (Object.keys(paths).length >= 2) return { found: true, paths };
+  }
+
+  // Strategy 2: Check by "Artist - Title" folder name
+  if (artist && title) {
+    const safeName = `${artist} - ${title}`.replace(/[<>:"/\\|?*]/g, '_');
+    const nameFolder = path.join(stemsFolder, safeName);
+    if (fs.existsSync(nameFolder)) {
+      const paths = {};
+      for (const stem of stemFiles) {
+        for (const ext of stemExts) {
+          const p = path.join(nameFolder, stem + ext);
+          if (fs.existsSync(p)) {
+            paths[stem] = p.replace(/\\/g, '/');
+            break;
+          }
+        }
+      }
+      if (Object.keys(paths).length >= 2) return { found: true, paths };
+    }
+  }
+
+  // Strategy 3: Check by title only
+  if (title) {
+    const safeTitle = title.replace(/[<>:"/\\|?*]/g, '_');
+    const titleFolder = path.join(stemsFolder, safeTitle);
+    if (fs.existsSync(titleFolder)) {
+      const paths = {};
+      for (const stem of stemFiles) {
+        for (const ext of stemExts) {
+          const p = path.join(titleFolder, stem + ext);
+          if (fs.existsSync(p)) {
+            paths[stem] = p.replace(/\\/g, '/');
+            break;
+          }
+        }
+      }
+      if (Object.keys(paths).length >= 2) return { found: true, paths };
+    }
+  }
+
+  // Strategy 4: Scan all subdirectories for a match (case-insensitive)
+  try {
+    const dirs = fs.readdirSync(stemsFolder);
+    const lowerTitle = (title || '').toLowerCase();
+    const lowerArtist = (artist || '').toLowerCase();
+    for (const dir of dirs) {
+      const dirLower = dir.toLowerCase();
+      if (dirLower.includes(lowerTitle) && lowerTitle.length > 2) {
+        const dirPath = path.join(stemsFolder, dir);
+        if (!fs.statSync(dirPath).isDirectory()) continue;
+        const paths = {};
+        for (const stem of stemFiles) {
+          for (const ext of stemExts) {
+            const p = path.join(dirPath, stem + ext);
+            if (fs.existsSync(p)) {
+              paths[stem] = p.replace(/\\/g, '/');
+              break;
+            }
+          }
+        }
+        if (Object.keys(paths).length >= 2) return { found: true, paths };
+      }
+    }
+  } catch(e) {
+    console.error('Stem scan error:', e);
+  }
+
+  return { found: false };
+});
+
+ipcMain.handle('get-stem-path', (_event, opts) => {
+  const { stemsFolder, trackId, stem } = opts;
+  if (!stemsFolder) return null;
+  const stemExts = ['.wav', '.flac', '.mp3', '.ogg', '.m4a'];
+  const idFolder = path.join(stemsFolder, trackId);
+  if (fs.existsSync(idFolder)) {
+    for (const ext of stemExts) {
+      const p = path.join(idFolder, stem + ext);
+      if (fs.existsSync(p)) return p.replace(/\\/g, '/');
+    }
+  }
+  return null;
 });
