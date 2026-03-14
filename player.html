@@ -4156,16 +4156,32 @@ async function analyzeBPM(deck) {
             }
 
             // --- Danceability & onset rate ---
+            // Note: not all Essentia algorithms are available in the WASM build
+            // Approximate from rhythm data when native algorithms are unavailable
             let danceability = 0.5, onsetRate = 0;
             try {
-              const dance = essentia.Danceability(audioVector);
-              danceability = dance.danceability || 0.5;
-            } catch(e) {}
+              if (typeof essentia.Danceability === 'function') {
+                const dance = essentia.Danceability(audioVector);
+                danceability = dance.danceability || 0.5;
+              } else {
+                // Approximate: BPM confidence from RhythmExtractor2013 correlates with danceability
+                // Higher confidence = more regular rhythm = more danceable
+                danceability = Math.min(1, Math.max(0, (rhythm.confidence || 0.5)));
+              }
+            } catch(e) {
+              danceability = Math.min(1, Math.max(0, bpmFloat / 160)); // rough: higher BPM → more energy
+            }
             try {
-              // Onset rate: onsets per second — indicates rhythmic density
-              const onsets = essentia.OnsetRate(audioVector);
-              onsetRate = onsets.onsetRate || 0;
-            } catch(e) {}
+              if (typeof essentia.OnsetRate === 'function') {
+                const onsetsResult = essentia.OnsetRate(audioVector);
+                onsetRate = onsetsResult.onsetRate || 0;
+              } else {
+                // Approximate onset rate from beat ticks count / duration
+                onsetRate = beatGrid.length > 0 ? beatGrid.length / duration : 0;
+              }
+            } catch(e) {
+              onsetRate = beatGrid.length > 0 ? beatGrid.length / duration : 0;
+            }
 
             essentia.delete(audioVector);
             resolve({ bpm, bpmFloat, beatGrid, key, keyScale, camelot, danceability, onsetRate });
@@ -4302,32 +4318,60 @@ async function analyzeBPM(deck) {
 function computeSpectralProfile(deck, channelData, sampleRate, duration) {
   try {
     const fftSize = 2048;
-    const numBands = 16; // 16 mel-like bands covering 20Hz-16kHz
+    const numBands = 16;
     const hopSize = fftSize;
     const numFrames = Math.floor(channelData.length / hopSize);
     const bandEnergies = new Float32Array(numBands);
     let frameCount = 0;
 
-    // Sample every ~2 seconds for speed (don't need every frame)
+    // Log-spaced band edges from 20Hz to 16kHz
+    const bandEdges = [];
+    for (let b = 0; b <= numBands; b++) {
+      bandEdges.push(20 * Math.pow(16000 / 20, b / numBands));
+    }
+
+    // Pre-compute Hann window
+    const hann = new Float32Array(fftSize);
+    for (let i = 0; i < fftSize; i++) {
+      hann[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / (fftSize - 1)));
+    }
+
+    // Sample every ~2 seconds for speed
     const skipFrames = Math.max(1, Math.floor(sampleRate * 2 / hopSize));
 
     for (let f = 0; f < numFrames; f += skipFrames) {
       const start = f * hopSize;
-      // Simple DFT approximation: compute energy in frequency bands
-      // Use autocorrelation-based band energy estimation
-      for (let b = 0; b < numBands; b++) {
-        const freqLow = 20 * Math.pow(800, b / numBands); // Log-spaced 20Hz to 16kHz
-        const freqHigh = 20 * Math.pow(800, (b + 1) / numBands);
-        const binLow = Math.floor(freqLow * fftSize / sampleRate);
-        const binHigh = Math.min(Math.ceil(freqHigh * fftSize / sampleRate), fftSize / 2);
+      if (start + fftSize > channelData.length) break;
 
-        let bandE = 0;
-        const blockEnd = Math.min(start + fftSize, channelData.length);
-        // RMS of the band's frequency range (approximated by filtering)
-        for (let j = start; j < blockEnd; j += 4) {
-          bandE += channelData[j] * channelData[j];
+      // Apply window and compute real DFT magnitude for positive frequencies
+      // Using Goertzel-style per-bin computation for only the bins we need
+      const magnitudes = new Float32Array(fftSize / 2);
+      for (let k = 0; k < fftSize / 2; k++) {
+        // Only compute bins that fall within our band ranges
+        const binFreq = k * sampleRate / fftSize;
+        if (binFreq > 16500) break; // Beyond our highest band
+
+        let real = 0, imag = 0;
+        const omega = 2 * Math.PI * k / fftSize;
+        for (let n = 0; n < fftSize; n += 4) { // Downsample 4x for speed
+          const sample = channelData[start + n] * hann[n];
+          real += sample * Math.cos(omega * n);
+          imag -= sample * Math.sin(omega * n);
         }
-        bandEnergies[b] += bandE / ((blockEnd - start) / 4);
+        magnitudes[k] = real * real + imag * imag; // Power spectrum (skip sqrt)
+      }
+
+      // Sum power into bands
+      for (let b = 0; b < numBands; b++) {
+        const binLow = Math.max(1, Math.floor(bandEdges[b] * fftSize / sampleRate));
+        const binHigh = Math.min(Math.ceil(bandEdges[b + 1] * fftSize / sampleRate), fftSize / 2 - 1);
+        let bandPower = 0;
+        let binCount = 0;
+        for (let k = binLow; k <= binHigh; k++) {
+          bandPower += magnitudes[k];
+          binCount++;
+        }
+        bandEnergies[b] += binCount > 0 ? bandPower / binCount : 0;
       }
       frameCount++;
     }
@@ -4341,6 +4385,7 @@ function computeSpectralProfile(deck, channelData, sampleRate, duration) {
 
     deck.spectralProfile = bandEnergies;
   } catch(e) {
+    console.warn('[DJ] Spectral profile computation failed:', e);
     deck.spectralProfile = null;
   }
 }
@@ -4470,17 +4515,20 @@ function startPreAnalysis() {
 async function preAnalyzeNext() {
   if (!djMode) { DJ.preAnalyzing = false; return; }
 
-  // Find tracks in queue that haven't been analyzed yet
-  const unanalyzed = currentQueue.filter(t => !bpmCache[t.id]);
+  // Find tracks in queue that haven't been analyzed yet, sorted by proximity to current position
+  const unanalyzed = currentQueue
+    .map((t, i) => ({ t, dist: Math.abs(i - currentQueueIndex) }))
+    .filter(x => !bpmCache[x.t.id])
+    .sort((a, b) => a.dist - b.dist)
+    .map(x => x.t);
   if (unanalyzed.length === 0) {
     DJ.preAnalyzing = false;
     console.log('[DJ/PreAnalysis] All queue tracks analyzed');
     return;
   }
 
-  // Prioritize tracks near current queue position
-  const nearbyUnanalyzed = unanalyzed.slice(0, 3);
-  const track = nearbyUnanalyzed[0];
+  // Already sorted by proximity — pick the closest unanalyzed track
+  const track = unanalyzed[0];
 
   console.log(`[DJ/PreAnalysis] Background analyzing: "${track.title}" (${unanalyzed.length} remaining)`);
 
@@ -4793,8 +4841,15 @@ async function generateDeckWaveform(deck) {
       for (let i = 0; i < points; i++) deck.waveformData[i] /= max;
     }
 
-    // Now that waveform is ready, re-run energy analysis with real data
+    // Now that waveform is ready, re-run energy analysis with real waveform data
     analyzeEnergy(deck);
+    // Update bpmCache with accurate energy values (was stale from initial beat-density estimate)
+    if (deck.track && bpmCache[deck.track.id]) {
+      bpmCache[deck.track.id].avgEnergy = deck.avgEnergy;
+      bpmCache[deck.track.id].peakEnergy = deck.peakEnergy;
+      bpmCache[deck.track.id].energyCurve = deck.energyCurve;
+      bpmCache[deck.track.id].energyTrajectory = deck.energyTrajectory;
+    }
   } catch (e) {
     console.error(`[DJ] Waveform generation failed for deck ${deck.id}:`, e);
     deck.waveformData = null;
@@ -5074,9 +5129,18 @@ async function transitionBassSwap(outgoing, incoming) {
   restoreEQ(incoming, 'mid');
   showToast('BASS SWAP');
 
-  // Phase 3: 4 bars at center, then fade outgoing over 4 bars
-  await djSleep(barDuration * 4 * 1000);
-  if (!djMode) return;
+  // Phase 3: 4 bars at center with drift correction, then fade outgoing over 4 bars
+  const beatTimeBs = 60 / bpm;
+  for (let i = 0; i < 16; i++) { // 4 bars = 16 beats
+    await djSleep(beatTimeBs * 1000);
+    if (!djMode) return;
+    if (i % 4 === 3) {
+      const drift = calcBeatPhaseOffset(outgoing, incoming);
+      if (Math.abs(drift) > 0.02 && Math.abs(drift) < 0.15) {
+        incoming.audio.currentTime += drift * 0.5;
+      }
+    }
+  }
 
   // Also start rolling off outgoing highs
   setDeckEQ(outgoing, 'high', -12);
@@ -5284,22 +5348,25 @@ async function transitionDoubleDrop(outgoing, incoming) {
   setCrossfader(0.5);
   incoming.gainNode.gain.value = 0.2;
 
-  // Build phase: gradually bring in incoming over the buildup (with drift correction)
-  const buildSteps = Math.max(10, Math.floor(timeToOutDrop * 4));
-  for (let i = 0; i < buildSteps; i++) {
-    const t = i / buildSteps;
+  // Build phase: beat-aligned gain ramp with drift correction
+  const ddBeatTime = 60 / bpm;
+  const buildBeats = Math.max(4, Math.floor(timeToOutDrop / ddBeatTime));
+  let midsRestored = false;
+  for (let i = 0; i < buildBeats; i++) {
+    const t = i / buildBeats;
     incoming.gainNode.gain.value = 0.2 + t * t * 0.6;
-    if (t > 0.6) {
+    if (t > 0.6 && !midsRestored) {
       restoreEQ(incoming, 'mid');
+      midsRestored = true;
     }
-    // Drift correction every ~8 steps during build
-    if (i % 8 === 7) {
+    // Drift correction every 4 beats during build
+    if (i % 4 === 3) {
       const drift = calcBeatPhaseOffset(outgoing, incoming);
       if (Math.abs(drift) > 0.02 && Math.abs(drift) < 0.15) {
         incoming.audio.currentTime += drift * 0.5;
       }
     }
-    await djSleep((timeToOutDrop / buildSteps) * 1000);
+    await djSleep(ddBeatTime * 1000);
     if (!djMode) return;
   }
 
@@ -5423,7 +5490,7 @@ async function transitionFilterSweep(outgoing, incoming) {
     }
 
     // Micro-drift correction
-    if (i % 8 === 0 && i > 0) {
+    if (i % 4 === 0 && i > 0) {
       const drift = calcBeatPhaseOffset(outgoing, incoming);
       if (Math.abs(drift) > 0.02 && Math.abs(drift) < 0.15) {
         incoming.audio.currentTime += drift * 0.5;
@@ -5460,14 +5527,15 @@ async function transitionPowerDown(outgoing, incoming) {
   const powerDownDuration = beatTime * 8; // 2 bars
   const steps = 30;
 
+  // Disable pitch preservation so slowdown sounds like real vinyl/turntable
+  outgoing.audio.preservesPitch = false;
+
   for (let i = 0; i < steps; i++) {
     const t = i / steps;
-    // Exponential slowdown with pitch drop (preservesPitch OFF for this effect)
-    outgoing.audio.preservesPitch = false;
     outgoing.audio.playbackRate = Math.max(0.01, 1.0 - t * t * 0.99);
     outgoing.gainNode.gain.value = 1.0 - t * 0.7;
     await djSleep((powerDownDuration / steps) * 1000);
-    if (!djMode) return;
+    if (!djMode) { outgoing.audio.preservesPitch = true; return; }
   }
 
   outgoing.audio.pause();
@@ -5671,8 +5739,7 @@ function selectNextTrack(currentTrack, candidates) {
   const currentEnergy = currentTrack.avgEnergy || 0.5;
   const currentDanceability = currentTrack.danceability || 0.5;
 
-  // ===== SET JOURNEY PLANNING =====
-  updateSetJourney(currentEnergy);
+  // Read current set journey phase (updated in beginTransition, not here)
   const setPhase = DJ.setJourney.phase;
 
   // Determine set momentum from history
@@ -5848,7 +5915,16 @@ function getNextTrackIndex() {
 
   if (DJ.autoMixEnabled) {
     const activeDeck = DJ.activeDeck === 'A' ? DJ.deckA : DJ.deckB;
-    const current = activeDeck ? activeDeck.track : currentQueue[currentQueueIndex];
+    // Build enriched current track with deck analysis data (bpm, energy, key, spectral, etc.)
+    // Without this, selectNextTrack scores against defaults since track objects don't have these fields
+    let current = activeDeck ? activeDeck.track : currentQueue[currentQueueIndex];
+    if (activeDeck && current) {
+      current = { ...current, bpm: activeDeck.bpm, bpmFloat: activeDeck.bpmFloat,
+        avgEnergy: activeDeck.avgEnergy, peakEnergy: activeDeck.peakEnergy,
+        camelot: activeDeck.camelot, key: activeDeck.key, keyScale: activeDeck.keyScale,
+        spectralProfile: activeDeck.spectralProfile, danceability: activeDeck.danceability,
+        energyCurve: activeDeck.energyCurve, energyTrajectory: activeDeck.energyTrajectory };
+    }
     if (candidates.length > 0 && current) {
       const best = selectNextTrack(current, candidates);
       if (best) return currentQueue.findIndex(t => t.id === best.id);
@@ -5935,6 +6011,9 @@ async function beginTransition(outgoing, incoming) {
 
   // Cap mix history to prevent unbounded growth
   if (DJ.mixHistory.length > 50) DJ.mixHistory = DJ.mixHistory.slice(-50);
+
+  // Update set journey phase now that a transition has actually completed
+  updateSetJourney(incoming.avgEnergy || 0.5);
 
   // Track user behavior: if the previous track was skipped (played <30% of duration), record negative feedback
   if (outgoing.track && outgoing.audio.currentTime > 0) {
