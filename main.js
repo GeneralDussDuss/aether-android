@@ -285,7 +285,7 @@ function parseDiscordPacket(buf) {
   if (buf.length < 8 + len) return null;
   try {
     const data = JSON.parse(buf.slice(8, 8 + len).toString());
-    return { op, data };
+    return { op, data, len }; // Return wire length for correct buffer consumption
   } catch(e) {
     return null;
   }
@@ -313,7 +313,7 @@ function connectDiscord(appId) {
       dataBuffer = Buffer.concat([dataBuffer, chunk]);
       const packet = parseDiscordPacket(dataBuffer);
       if (packet) {
-        dataBuffer = dataBuffer.slice(8 + Buffer.byteLength(JSON.stringify(packet.data)));
+        dataBuffer = dataBuffer.slice(8 + packet.len); // Use wire length, not re-serialized length
         if (packet.op === 1 && packet.data.cmd === 'DISPATCH' && packet.data.evt === 'READY') {
           console.log('[Discord RPC] Handshake complete, user:', packet.data.data?.user?.username);
           discordConnected = true;

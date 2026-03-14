@@ -8149,6 +8149,8 @@ document.getElementById('btnRepeat').addEventListener('click', function() {
 // Volume
 document.getElementById('volumeSlider').addEventListener('input', (e) => {
   audio.volume = e.target.value / 100;
+  // Update sleep timer's original volume if timer is active but not yet fading
+  if (window._sleepTimerUpdateVol) window._sleepTimerUpdateVol(audio.volume);
 });
 
 document.getElementById('btnMute').addEventListener('click', () => {
@@ -14998,7 +15000,7 @@ function generateMagicPlaylist(prompt){
   const getE=(t)=>{const c=bpmCache[t.track.id];return c?(c.avgEnergy||0.5):0.5;};
   selected.sort((a,b)=>getE(a)-getE(b));
   const n=selected.length;
-  if(n>=6){const q=Math.floor(n/4);const s=[...selected];const r=[];r.push(...s.slice(0,q));r.push(...s.slice(q,q*2));const pk=s.slice(q*2,q*3);pk.reverse();r.push(...pk);const wd=s.slice(q*3);wd.reverse();r.push(...wd);return r;}
+  if(n>=6){const s=[...selected];const mid=Math.ceil(n/2);const r=[];r.push(...s.slice(0,mid));const wd=s.slice(mid);wd.reverse();r.push(...wd);return r;}
   return selected;
 }
 
@@ -15403,11 +15405,14 @@ function sonicMapMouseDown(e) {
   sonicMap.dragging = true;
   sonicMap.dragStartX = e.clientX;
   sonicMap.dragStartY = e.clientY;
+  sonicMap.origDragX = e.clientX; // Preserved for click-vs-drag detection
+  sonicMap.origDragY = e.clientY;
 }
 
 function sonicMapMouseUp(e) {
   if (!sonicMap.dragging) return;
-  var moved = Math.abs(e.clientX - sonicMap.dragStartX) + Math.abs(e.clientY - sonicMap.dragStartY);
+  // Use original mousedown position (not continuously updated dragStart) for click detection
+  var moved = Math.abs(e.clientX - sonicMap.origDragX) + Math.abs(e.clientY - sonicMap.origDragY);
   sonicMap.dragging = false;
   if (moved < 5 && sonicMap.hoveredTrack !== null) {
     playTrackById(sonicMap.tracks[sonicMap.hoveredTrack].id);
@@ -15765,6 +15770,10 @@ async function loadInsightsView() {
   function stClear() { if (stInterval) { clearInterval(stInterval); stInterval = null; } stFading = false; stDeltaOn = false; stCancelBtn.classList.remove('visible'); stCountdown.classList.remove('visible'); stBadge.classList.remove('visible'); stStartBtn.textContent = 'START TIMER'; stStartBtn.disabled = false; }
   stStartBtn.addEventListener('click', stStart);
   stCancelBtn.addEventListener('click', stCancel);
+  // Expose for external volume slider to update original volume during active timer
+  window._sleepTimerUpdateVol = function(vol) {
+    if (stInterval && !stFading) stOrigVol = vol;
+  };
 })();
 
 // ============ FEATURE: POMODORO FOCUS MODE ============
@@ -15839,7 +15848,7 @@ async function loadInsightsView() {
   function wxCrickets(ctx,dst){var g=ctx.createGain();g.gain.value=0.08;g.connect(dst);for(var i=0;i<3;i++){var o=ctx.createOscillator();var cg=ctx.createGain();var lf=ctx.createOscillator();var lg=ctx.createGain();o.type='sine';o.frequency.value=5000+Math.random()*1000;cg.gain.value=0;lf.type='square';lf.frequency.value=3+Math.random()*4;lg.gain.value=0.1;lf.connect(lg);lg.connect(cg.gain);o.connect(cg);cg.connect(g);o.start();lf.start();wxCO.push({osc:o,lfo:lf});}return{gain:g,stop:function(){wxCO.forEach(function(c){try{c.osc.stop();c.lfo.stop();}catch(e){}});wxCO=[];}};}
   function wxIsDay(){var h=new Date().getHours();return h>=6&&h<20;}
   function wxStopAll(){Object.keys(wxN).forEach(function(k){if(wxN[k]&&wxN[k].stop)wxN[k].stop();});wxN={};if(wxMG){try{wxMG.disconnect();}catch(e){}wxMG=null;}}
-  function wxApply(){wxStopAll();if(!wxD||!wxOn)return;initAudioContext();if(!audioCtx)return;wxMG=audioCtx.createGain();wxMG.gain.value=wxVol;wxMG.connect(audioCtx.destination);var cur=wxD.current_condition[0];var co=wxCond(cur.weatherCode);var dy=wxIsDay();if(co==='clear'){if(dy)wxN.birds=wxBirds(audioCtx,wxMG);else wxN.crickets=wxCrickets(audioCtx,wxMG);}else if(co==='cloudy'){wxN.wind=wxWind(audioCtx,wxMG);if(dy)wxN.birds=wxBirds(audioCtx,wxMG);}else if(co==='rain'){wxN.rain=wxRain(audioCtx,wxMG);wxN.thunder=wxThunder(audioCtx,wxMG);}else if(co==='heavyRain'){wxN.rain=wxRain(audioCtx,wxMG);if(wxN.rain.gain)wxN.rain.gain.gain.value=0.9;wxN.thunder=wxThunder(audioCtx,wxMG);}else if(co==='thunderstorm'){wxN.rain=wxRain(audioCtx,wxMG);if(wxN.rain.gain)wxN.rain.gain.gain.value=1.0;wxN.thunder=wxThunder(audioCtx,wxMG);wxN.wind=wxWind(audioCtx,wxMG);}else if(co==='snow'){wxN.wind=wxWind(audioCtx,wxMG);if(wxN.wind.gain)wxN.wind.gain.gain.value=0.2;}}
+  function wxApply(){wxStopAll();if(!wxD||!wxOn)return;initAudioContext();if(!audioCtx)return;wxMG=audioCtx.createGain();wxMG.gain.value=wxVol;wxMG.connect(audioCtx.destination);var cur=wxD.current_condition[0];var co=wxCond(cur.weatherCode);var dy=wxIsDay();if(co==='clear'){if(dy)wxN.birds=wxBirds(audioCtx,wxMG);else wxN.crickets=wxCrickets(audioCtx,wxMG);}else if(co==='cloudy'){wxN.wind=wxWind(audioCtx,wxMG);if(dy)wxN.birds=wxBirds(audioCtx,wxMG);}else if(co==='rain'){wxN.rain=wxRain(audioCtx,wxMG);}else if(co==='heavyRain'){wxN.rain=wxRain(audioCtx,wxMG);if(wxN.rain.gain)wxN.rain.gain.gain.value=0.9;wxN.thunder=wxThunder(audioCtx,wxMG);}else if(co==='thunderstorm'){wxN.rain=wxRain(audioCtx,wxMG);if(wxN.rain.gain)wxN.rain.gain.gain.value=1.0;wxN.thunder=wxThunder(audioCtx,wxMG);wxN.wind=wxWind(audioCtx,wxMG);}else if(co==='snow'){wxN.wind=wxWind(audioCtx,wxMG);if(wxN.wind.gain)wxN.wind.gain.gain.value=0.2;}}
   wxTB.addEventListener('click',function(){wxOn=!wxOn;wxTB.classList.toggle('active',wxOn);wxTB.textContent=wxOn?'DISABLE AMBIENT':'ENABLE AMBIENT';if(wxOn){wxBd.classList.add('visible');if(!wxD)wxFetch();else wxApply();if(wxRefT)clearInterval(wxRefT);wxRefT=setInterval(wxFetch,30*60*1000);}else{wxBd.classList.remove('visible');wxStopAll();if(wxRefT){clearInterval(wxRefT);wxRefT=null;}}});
   wxRB.addEventListener('click',wxFetch);
   wxFetch();
