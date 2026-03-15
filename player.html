@@ -5,22 +5,24 @@
   ╠══════════════════════════════════════════════════════════════════╣
   ║                                                                  ║
   ║  This file IS the entire application — CSS, HTML, and JS.        ║
-  ║  ~5700 lines of hand-crafted code. No frameworks. No build step. ║
+  ║  ~17,000 lines of hand-crafted code. No frameworks. No build     ║
+  ║  step.                                                           ║
   ║                                                                  ║
   ║  SECTIONS:                                                       ║
-  ║  ├─ CSS (~1500 lines) — OLED Tron Purple design system           ║
+  ║  ├─ CSS (~3000 lines) — OLED Tron Purple design system           ║
   ║  │   ├─ CSS Variables & Theming                                  ║
   ║  │   ├─ Layout (sidebar, content, now-playing bar)               ║
   ║  │   ├─ Vertical/Horizontal orientation modes                    ║
   ║  │   ├─ Animations & Transitions                                 ║
   ║  │   └─ Responsive breakpoints (320px to 4K)                     ║
-  ║  ├─ HTML (~200 lines) — Semantic structure                       ║
+  ║  ├─ HTML (~500 lines) — Semantic structure                       ║
   ║  │   ├─ Title bar (frameless window controls)                    ║
   ║  │   ├─ Sidebar (library nav, playlists)                         ║
   ║  │   ├─ Content area (dynamic views)                             ║
   ║  │   ├─ Visualizer panel (canvas)                                ║
+  ║  │   ├─ Sleep Timer & Pomodoro panels                            ║
   ║  │   └─ Now-playing bar (controls, seek, info)                   ║
-  ║  └─ JavaScript (~4000 lines) — Application logic                 ║
+  ║  └─ JavaScript (~13000 lines) — Application logic                ║
   ║      ├─ MD5 hasher (Subsonic auth)                               ║
   ║      ├─ Subsonic API client                                      ║
   ║      ├─ Audio engine (Web Audio API pipeline)                    ║
@@ -30,7 +32,15 @@
   ║      ├─ Settings persistence (localStorage)                      ║
   ║      ├─ 17 Visualizer scenes (Canvas 2D)                         ║
   ║      ├─ Beat detection & frequency band analysis                 ║
-  ║      └─ Keyboard shortcuts & navigation                          ║
+  ║      ├─ Keyboard shortcuts & navigation                          ║
+  ║      ├─ Sonic Map (3D track visualization by BPM/energy/key)     ║
+  ║      ├─ Music DNA Fingerprint (radial track signatures)          ║
+  ║      ├─ Taste Evolution Timeline & Listening Insights            ║
+  ║      ├─ Auto-tagger (energy, mood, tempo, dance, vocal tags)     ║
+  ║      ├─ Sleep Timer with intelligent fade & delta waves          ║
+  ║      ├─ Pomodoro Focus Mode with binaural integration            ║
+  ║      ├─ Weather-reactive ambient soundscapes                     ║
+  ║      └─ DJ Mode, Daylist, Signal Path & Stem Isolation           ║
   ║                                                                  ║
   ║  DEVNOTES:                                                       ║
   ║  - Credentials in SUBSONIC object are local defaults only        ║
@@ -7917,7 +7927,7 @@ function renderTrackList(tracks, containerId, filter = '') {
       <div class="track-title-cell">
         <div class="track-art-small">${coverSrc ? `<img src="${coverSrc}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}</div>
         <div class="track-title-text">
-          <div class="track-title">${escHtml(t.title) || 'Unknown'}</div>
+          <div class="track-title">${escHtml(t.title) || 'Unknown'}${typeof trackTags!=='undefined'&&trackTags[t.id]?' <span class="track-tag energy-'+trackTags[t.id].energy+'">'+trackTags[t.id].energy+'</span><span class="track-tag mood-'+trackTags[t.id].mood+'">'+trackTags[t.id].mood+'</span>':''}</div>
           <div class="track-artist-sub">${escHtml(t.artist) || 'Unknown'}</div>
         </div>
       </div>
@@ -15424,9 +15434,31 @@ function scoreTrack(track,params){
   return Math.round(score);
 }
 
-function generateMagicPlaylist(prompt){
+let _libraryCacheData=null,_libraryCacheTime=0;const LIBRARY_CACHE_TTL=5*60*1000;
+async function _fetchLibraryPool(){
+  const now=Date.now();
+  if(_libraryCacheData&&(now-_libraryCacheTime)<LIBRARY_CACHE_TTL)return _libraryCacheData;
+  const resp=await SUBSONIC.get('getRandomSongs',{size:500}).catch(()=>null);
+  const songs=(resp?.randomSongs?.song)||[];
+  _libraryCacheData=songs;_libraryCacheTime=Date.now();
+  return songs;
+}
+function _buildCandidatePool(localTracks,libraryTracks){
+  const trackMap=new Map();
+  for(const t of localTracks)trackMap.set(t.id,t);
+  for(const t of libraryTracks){if(!trackMap.has(t.id))trackMap.set(t.id,t);}
+  return trackMap;
+}
+async function generateMagicPlaylist(prompt){
   const params=parsePrompt(prompt);const trackMap=new Map();
   for(const t of currentQueue)trackMap.set(t.id,t);
+  if(currentQueue.length<50){
+    const container=document.getElementById('magicResults');
+    if(container)container.innerHTML='<div class="magic-status">Scanning library...</div>';
+    const libTracks=await _fetchLibraryPool();
+    const merged=_buildCandidatePool(currentQueue,libTracks);
+    trackMap.clear();for(const[id,t]of merged)trackMap.set(id,t);
+  }
   const scored=[];for(const[id,track]of trackMap)scored.push({track,score:scoreTrack(track,params)});
   scored.sort((a,b)=>b.score-a.score);
   const selected=scored.slice(0,Math.min(20,scored.length));if(selected.length===0)return[];
@@ -15447,11 +15479,11 @@ function renderMagicResults(results){
 
 function magicPlayAll(){if(magicLastResults.length===0)return;currentQueue=magicLastResults.map(r=>r.track);currentQueueIndex=0;playCurrentTrack();document.getElementById('magicPlaylistOverlay').classList.remove('open');showToast('Magic playlist playing');}
 function magicAddToQueue(){if(magicLastResults.length===0)return;for(const r of magicLastResults){if(!currentQueue.find(t=>t.id===r.track.id))currentQueue.push(r.track);}renderQueueItems();showToast(`Added ${magicLastResults.length} tracks to queue`);}
-function magicRegenerate(){if(!magicLastPrompt)return;magicLastResults=generateMagicPlaylist(magicLastPrompt);renderMagicResults(magicLastResults);}
+async function magicRegenerate(){if(!magicLastPrompt)return;magicLastResults=await generateMagicPlaylist(magicLastPrompt);renderMagicResults(magicLastResults);}
 
 document.querySelector('[data-action="magic"]').addEventListener('click',()=>{document.getElementById('magicPlaylistOverlay').classList.add('open');document.getElementById('magicPromptInput').focus();});
 document.getElementById('magicPlaylistOverlay').addEventListener('click',(e)=>{if(e.target===document.getElementById('magicPlaylistOverlay'))document.getElementById('magicPlaylistOverlay').classList.remove('open');});
-document.getElementById('magicPromptInput').addEventListener('keydown',(e)=>{if(e.key==='Enter'){const p=e.target.value.trim();if(!p)return;magicLastPrompt=p;magicLastResults=generateMagicPlaylist(p);renderMagicResults(magicLastResults);}});
+document.getElementById('magicPromptInput').addEventListener('keydown',async(e)=>{if(e.key==='Enter'){const p=e.target.value.trim();if(!p)return;magicLastPrompt=p;magicLastResults=await generateMagicPlaylist(p);renderMagicResults(magicLastResults);}});
 
 // ============ FEATURE: REDISCOVER MODE ============
 function formatTimeAgo(dateStr){if(!dateStr)return'a while ago';const then=new Date(dateStr),now=new Date(),d=Math.floor((now-then)/(1000*60*60*24));if(d<1)return'today';if(d<2)return'yesterday';if(d<30)return`${d} days ago`;const m=Math.floor(d/30);if(m<12)return`${m} month${m>1?'s':''} ago`;const y=Math.floor(m/12);return`${y} year${y>1?'s':''} ago`;}
@@ -15521,15 +15553,26 @@ function scoreDaylistTrack(track,period){
   return Math.round(score);
 }
 
-function generateDaylist(period){daylistCurrentPeriod=period;const scored=[];for(const t of currentQueue)scored.push({track:t,score:scoreDaylistTrack(t,period)});scored.sort((a,b)=>b.score-a.score);daylistTracks=scored.slice(0,20);return daylistTracks;}
+async function generateDaylist(period){
+  daylistCurrentPeriod=period;
+  let candidates=[...currentQueue];
+  if(currentQueue.length<50){
+    const libTracks=await _fetchLibraryPool();
+    const merged=_buildCandidatePool(currentQueue,libTracks);
+    candidates=[...merged.values()];
+  }
+  const scored=[];for(const t of candidates)scored.push({track:t,score:scoreDaylistTrack(t,period)});
+  scored.sort((a,b)=>b.score-a.score);daylistTracks=scored.slice(0,20);return daylistTracks;
+}
 
-function loadDaylistView(forcePeriod){
+async function loadDaylistView(forcePeriod){
   const container=document.getElementById('trackList'),titleEl=document.getElementById('contentTitle');
   if(titleEl)titleEl.textContent='Daylist';
   document.getElementById('viewToggles').style.display='none';
   document.querySelector('.search-bar').style.display='none';
   const period=forcePeriod||getCurrentDaylistPeriod();
-  const tracks=generateDaylist(period);
+  if(currentQueue.length<50){container.innerHTML='<div style="text-align:center;padding:40px;font-family:var(--font-mono);font-size:0.75rem;color:var(--purple-muted);">Scanning library...</div>';}
+  const tracks=await generateDaylist(period);
   const mixName=DAYLIST_NAMES[period.id]||'Daylist';
   let html='<div class="daylist-container">';
   html+=`<div class="daylist-header"><div class="daylist-icon">${period.icon}</div><div class="daylist-info"><h2>${mixName}</h2><p>${period.desc} &middot; ${period.bpm[0]}-${period.bpm[1]} BPM &middot; ${period.label}</p></div></div>`;
@@ -15549,7 +15592,7 @@ function loadDaylistView(forcePeriod){
 
 function daylistPlayAll(){if(daylistTracks.length===0)return;currentQueue=daylistTracks.map(r=>r.track);currentQueueIndex=0;playCurrentTrack();showToast('Playing daylist');}
 function daylistAddToQueue(){for(const r of daylistTracks){if(!currentQueue.find(q=>q.id===r.track.id))currentQueue.push(r.track);}renderQueueItems();showToast(`Added ${daylistTracks.length} tracks to queue`);}
-function daylistRegenerate(){loadDaylistView(daylistCurrentPeriod);showToast('Daylist regenerated');}
+async function daylistRegenerate(){await loadDaylistView(daylistCurrentPeriod);showToast('Daylist regenerated');}
 
 // ============ WIRE UP NEW NAV ITEMS ============
 (function(){
@@ -15620,13 +15663,27 @@ function camelotToHue(camelot) {
   return ((num - 1) * 30) % 360;
 }
 
+// Simple string hash for deterministic pseudo-random positioning
+function _sonicHashId(str) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) { h = ((h << 5) - h + str.charCodeAt(i)) | 0; }
+  return h;
+}
+function _sonicHashNorm(str, salt) {
+  var h = _sonicHashId(str + (salt || ''));
+  return ((h & 0x7fffffff) % 10000) / 10000; // 0..1
+}
+
 function buildSonicMapData() {
   sonicMap.tracks = [];
+  var added = {};
+  // First pass: tracks with full analysis data from bpmCache
   var ids = Object.keys(bpmCache);
   for (var ii = 0; ii < ids.length; ii++) {
     var id = ids[ii];
     var cached = bpmCache[id];
     if (!cached || !cached.bpm) continue;
+    added[id] = true;
     var trackInfo = currentQueue.find(function(t) { return t.id === id; });
     if (!trackInfo) trackInfo = { id: id, title: 'Track ' + id.slice(0, 6), artist: 'Unknown' };
     sonicMap.tracks.push({
@@ -15642,6 +15699,31 @@ function buildSonicMapData() {
       x3d: (cached.avgEnergy !== undefined ? cached.avgEnergy : 0.5) * 2 - 1,        // Energy: left-right
       y3d: ((cached.bpm || 120) - 60) / 140 * 2 - 1,                                  // BPM: bottom-top
       z3d: (cached.danceability || 0.5) * 2 - 1,                                       // Danceability: front-back
+    });
+  }
+  // Second pass: fill from queue metadata using hash-based positioning
+  // so new users see their library visualized even without analysis
+  for (var qi = 0; qi < currentQueue.length; qi++) {
+    var qt = currentQueue[qi];
+    if (!qt || !qt.id || added[qt.id]) continue;
+    added[qt.id] = true;
+    var hEnergy = _sonicHashNorm(qt.id, 'e');
+    var hBpm = 70 + _sonicHashNorm(qt.id, 'b') * 130; // 70-200
+    var hDance = _sonicHashNorm(qt.id, 'd');
+    var hHue = Math.floor(_sonicHashNorm(qt.id, 'h') * 360);
+    sonicMap.tracks.push({
+      id: qt.id,
+      title: qt.title || 'Unknown',
+      artist: qt.artist || 'Unknown',
+      bpm: Math.round(hBpm),
+      energy: hEnergy,
+      camelot: '?',
+      danceability: hDance,
+      hue: hHue,
+      _estimated: true,
+      x3d: hEnergy * 2 - 1,
+      y3d: (hBpm - 60) / 140 * 2 - 1,
+      z3d: hDance * 2 - 1,
     });
   }
 }
@@ -16207,6 +16289,20 @@ async function loadSonicMapView() {
   sonicMap.canvas.addEventListener('wheel', sonicMapWheel, { passive: false });
   buildSonicMapData();
   buildCamelotGroups(); // PERF: pre-group tracks by key for fast constellation lines
+  // Show empty state message when no tracks at all (no queue and no analysis)
+  if (sonicMap.tracks.length === 0) {
+    var emptyDiv = document.createElement('div');
+    emptyDiv.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10;pointer-events:none;';
+    emptyDiv.innerHTML = '<div style="font-size:2rem;margin-bottom:12px;animation:pulse 2s ease-in-out infinite;opacity:0.6">&#127925;</div>' +
+      '<div style="font-family:var(--font-display);font-size:0.85rem;color:var(--purple-hot);letter-spacing:0.06em;margin-bottom:8px">No tracks to map yet</div>' +
+      '<div style="font-family:var(--font-body);font-size:0.7rem;color:var(--purple-muted);max-width:280px;line-height:1.5">Play some tracks to populate the map. AETHER analyzes BPM, key, and energy as you listen.</div>';
+    document.getElementById('sonicMapContainer').appendChild(emptyDiv);
+  }
+  var estimatedCount = sonicMap.tracks.filter(function(t){return t._estimated;}).length;
+  var statsEl = document.getElementById('sonicMapStats');
+  if (statsEl) {
+    statsEl.textContent = sonicMap.tracks.length + ' TRACKS' + (estimatedCount > 0 ? ' (' + estimatedCount + ' estimated)' : '');
+  }
   sonicMap._dirty = true;
   drawSonicMap();
   sonicMapAnimate(); // Start auto-rotation loop
@@ -16295,12 +16391,30 @@ function renderDNAToCanvas(canvas, trackId, size) {
 }
 
 function renderDNAFingerprint() {
-  if (currentQueueIndex < 0 || currentQueueIndex >= currentQueue.length) return;
+  var titleEl = document.getElementById('dnaTrackTitle');
+  var artistEl = document.getElementById('dnaTrackArtist');
+  var canvas = document.getElementById('dnaCanvas');
+  if (currentQueueIndex < 0 || currentQueueIndex >= currentQueue.length || !currentQueue[currentQueueIndex]) {
+    // Empty state: no track playing
+    if (titleEl) titleEl.textContent = 'Play a track to generate its DNA fingerprint';
+    if (artistEl) artistEl.textContent = '';
+    if (canvas) {
+      var ctx = canvas.getContext('2d'), dpr = window.devicePixelRatio || 1, sz = 400;
+      canvas.width = sz * dpr; canvas.height = sz * dpr; ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, sz, sz);
+      ctx.fillStyle = '#09090F'; ctx.beginPath(); ctx.arc(sz/2, sz/2, sz*0.42+10, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = 'rgba(157,78,221,0.15)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(sz/2, sz/2, sz*0.42+4, 0, Math.PI*2); ctx.stroke();
+      ctx.fillStyle = 'rgba(107,66,160,0.5)'; ctx.font = '12px "JetBrains Mono"';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('NO TRACK', sz/2, sz/2);
+    }
+    return;
+  }
   var t = currentQueue[currentQueueIndex];
-  if (!t) return;
-  document.getElementById('dnaTrackTitle').textContent = t.title || 'Unknown';
-  document.getElementById('dnaTrackArtist').textContent = t.artist || 'Unknown';
-  renderDNAToCanvas(document.getElementById('dnaCanvas'), t.id, 400);
+  if (titleEl) titleEl.textContent = t.title || 'Unknown';
+  if (artistEl) artistEl.textContent = t.artist || 'Unknown';
+  if (canvas) renderDNAToCanvas(canvas, t.id, 400);
 }
 
 function updateDNABadge() {
@@ -16406,7 +16520,7 @@ async function loadInsightsView() {
   html += '<div class="insights-stat-card"><div class="insights-stat-value">' + avgBpm + '</div><div class="insights-stat-label">AVG BPM</div></div></div>';
 
   if (sessions.length === 0) {
-    html += '<div class="insights-empty">No listening data yet. Play some tracks to start building your taste profile.</div>';
+    html += '<div class="insights-empty" style="text-align:center;padding:40px 20px"><div style="font-size:1.8rem;margin-bottom:12px;opacity:0.5;animation:pulse 2s ease-in-out infinite">&#127911;</div><div style="font-family:var(--font-display);font-size:0.85rem;color:var(--purple-hot);margin-bottom:10px;letter-spacing:0.06em">No listening data yet</div><div style="font-family:var(--font-body);font-size:0.7rem;color:var(--purple-muted);max-width:340px;margin:0 auto;line-height:1.6">Your listening insights will appear here as you play music. Genre breakdowns, energy trends, and session history &mdash; all tracked automatically.</div></div>';
   } else {
     html += '<div class="insights-timeline">';
     for (var i = sessions.length - 1; i >= 0; i--) {
@@ -16485,6 +16599,11 @@ async function loadInsightsView() {
   function stStart() {
     var min = stCustom.value ? parseInt(stCustom.value) : stSelMin;
     if (!min || min < 1) return;
+    // Mutual exclusion: pause Pomodoro if active
+    if (window._pomoActive && window._pomoActive()) {
+      if (window._pomoPause) window._pomoPause();
+      showToast('Pomodoro paused \u2014 sleep timer takes priority');
+    }
     stSelMin = min; localStorage.setItem('aether_sleep_timer_last', String(min));
     stEndTime = Date.now() + min*60*1000; stOrigVol = audio.volume; stFading = false; stDeltaOn = false;
     stCancelBtn.classList.add('visible'); stCountdown.classList.add('visible'); stBadge.classList.add('visible');
@@ -16509,6 +16628,9 @@ async function loadInsightsView() {
   window._sleepTimerUpdateVol = function(vol) {
     if (stInterval && !stFading) stOrigVol = vol;
   };
+  // Expose active state and cancel for mutual exclusion with Pomodoro
+  window._sleepTimerActive = function() { return !!stInterval; };
+  window._sleepTimerCancel = stCancel;
 })();
 
 // ============ FEATURE: POMODORO FOCUS MODE ============
@@ -16530,6 +16652,11 @@ async function loadInsightsView() {
   function pBeep(asc) { initAudioContext(); if(!audioCtx) return; var fs=asc?[440,554,659]:[659,554,440]; fs.forEach(function(f,i){ var o=audioCtx.createOscillator(); var g=audioCtx.createGain(); o.frequency.value=f; o.type='sine'; g.gain.value=0.15; o.connect(g); g.connect(audioCtx.destination); o.start(audioCtx.currentTime+i*0.15); g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+i*0.15+0.3); o.stop(audioCtx.currentTime+i*0.15+0.35); }); }
   function pPhase(phase) {
     pState=phase; pPaused=false; var dur;
+    // Mutual exclusion: cancel sleep timer when starting Pomodoro
+    if (window._sleepTimerActive && window._sleepTimerActive()) {
+      if (window._sleepTimerCancel) window._sleepTimerCancel();
+      showToast('Sleep timer cancelled \u2014 Pomodoro takes priority');
+    }
     if(phase==='work') { dur=WK; pPL.textContent='WORK'; pPL.style.color='var(--purple-vivid)'; document.body.classList.add('pomodoro-focus');
       if(pBO.checked&&typeof startBinaural==='function'){startBinaural(200,10);updateBinauralVolume(0.2);}
       if(pAT.checked&&currentQueue.length>0){var ct=currentQueue.filter(function(t){var c=bpmCache[t.id];if(!c)return true;return(c.bpm<110||!c.bpm);}); if(ct.length>0){var pk=ct[Math.floor(Math.random()*ct.length)];var ix=currentQueue.indexOf(pk);if(ix>=0){currentQueueIndex=ix;playCurrentTrack();}}}
@@ -16556,6 +16683,11 @@ async function loadInsightsView() {
     pPL.textContent='WORK';pPL.style.color='var(--purple-vivid)';pTB.textContent='25:00';pSB.textContent='START';
     pCo.classList.remove('visible');document.body.classList.remove('pomodoro-focus');if(binauralActive)stopBinaural();pUpdDots();
   });
+  // Expose active state and pause for mutual exclusion with Sleep Timer
+  window._pomoActive = function() { return pState !== 'idle'; };
+  window._pomoPause = function() {
+    if (pState !== 'idle' && !pPaused) { pPaused = true; pRemPaused = pEnd - Date.now(); pSB.textContent = 'RESUME'; }
+  };
 })();
 
 // ============ FEATURE: WEATHER-REACTIVE AMBIENT LAYER ============
