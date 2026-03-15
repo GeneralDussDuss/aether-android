@@ -445,7 +445,7 @@ nav.scrolled::after { opacity:1; }
 }
 .feat-card p { font-size:0.82rem; color:var(--p-muted); line-height:1.5; }
 .feat-card[data-cat] { display:block; }
-.feat-card.hidden { display:none; }
+/* .feat-card.hidden overridden by transition-based version below */
 .feat-section-header {
   grid-column:1/-1; font-family:var(--font-d); font-size:0.6rem;
   color:var(--p-bright); letter-spacing:0.15em; padding:1.5rem 0 0.5rem;
@@ -657,12 +657,111 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
   .filter-bar { justify-content:center; }
 }
 
+/* ══════ #4 FEATURE FILTER TRANSITIONS ══════ */
+.feat-card.hidden {
+  opacity:0; transform:scale(0.95); max-height:0; padding:0; margin:0; border-width:0;
+  overflow:hidden; pointer-events:none;
+  transition:opacity 0.35s var(--ease), transform 0.35s var(--ease), max-height 0.4s var(--ease),
+    padding 0.35s var(--ease), margin 0.35s var(--ease), border-width 0.35s var(--ease);
+}
+.feat-card:not(.hidden) {
+  max-height:300px;
+  transition:opacity 0.35s var(--ease), transform 0.35s var(--ease), max-height 0.4s var(--ease),
+    padding 0.35s var(--ease), margin 0.35s var(--ease), border-width 0.35s var(--ease),
+    border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.feat-section-header.hidden {
+  opacity:0; max-height:0; padding:0; margin:0; border-width:0; overflow:hidden;
+  transition:opacity 0.3s var(--ease), max-height 0.3s var(--ease), padding 0.3s var(--ease), margin 0.3s var(--ease);
+}
+
+/* ══════ #2 JOURNEY BAR ANIMATE ══════ */
+.journey-bar {
+  transition:height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* ══════ #3 TERMINAL TYPING ══════ */
+.terminal-cursor {
+  display:inline; animation:blink-cursor 0.7s step-end infinite; color:var(--p-vivid);
+}
+@keyframes blink-cursor { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+/* ══════ #5 HERO ENTRANCE SEQUENCE ══════ */
+.hero-stagger {
+  opacity:0; transform:translateY(20px);
+  transition:opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.hero-stagger.hero-in {
+  opacity:1; transform:translateY(0);
+}
+
+/* ══════ #6 INDIVIDUAL CARD REVEAL STAGGER ══════ */
+.card-reveal {
+  opacity:0; transform:translateY(25px);
+  transition:opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.card-reveal.vis {
+  opacity:1; transform:translateY(0);
+}
+
+/* ══════ #7 BPM PULSE ══════ */
+@keyframes bpm-pulse {
+  0%, 100% { transform:scale(1); }
+  50% { transform:scale(1.05); }
+}
+.bpm-pulse {
+  animation:bpm-pulse 1s ease-in-out 3;
+}
+
+/* ══════ #8 FILTER SLIDING INDICATOR ══════ */
+.filter-bar {
+  position:relative;
+}
+.filter-indicator {
+  position:absolute; bottom:0; left:0; height:2px;
+  background:var(--p-vivid); box-shadow:0 0 8px var(--p-bright);
+  border-radius:1px;
+  transition:transform 0.3s var(--ease), width 0.3s var(--ease);
+  pointer-events:none; z-index:1;
+}
+
+/* ══════ #9 HERO TAGLINE TYPEWRITER ══════ */
+.hero-tagline .cursor {
+  display:inline-block; width:2px; height:1em; background:var(--p-vivid);
+  margin-left:2px; vertical-align:text-bottom;
+  animation:blink-cursor 0.7s step-end infinite;
+}
+
+/* ══════ #10 CURSOR GLOW TRAIL ══════ */
+#cursorGlow {
+  position:fixed; width:300px; height:300px; pointer-events:none; z-index:9998;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(123,47,190,0.06) 0%, transparent 70%);
+  transform:translate(-50%,-50%);
+  will-change:left,top;
+}
+@media (max-width:768px) { #cursorGlow { display:none; } }
+@media (hover:none) { #cursorGlow { display:none; } }
+
+/* ══════ #1 STAT COUNT-UP BOUNCE ══════ */
+@keyframes stat-bounce-in {
+  0% { transform:scale(0.3); opacity:0; }
+  50% { transform:scale(1.15); opacity:1; }
+  100% { transform:scale(1); opacity:1; }
+}
+.stat-bounce {
+  animation:stat-bounce-in 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
 }
 </style>
 </head>
 <body>
+
+<!-- ══════ CURSOR GLOW ══════ -->
+<div id="cursorGlow"></div>
 
 <!-- ══════ PARTICLE CANVAS ══════ -->
 <canvas id="heroCanvas"></canvas>
@@ -697,12 +796,12 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
      ══════════════════════════════════════════ -->
 <div class="page active" id="page-home">
   <div class="hero">
-    <div class="hero-badge"><span class="dot"></span>VERSION 2.0 — NOW AVAILABLE</div>
-    <h1 class="hero-title">AETHER</h1>
-    <p class="hero-tagline">Not a music player — an experience.</p>
-    <div class="hero-rotating" id="heroRotating"></div>
-    <p class="hero-sub">17,000+ lines of hand-crafted code. AI DJ engine with 9 transitions. 3D sonic galaxy of your library. Stem isolation. Binaural brainwave entrainment. Weather-reactive ambient soundscapes. All in a single Electron file. Zero frameworks.</p>
-    <div class="hero-btns">
+    <div class="hero-badge hero-stagger" data-hero-delay="0"><span class="dot"></span>VERSION 2.0 — NOW AVAILABLE</div>
+    <h1 class="hero-title hero-stagger" data-hero-delay="300">AETHER</h1>
+    <p class="hero-tagline hero-stagger" data-hero-delay="600" id="heroTagline" data-tagline="Not a music player — an experience."></p>
+    <div class="hero-rotating hero-stagger" data-hero-delay="1000" id="heroRotating"></div>
+    <p class="hero-sub hero-stagger" data-hero-delay="1300">17,000+ lines of hand-crafted code. AI DJ engine with 9 transitions. 3D sonic galaxy of your library. Stem isolation. Binaural brainwave entrainment. Weather-reactive ambient soundscapes. All in a single Electron file. Zero frameworks.</p>
+    <div class="hero-btns hero-stagger" data-hero-delay="1600">
       <a href="https://github.com/EmperorBadussy/aether/releases" target="_blank" class="btn-primary">
         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         DOWNLOAD FOR WINDOWS
@@ -712,33 +811,33 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
         EXPLORE FEATURES
       </a>
     </div>
-    <div class="highlight-grid reveal">
-      <div class="highlight-card" style="transition-delay:0.05s">
+    <div class="highlight-grid hero-stagger" data-hero-delay="2000">
+      <div class="highlight-card card-reveal" data-stagger="120">
         <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="16" r="5"/><circle cx="16" cy="16" r="5"/><line x1="8" y1="11" x2="8" y2="4"/><line x1="16" y1="11" x2="16" y2="4"/><line x1="8" y1="4" x2="16" y2="4"/></svg></div>
         <h3>AI DJ ENGINE</h3>
         <p>9 transitions. Beat-phase alignment. Spectral compatibility. Set journey planning. Zero trainwrecks.</p>
       </div>
-      <div class="highlight-card" style="transition-delay:0.1s">
+      <div class="highlight-card card-reveal" data-stagger="120">
         <div class="card-icon" style="background:rgba(0,220,245,0.08);border-color:rgba(0,220,245,0.2)"><svg viewBox="0 0 24 24" style="stroke:var(--cyan)"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2.5"/><circle cx="19" cy="14" r="1.5"/><circle cx="10" cy="18" r="1.8"/><line x1="7" y1="11" x2="10" y2="7" stroke-opacity="0.4"/></svg></div>
         <h3>3D SONIC MAP</h3>
         <p>Your library as a 3D constellation. Energy, BPM, danceability axes. Orbit, zoom, click to play.</p>
       </div>
-      <div class="highlight-card" style="transition-delay:0.15s">
+      <div class="highlight-card card-reveal" data-stagger="120">
         <div class="card-icon" style="background:rgba(255,45,123,0.08);border-color:rgba(255,45,123,0.2)"><svg viewBox="0 0 24 24" style="stroke:var(--magenta)"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
         <h3>STEM ISOLATION</h3>
         <p>Vocals, drums, bass, instruments. Solo, mute, mix. Karaoke and instrumental presets.</p>
       </div>
-      <div class="highlight-card" style="transition-delay:0.2s">
+      <div class="highlight-card card-reveal" data-stagger="120">
         <div class="card-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div>
         <h3>17 VISUALIZERS</h3>
         <p>Fractal flames to lyric rain. Canvas 2D generative art. 60fps beat-reactive. All hand-crafted.</p>
       </div>
-      <div class="highlight-card" style="transition-delay:0.25s">
+      <div class="highlight-card card-reveal" data-stagger="120">
         <div class="card-icon" style="background:rgba(0,220,245,0.08);border-color:rgba(0,220,245,0.2)"><svg viewBox="0 0 24 24" style="stroke:var(--cyan)"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7"/><path d="M2 18c0-2 1.5-5 3.5-5s2 3 3.5 3 1.5-3 3.5-3 2 3 3.5 3 1.5-3 3.5-3 3.5 3 3.5 5" opacity="0.5"/></svg></div>
         <h3>BINAURAL ENGINE</h3>
         <p>Multi-layer brainwave entrainment. Delta to Gamma. Rhythmic divisions. Neural state targeting.</p>
       </div>
-      <div class="highlight-card" style="transition-delay:0.3s">
+      <div class="highlight-card card-reveal" data-stagger="120">
         <div class="card-icon" style="background:rgba(255,45,123,0.08);border-color:rgba(255,45,123,0.2)"><svg viewBox="0 0 24 24" style="stroke:var(--magenta)"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div>
         <h3>VINYL WARMTH</h3>
         <p>Crackle, hiss, flutter, tube saturation. 6 presets from clean digital to dusty AM radio.</p>
@@ -754,36 +853,36 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
     <h2 class="section-title reveal">Every Scene Handcrafted</h2>
     <p class="section-desc reveal">Canvas 2D. 60fps. Beat-reactive. Auto-rotate or pin your favorite. Each visualizer is a living artwork that breathes with your music.</p>
 
-    <div class="viz-grid reveal">
-      <div class="viz-card">
+    <div class="viz-grid">
+      <div class="viz-card card-reveal" data-stagger="100">
         <div class="viz-preview viz-sheep"><div class="fl"></div><div class="fl"></div><div class="fl"></div></div>
         <div class="viz-info"><div class="viz-name">ELECTRIC SHEEP</div><div class="viz-desc">Video fractal flames with audio-reactive hue rotation, zoom pulse, and beat rings.</div></div>
       </div>
-      <div class="viz-card">
+      <div class="viz-card card-reveal" data-stagger="100">
         <div class="viz-preview viz-ptcl" id="ptclPrev"></div>
         <div class="viz-info"><div class="viz-name">PARTICLE FIELD</div><div class="viz-desc">Cosmic dust in slow 3D orbit. Beat-reactive radial explosions.</div></div>
       </div>
-      <div class="viz-card">
+      <div class="viz-card card-reveal" data-stagger="100">
         <div class="viz-preview viz-neural" id="neuralPrev"></div>
         <div class="viz-info"><div class="viz-name">NEURAL WEB</div><div class="viz-desc">Force-directed graph. Nodes pulse with frequency bands.</div></div>
       </div>
-      <div class="viz-card">
+      <div class="viz-card card-reveal" data-stagger="100">
         <div class="viz-preview viz-tron"><div class="go"></div><div class="hz"></div></div>
         <div class="viz-info"><div class="viz-name">TRON GRID</div><div class="viz-desc">Infinite perspective grid with horizon glow. BPM-synced scroll. Light columns on beats.</div></div>
       </div>
-      <div class="viz-card">
+      <div class="viz-card card-reveal" data-stagger="100">
         <div class="viz-preview viz-void" id="voidPrev"></div>
         <div class="viz-info"><div class="viz-name">VOID PULSE</div><div class="viz-desc">Minimalist concentric rings. Maximum OLED contrast.</div></div>
       </div>
-      <div class="viz-card">
+      <div class="viz-card card-reveal" data-stagger="100">
         <div class="viz-preview viz-dna" id="dnaPrev"></div>
         <div class="viz-info"><div class="viz-name">DNA HELIX</div><div class="viz-desc">Double strand reactor with frequency-mapped nucleotides.</div></div>
       </div>
-      <div class="viz-card">
+      <div class="viz-card card-reveal" data-stagger="100">
         <div class="viz-preview viz-lyric"><span>LYRICS</span></div>
         <div class="viz-info"><div class="viz-name">LYRIC RAIN</div><div class="viz-desc">Matrix rain with bass shockwaves. LRCLIB lyrics materialize on beats.</div></div>
       </div>
-      <div class="viz-card">
+      <div class="viz-card card-reveal" data-stagger="100">
         <div class="viz-preview" style="background:linear-gradient(135deg,rgba(157,78,221,0.08),rgba(255,45,123,0.05)); display:flex; align-items:center; justify-content:center;">
           <span style="font-family:var(--font-d);font-size:0.7rem;color:var(--p-muted);letter-spacing:3px">+10 MORE</span>
         </div>
@@ -803,6 +902,7 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
     <p class="section-desc reveal">Every detail obsessed over. Every millisecond accounted for. Built for people who care about how music sounds and feels.</p>
 
     <div class="filter-bar reveal">
+      <div class="filter-indicator" id="filterIndicator"></div>
       <button class="filter-btn active" onclick="filterFeats('all',this)">ALL</button>
       <button class="filter-btn" onclick="filterFeats('audio',this)">AUDIO</button>
       <button class="filter-btn" onclick="filterFeats('dj',this)">DJ</button>
@@ -893,16 +993,16 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
     </div>
 
     <h3 class="section-title reveal" style="font-size:1.2rem;margin-top:3rem;">9 Transition Patterns</h3>
-    <div class="trans-grid reveal">
-      <div class="trans-card"><h4>BLEND</h4><p>S-curve crossfade with progressive EQ handoff. Highs → bass swap → mids restore.</p></div>
-      <div class="trans-card"><h4>CUT</h4><p>Instant beat-locked switch. 30ms anti-click ramp. Prefers cutting into drops.</p></div>
-      <div class="trans-card"><h4>BASS SWAP</h4><p>Low-end handoff on the downbeat. 8 bars together, bass swap, 4-bar fade.</p></div>
-      <div class="trans-card"><h4>ECHO OUT</h4><p>Tempo-synced delay chain with high-pass feedback. Dry signal fades while echo sustains.</p></div>
-      <div class="trans-card"><h4>LOOP TEASE</h4><p>Tease incoming twice (percussion only, then with mids), pull back, then commit.</p></div>
-      <div class="trans-card"><h4>DOUBLE DROP</h4><p>Align both tracks' drops to hit simultaneously. Exponential gain build into the moment.</p></div>
-      <div class="trans-card"><h4>BACKSPIN</h4><p>Vinyl backspin simulation. Exponential slowdown with pitch drop and volume fade.</p></div>
-      <div class="trans-card"><h4>FILTER SWEEP</h4><p>Low-pass filter 20kHz → 200Hz with resonance. Overlapping crossfade at midpoint.</p></div>
-      <div class="trans-card"><h4>POWER DOWN</h4><p>Turntable power-loss effect. Pitch drops, slows to stop, slams into new track.</p></div>
+    <div class="trans-grid">
+      <div class="trans-card card-reveal" data-stagger="100"><h4>BLEND</h4><p>S-curve crossfade with progressive EQ handoff. Highs → bass swap → mids restore.</p></div>
+      <div class="trans-card card-reveal" data-stagger="100"><h4>CUT</h4><p>Instant beat-locked switch. 30ms anti-click ramp. Prefers cutting into drops.</p></div>
+      <div class="trans-card card-reveal" data-stagger="100"><h4>BASS SWAP</h4><p>Low-end handoff on the downbeat. 8 bars together, bass swap, 4-bar fade.</p></div>
+      <div class="trans-card card-reveal" data-stagger="100"><h4>ECHO OUT</h4><p>Tempo-synced delay chain with high-pass feedback. Dry signal fades while echo sustains.</p></div>
+      <div class="trans-card card-reveal" data-stagger="100"><h4>LOOP TEASE</h4><p>Tease incoming twice (percussion only, then with mids), pull back, then commit.</p></div>
+      <div class="trans-card card-reveal" data-stagger="100"><h4>DOUBLE DROP</h4><p>Align both tracks' drops to hit simultaneously. Exponential gain build into the moment.</p></div>
+      <div class="trans-card card-reveal" data-stagger="100"><h4>BACKSPIN</h4><p>Vinyl backspin simulation. Exponential slowdown with pitch drop and volume fade.</p></div>
+      <div class="trans-card card-reveal" data-stagger="100"><h4>FILTER SWEEP</h4><p>Low-pass filter 20kHz → 200Hz with resonance. Overlapping crossfade at midpoint.</p></div>
+      <div class="trans-card card-reveal" data-stagger="100"><h4>POWER DOWN</h4><p>Turntable power-loss effect. Pitch drops, slows to stop, slams into new track.</p></div>
     </div>
 
     <h3 class="section-title reveal" style="font-size:1.2rem;margin-top:3rem;">Set Journey Arc</h3>
@@ -935,30 +1035,30 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
     <h2 class="section-title reveal">Built Different</h2>
 
     <div class="stats-row reveal">
-      <div class="stat-box"><div class="stat-num" id="statLines">17,000+</div><div class="stat-label">LINES OF CODE</div></div>
-      <div class="stat-box"><div class="stat-num">140+</div><div class="stat-label">FEATURES</div></div>
-      <div class="stat-box"><div class="stat-num">0</div><div class="stat-label">FRAMEWORKS</div></div>
-      <div class="stat-box"><div class="stat-num">1</div><div class="stat-label">FILE</div></div>
+      <div class="stat-box"><div class="stat-num" id="statLines" data-target="17000" data-suffix="+" data-format="comma">17,000+</div><div class="stat-label">LINES OF CODE</div></div>
+      <div class="stat-box"><div class="stat-num" data-target="140" data-suffix="+" data-format="comma">140+</div><div class="stat-label">FEATURES</div></div>
+      <div class="stat-box"><div class="stat-num" data-target="0">0</div><div class="stat-label">FRAMEWORKS</div></div>
+      <div class="stat-box"><div class="stat-num" data-target="1">1</div><div class="stat-label">FILE</div></div>
     </div>
 
     <h3 class="section-title reveal" style="font-size:1.1rem;margin-top:3rem;">Tech Stack</h3>
-    <div class="badge-grid reveal">
-      <div class="tech-badge"><span class="dot"></span>Electron 33</div>
-      <div class="tech-badge"><span class="dot"></span>Vanilla JS</div>
-      <div class="tech-badge"><span class="dot"></span>Canvas 2D</div>
-      <div class="tech-badge"><span class="dot"></span>Web Audio API</div>
-      <div class="tech-badge"><span class="dot"></span>Essentia.js WASM</div>
-      <div class="tech-badge"><span class="dot"></span>Subsonic API</div>
-      <div class="tech-badge"><span class="dot"></span>LRCLIB API</div>
-      <div class="tech-badge"><span class="dot"></span>Discord IPC</div>
-      <div class="tech-badge"><span class="dot"></span>Last.fm API</div>
-      <div class="tech-badge"><span class="dot"></span>wttr.in API</div>
-      <div class="tech-badge"><span class="dot"></span>Camelot Wheel</div>
-      <div class="tech-badge"><span class="dot"></span>Spectral DFT</div>
-      <div class="tech-badge"><span class="dot"></span>WaveShaper DSP</div>
-      <div class="tech-badge"><span class="dot"></span>DynamicsCompressor</div>
-      <div class="tech-badge"><span class="dot"></span>MediaSession API</div>
-      <div class="tech-badge"><span class="dot"></span>localStorage</div>
+    <div class="badge-grid">
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Electron 33</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Vanilla JS</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Canvas 2D</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Web Audio API</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Essentia.js WASM</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Subsonic API</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>LRCLIB API</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Discord IPC</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Last.fm API</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>wttr.in API</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Camelot Wheel</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>Spectral DFT</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>WaveShaper DSP</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>DynamicsCompressor</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>MediaSession API</div>
+      <div class="tech-badge card-reveal" data-stagger="50"><span class="dot"></span>localStorage</div>
     </div>
 
     <h3 class="section-title reveal" style="font-size:1.1rem;margin-top:3rem;">Audio Pipeline</h3>
@@ -1014,20 +1114,20 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
       <p style="margin-top:1rem;font-family:var(--font-m);font-size:0.6rem;color:var(--p-muted);">Windows x64 · Electron 33 · NSIS Installer</p>
     </div>
 
-    <div class="steps reveal">
-      <div class="step">
+    <div class="steps">
+      <div class="step card-reveal" data-stagger="150">
         <div class="step-num">1</div>
         <div class="step-text"><h4>Clone & Install</h4><p><code>git clone https://github.com/EmperorBadussy/aether.git && cd aether && npm install</code></p></div>
       </div>
-      <div class="step">
+      <div class="step card-reveal" data-stagger="150">
         <div class="step-num">2</div>
         <div class="step-text"><h4>Launch</h4><p><code>npm start</code></p></div>
       </div>
-      <div class="step">
+      <div class="step card-reveal" data-stagger="150">
         <div class="step-num">3</div>
         <div class="step-text"><h4>Connect</h4><p>Open Settings, enter your Navidrome server URL, username, and password. Click APPLY.</p></div>
       </div>
-      <div class="step">
+      <div class="step card-reveal" data-stagger="150">
         <div class="step-num">4</div>
         <div class="step-text"><h4>Experience</h4><p>Your library loads. Pick a visualizer. Start the DJ. Enter the void.</p></div>
       </div>
@@ -1090,22 +1190,327 @@ function go(page) {
       var rect = r.getBoundingClientRect();
       if (rect.top < window.innerHeight + 100) r.classList.add('vis');
     });
+    // #6 — card-reveal stagger on page load
+    revealCards(el);
   }, 100);
+  // #5 — Hero entrance sequence
+  if (page === 'home') triggerHeroEntrance();
+  // #7 — BPM counter
+  if (page === 'dj') triggerBpmCount();
+  // #1 — Stat count-up
+  if (page === 'tech') triggerStatCountUp();
+}
+
+// #5 — Hero entrance sequence
+var heroEntranceDone = false;
+function triggerHeroEntrance() {
+  if (heroEntranceDone) return;
+  heroEntranceDone = true;
+  document.querySelectorAll('.hero-stagger').forEach(function(el) {
+    var delay = parseInt(el.dataset.heroDelay) || 0;
+    setTimeout(function() {
+      el.classList.add('hero-in');
+    }, delay);
+  });
+  // #9 — Typewriter tagline
+  setTimeout(function() { typewriterTagline(); }, 600);
+}
+
+// #9 — Tagline typewriter
+var taglineDone = false;
+function typewriterTagline() {
+  if (taglineDone) return;
+  taglineDone = true;
+  var el = document.getElementById('heroTagline');
+  if (!el) return;
+  var text = el.dataset.tagline;
+  var typed = document.createElement('span');
+  var cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  el.textContent = '';
+  el.appendChild(typed);
+  el.appendChild(cursor);
+  var i = 0;
+  function typeChar() {
+    if (i < text.length) {
+      typed.textContent += text[i];
+      i++;
+      setTimeout(typeChar, 50);
+    } else {
+      // Keep cursor blinking for 2s then remove
+      setTimeout(function() { cursor.style.opacity = '0'; cursor.style.transition = 'opacity 0.5s'; }, 2000);
+    }
+  }
+  typeChar();
+}
+
+// #6 — Individual card reveal stagger
+function revealCards(container) {
+  if (!container) return;
+  // Group card-reveals by parent
+  var groups = {};
+  container.querySelectorAll('.card-reveal').forEach(function(card) {
+    var parent = card.parentElement;
+    var pid = parent.id || parent.className;
+    if (!groups[pid]) groups[pid] = [];
+    groups[pid].push(card);
+  });
+  Object.keys(groups).forEach(function(key) {
+    var cards = groups[key];
+    // Check if parent is in viewport
+    if (cards.length === 0) return;
+    var parentRect = cards[0].parentElement.getBoundingClientRect();
+    if (parentRect.top < window.innerHeight + 100) {
+      var stagger = parseInt(cards[0].dataset.stagger) || 100;
+      cards.forEach(function(card, idx) {
+        card.style.transitionDelay = (idx * stagger) + 'ms';
+        setTimeout(function() {
+          card.classList.add('vis');
+        }, 50);
+      });
+    }
+  });
+}
+
+// #1 — Stat number count-up
+var statCountDone = false;
+function triggerStatCountUp() {
+  if (statCountDone) return;
+  statCountDone = true;
+  setTimeout(function() {
+    document.querySelectorAll('.stat-num[data-target]').forEach(function(el) {
+      var target = parseInt(el.dataset.target);
+      var suffix = el.dataset.suffix || '';
+      var useComma = el.dataset.format === 'comma';
+      if (target === 0) {
+        el.textContent = '0';
+        el.classList.add('stat-bounce');
+        return;
+      }
+      if (target === 1) {
+        el.textContent = '';
+        setTimeout(function() {
+          el.textContent = '1';
+          el.classList.add('stat-bounce');
+        }, 200);
+        return;
+      }
+      var start = performance.now();
+      var duration = 1500;
+      function formatNum(n) {
+        if (useComma) return n.toLocaleString('en-US');
+        return n.toString();
+      }
+      function step(ts) {
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = Math.round(eased * target);
+        el.textContent = formatNum(current) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      el.textContent = '0';
+      requestAnimationFrame(step);
+    });
+  }, 400);
+}
+
+// #7 — BPM counter animation
+var bpmCountDone = false;
+function triggerBpmCount() {
+  if (bpmCountDone) return;
+  bpmCountDone = true;
+  setTimeout(function() {
+    document.querySelectorAll('.dj-deck-bpm').forEach(function(el) {
+      var bpmSpan = el.querySelector('span');
+      var fullText = el.textContent.trim();
+      var bpmVal = parseInt(fullText);
+      if (isNaN(bpmVal)) return;
+      var start = performance.now();
+      var duration = 1500;
+      function step(ts) {
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = Math.round(eased * bpmVal);
+        el.textContent = '';
+        el.textContent = current;
+        var s = document.createElement('span');
+        s.textContent = 'BPM';
+        el.appendChild(s);
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.classList.add('bpm-pulse');
+        }
+      }
+      el.textContent = '0';
+      var s = document.createElement('span');
+      s.textContent = 'BPM';
+      el.appendChild(s);
+      requestAnimationFrame(step);
+    });
+  }, 400);
+}
+
+// #3 — Terminal typing effect
+var terminalsDone = {};
+function typeTerminal(terminalEl, idx) {
+  if (terminalsDone[idx]) return;
+  terminalsDone[idx] = true;
+  var originalHTML = terminalEl.dataset.originalHtml || terminalEl.innerHTML;
+  // Parse the HTML into text segments with spans preserved
+  var temp = document.createElement('div');
+  temp.innerHTML = originalHTML;
+  var segments = [];
+  function walk(node) {
+    node.childNodes.forEach(function(child) {
+      if (child.nodeType === 3) { // text
+        segments.push({ type:'text', content:child.textContent });
+      } else if (child.nodeType === 1) { // element
+        var cls = child.className;
+        segments.push({ type:'open', tag:child.tagName.toLowerCase(), cls:cls });
+        walk(child);
+        segments.push({ type:'close', tag:child.tagName.toLowerCase() });
+      }
+    });
+  }
+  walk(temp);
+  // Build flat char list with markup info
+  var chars = [];
+  var openTags = [];
+  segments.forEach(function(seg) {
+    if (seg.type === 'text') {
+      for (var i = 0; i < seg.content.length; i++) {
+        chars.push({ ch: seg.content[i], tags: openTags.slice() });
+      }
+    } else if (seg.type === 'open') {
+      openTags.push({ tag: seg.tag, cls: seg.cls });
+    } else if (seg.type === 'close') {
+      openTags.pop();
+    }
+  });
+  // Clear and type
+  terminalEl.innerHTML = '<span class="terminal-cursor">\u258C</span>';
+  var charIdx = 0;
+  function buildHTML(upTo) {
+    var html = '';
+    var currentTags = [];
+    for (var i = 0; i <= upTo && i < chars.length; i++) {
+      var c = chars[i];
+      // Close tags that are no longer needed
+      while (currentTags.length > c.tags.length) {
+        html += '</' + currentTags.pop().tag + '>';
+      }
+      // Close mismatched tags
+      for (var t = 0; t < c.tags.length; t++) {
+        if (t < currentTags.length && (currentTags[t].cls !== c.tags[t].cls)) {
+          while (currentTags.length > t) html += '</' + currentTags.pop().tag + '>';
+          break;
+        }
+      }
+      // Open needed tags
+      while (currentTags.length < c.tags.length) {
+        var needed = c.tags[currentTags.length];
+        html += '<' + needed.tag + (needed.cls ? ' class="' + needed.cls + '"' : '') + '>';
+        currentTags.push(needed);
+      }
+      html += c.ch === '<' ? '&lt;' : c.ch === '>' ? '&gt;' : c.ch === '&' ? '&amp;' : c.ch;
+    }
+    while (currentTags.length > 0) html += '</' + currentTags.pop().tag + '>';
+    return html;
+  }
+  function typeNext() {
+    if (charIdx < chars.length) {
+      terminalEl.innerHTML = buildHTML(charIdx) + '<span class="terminal-cursor">\u258C</span>';
+      charIdx++;
+      setTimeout(typeNext, 20);
+    } else {
+      // Done — remove cursor after a moment
+      setTimeout(function() {
+        var cur = terminalEl.querySelector('.terminal-cursor');
+        if (cur) cur.style.display = 'none';
+      }, 1500);
+    }
+  }
+  typeNext();
+}
+
+// #2 — Journey arc bars animate from zero
+var journeyAnimDone = false;
+function animateJourneyBars() {
+  if (journeyAnimDone) return;
+  journeyAnimDone = true;
+  var bars = document.querySelectorAll('#journeyArc .journey-bar');
+  bars.forEach(function(bar, i) {
+    setTimeout(function() {
+      bar.style.height = bar.dataset.targetH;
+    }, i * 80);
+  });
+}
+
+// #8 — Sliding filter tab indicator
+function updateFilterIndicator(btn) {
+  var indicator = document.getElementById('filterIndicator');
+  if (!indicator || !btn) return;
+  var bar = btn.parentElement;
+  var barRect = bar.getBoundingClientRect();
+  var btnRect = btn.getBoundingClientRect();
+  indicator.style.width = btnRect.width + 'px';
+  indicator.style.transform = 'translateX(' + (btnRect.left - barRect.left) + 'px)';
 }
 
 // Init from hash
 var initPage = (location.hash || '#home').replace('#', '');
 if (!document.getElementById('page-' + initPage)) initPage = 'home';
 go(initPage);
+// Init filter indicator on first active button
+setTimeout(function() {
+  var activeBtn = document.querySelector('.filter-btn.active');
+  if (activeBtn) updateFilterIndicator(activeBtn);
+}, 200);
 
 // ══════ SCROLL EFFECTS ══════
 var nav = document.getElementById('nav');
+var terminalEls = document.querySelectorAll('.terminal');
 window.addEventListener('scroll', function() {
   nav.classList.toggle('scrolled', window.scrollY > 50);
   // Reveal on scroll
   document.querySelectorAll('.page.active .reveal').forEach(function(el) {
-    if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('vis');
+    if (el.getBoundingClientRect().top < window.innerHeight - 50) {
+      el.classList.add('vis');
+    }
   });
+  // #6 — card reveal on scroll
+  var activePage = document.querySelector('.page.active');
+  if (activePage) {
+    activePage.querySelectorAll('.card-reveal:not(.vis)').forEach(function(card) {
+      var parent = card.parentElement;
+      if (parent.getBoundingClientRect().top < window.innerHeight - 30) {
+        // Stagger siblings
+        var siblings = Array.from(parent.querySelectorAll('.card-reveal:not(.vis)'));
+        var stagger = parseInt(card.dataset.stagger) || 100;
+        siblings.forEach(function(sib, idx) {
+          sib.style.transitionDelay = (idx * stagger) + 'ms';
+          setTimeout(function() { sib.classList.add('vis'); }, 50);
+        });
+      }
+    });
+  }
+  // #3 — Terminal typing on scroll
+  terminalEls.forEach(function(term, idx) {
+    if (!terminalsDone[idx] && term.getBoundingClientRect().top < window.innerHeight - 50) {
+      var page = term.closest('.page');
+      if (page && page.classList.contains('active')) {
+        typeTerminal(term, idx);
+      }
+    }
+  });
+  // Store terminal original HTML on first encounter
+  // #2 — Journey arc on scroll
+  var arcSection = document.getElementById('journeyArc');
+  if (arcSection && !journeyAnimDone && arcSection.getBoundingClientRect().top < window.innerHeight - 30) {
+    var page = arcSection.closest('.page');
+    if (page && page.classList.contains('active')) animateJourneyBars();
+  }
 });
 
 // ══════ MOBILE MENU ══════
@@ -1124,6 +1529,8 @@ function filterFeats(cat, btn) {
     if (cat === 'all') { el.classList.remove('hidden'); }
     else { el.classList.toggle('hidden', el.dataset.cat !== cat); }
   });
+  // #8 — Update filter indicator
+  updateFilterIndicator(btn);
 }
 
 // ══════ HERO ROTATING TEXT ══════
@@ -1170,11 +1577,41 @@ var phases = [
 phases.forEach(function(p) {
   var bar = document.createElement('div');
   bar.className = 'journey-bar';
-  bar.style.height = p.h + '%';
+  bar.dataset.targetH = p.h + '%';
+  bar.style.height = '0%';
   bar.style.background = p.color;
   bar.innerHTML = '<span>' + p.label + '</span>';
   arcEl.appendChild(bar);
 });
+
+// #3 — Store terminal original HTML before any typing
+terminalEls.forEach(function(term, idx) {
+  term.dataset.originalHtml = term.innerHTML;
+});
+
+// #10 — Cursor glow trail
+(function() {
+  var glow = document.getElementById('cursorGlow');
+  if (!glow) return;
+  var glowX = 0, glowY = 0, targetX = 0, targetY = 0;
+  var hasMoused = false;
+  document.addEventListener('mousemove', function(e) {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if (!hasMoused) { hasMoused = true; glowX = targetX; glowY = targetY; glow.style.opacity = '1'; }
+  });
+  glow.style.opacity = '0';
+  function lerpGlow() {
+    if (hasMoused) {
+      glowX += (targetX - glowX) * 0.1;
+      glowY += (targetY - glowY) * 0.1;
+      glow.style.left = glowX + 'px';
+      glow.style.top = glowY + 'px';
+    }
+    requestAnimationFrame(lerpGlow);
+  }
+  lerpGlow();
+})();
 
 // ══════ POPULATE VISUALIZER PREVIEWS ══════
 (function() {
