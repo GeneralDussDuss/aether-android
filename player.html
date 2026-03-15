@@ -1959,6 +1959,14 @@ body::after {
 .eq-preset-btn:hover { border-color: var(--purple-bright); box-shadow: var(--glow-subtle); color: var(--purple-white); }
 .eq-preset-btn.active { border-color: var(--cyan-bright); box-shadow: var(--cyan-glow); color: var(--cyan-bright); background: rgba(0,220,245,0.05); }
 
+.eq-curve-wrap {
+  padding: 10px 20px 0; position: relative;
+}
+.eq-curve-canvas {
+  width: 100%; height: 80px; display: block; border-radius: 6px;
+  background: rgba(9,9,15,0.6); border: 1px solid rgba(54,32,80,0.4);
+}
+
 .eq-bands {
   display: flex; align-items: stretch; justify-content: space-around;
   padding: 14px 16px 6px; position: relative;
@@ -3140,6 +3148,71 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
 .weather-badge { font-family:var(--font-mono); font-size:0.48rem; color:var(--cyan-bright); background:none; border:none; border-radius:3px; padding:1px 4px; white-space:nowrap; display:none; cursor:pointer; opacity:0.7; transition:opacity 0.2s; }
 .weather-badge:hover { opacity:1; }
 .weather-badge.visible { display:inline-flex; align-items:center; gap:3px; }
+.weather-badge-pulse { display:none; width:14px; height:10px; margin-left:2px; }
+.weather-badge-pulse.active { display:inline-flex; align-items:flex-end; gap:1px; }
+.weather-badge-pulse .wb-bar { width:2px; background:var(--cyan-bright); border-radius:1px; animation:wxPulse 1.2s ease-in-out infinite; }
+.weather-badge-pulse .wb-bar:nth-child(1) { height:4px; animation-delay:0s; }
+.weather-badge-pulse .wb-bar:nth-child(2) { height:7px; animation-delay:0.2s; }
+.weather-badge-pulse .wb-bar:nth-child(3) { height:5px; animation-delay:0.4s; }
+.weather-badge-pulse .wb-bar:nth-child(4) { height:9px; animation-delay:0.15s; }
+@keyframes wxPulse { 0%,100%{transform:scaleY(0.4);opacity:0.5;} 50%{transform:scaleY(1);opacity:1;} }
+.wx-active-layers { margin-bottom:14px; }
+.wx-active-layers-title { font-family:var(--font-display); font-size:0.6rem; color:var(--purple-muted); letter-spacing:0.12em; margin-bottom:8px; }
+.wx-layers-grid { display:flex; flex-wrap:wrap; gap:6px; }
+.wx-layer-ind { display:flex; align-items:center; gap:5px; padding:4px 10px; background:var(--bg-input); border:1px solid var(--purple-dim); border-radius:6px; font-family:var(--font-mono); font-size:0.6rem; color:var(--purple-dim); letter-spacing:0.06em; transition:all 0.3s; user-select:none; }
+.wx-layer-ind.on { color:var(--cyan-bright); border-color:var(--cyan-dim); background:rgba(0,180,216,0.06); }
+.wx-layer-dot { width:6px; height:6px; border-radius:50%; background:var(--purple-dim); transition:all 0.3s; }
+.wx-layer-ind.on .wx-layer-dot { background:var(--cyan-bright); box-shadow:0 0 6px rgba(0,220,245,0.6); animation:wxDotPulse 2s ease-in-out infinite; }
+@keyframes wxDotPulse { 0%,100%{opacity:0.6;transform:scale(0.85);} 50%{opacity:1;transform:scale(1.2);} }
+.wx-error-box { display:none; padding:12px; margin-bottom:12px; background:rgba(255,60,60,0.08); border:1px solid rgba(255,60,60,0.3); border-radius:8px; text-align:center; }
+.wx-error-box.show { display:block; }
+.wx-error-msg { font-family:var(--font-body); font-size:0.8rem; color:#ff6b6b; margin-bottom:8px; }
+.wx-error-retry { background:none; border:1px solid rgba(255,60,60,0.4); color:#ff6b6b; font-family:var(--font-display); font-size:0.6rem; letter-spacing:0.1em; padding:6px 18px; border-radius:6px; cursor:pointer; transition:all 0.2s; }
+.wx-error-retry:hover { background:rgba(255,60,60,0.15); border-color:#ff6b6b; }
+.wx-manual-section { margin-bottom:14px; }
+.wx-manual-toggle { display:flex; align-items:center; gap:8px; margin-bottom:10px; cursor:pointer; user-select:none; }
+.wx-manual-cb { width:14px; height:14px; accent-color:var(--purple-bright); cursor:pointer; }
+.wx-manual-label { font-family:var(--font-display); font-size:0.6rem; color:var(--purple-hot); letter-spacing:0.1em; }
+.wx-manual-checks { display:none; flex-wrap:wrap; gap:6px; padding:10px; background:var(--bg-raised); border-radius:8px; }
+.wx-manual-checks.show { display:flex; }
+.wx-manual-check { display:flex; align-items:center; gap:5px; cursor:pointer; user-select:none; }
+.wx-manual-check input { width:12px; height:12px; accent-color:var(--cyan-bright); cursor:pointer; }
+.wx-manual-check span { font-family:var(--font-mono); font-size:0.65rem; color:var(--purple-hot); letter-spacing:0.04em; }
+
+/* Skeleton loading placeholders */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-raised) 25%, var(--bg-input) 50%, var(--bg-raised) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-album-card { display:flex; flex-direction:column; }
+.skeleton-album-art { aspect-ratio:1; border-radius:12px; border:1px solid var(--purple-dim); }
+.skeleton-album-info { padding:10px 4px; display:flex; flex-direction:column; gap:6px; }
+.skeleton-album-title { height:12px; width:75%; border-radius:4px; }
+.skeleton-album-artist { height:10px; width:50%; border-radius:4px; }
+.skeleton-track-row { display:grid; grid-template-columns:40px 2fr 1.5fr 1fr 80px 80px; padding:10px 12px; gap:12px; align-items:center; border-radius:8px; }
+.skeleton-track-num { width:20px; height:14px; border-radius:4px; }
+.skeleton-track-title-cell { display:flex; align-items:center; gap:10px; }
+.skeleton-track-art { width:36px; height:36px; border-radius:6px; flex-shrink:0; }
+.skeleton-track-text { display:flex; flex-direction:column; gap:5px; flex:1; }
+.skeleton-track-title { height:12px; width:60%; border-radius:4px; }
+.skeleton-track-artist { height:10px; width:40%; border-radius:4px; }
+.skeleton-track-album { height:12px; width:70%; border-radius:4px; }
+.skeleton-track-format { height:12px; width:50px; border-radius:4px; }
+.skeleton-track-bitrate { height:12px; width:50px; border-radius:4px; }
+.skeleton-track-duration { height:12px; width:40px; border-radius:4px; margin-left:auto; }
+.skeleton-artist-row { display:grid; grid-template-columns:40px 2fr 1fr 80px; padding:10px 12px; gap:12px; align-items:center; border-radius:8px; }
+.skeleton-rediscover-card { border-radius:12px; overflow:hidden; border:1px solid var(--purple-dim); }
+.skeleton-rediscover-art { aspect-ratio:1; }
+.skeleton-rediscover-info { padding:12px; display:flex; flex-direction:column; gap:6px; }
+.skeleton-rediscover-title { height:13px; width:70%; border-radius:4px; }
+.skeleton-rediscover-artist { height:11px; width:45%; border-radius:4px; }
+.skeleton-rediscover-meta { height:10px; width:60%; border-radius:4px; }
 </style>
 </head>
 <body>
@@ -3533,7 +3606,7 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
       <div class="np-badges">
         <div class="quality-badge" id="qualityBadge">--</div>
         <div class="sleep-timer-badge" id="sleepTimerBadge" title="Sleep Timer active" onclick="document.getElementById('sleepTimerPanel').classList.toggle('open')"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span id="sleepTimerBadgeTime"></span></div>
-        <div class="weather-badge" id="weatherBadge" title="Weather Ambient" onclick="document.getElementById('weatherPanel').classList.toggle('open')"><span id="weatherBadgeText">--</span></div>
+        <div class="weather-badge" id="weatherBadge" title="Weather Ambient" onclick="document.getElementById('weatherPanel').classList.toggle('open')"><span id="weatherBadgeText">--</span><span class="weather-badge-pulse" id="wxBadgePulse"><span class="wb-bar"></span><span class="wb-bar"></span><span class="wb-bar"></span><span class="wb-bar"></span></span></div>
       </div>
     </div>
   </div>
@@ -3594,6 +3667,9 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
     <button class="eq-close" id="eqClose"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>
   <div class="eq-presets" id="eqPresets"></div>
+  <div class="eq-curve-wrap">
+    <canvas class="eq-curve-canvas" id="eqCurveCanvas"></canvas>
+  </div>
   <div class="eq-bands" id="eqBands"></div>
   <div class="eq-footer">
     <button class="eq-reset-btn" onclick="resetEq()">RESET</button>
@@ -4037,12 +4113,39 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
       <div class="weather-desc" id="weatherDescText">No weather data</div>
     </div>
   </div>
+  <div class="wx-error-box" id="wxErrorBox">
+    <div class="wx-error-msg" id="wxErrorMsg">Failed to fetch weather data</div>
+    <button class="wx-error-retry" id="wxErrorRetry">RETRY</button>
+  </div>
   <input type="text" class="weather-city-input" id="weatherCityInput" placeholder="City (leave empty for auto-detect)">
   <div class="weather-volume-row">
     <span class="weather-volume-label">Volume</span>
     <input type="range" class="weather-volume-slider" id="weatherVolumeSlider" min="0" max="100" value="30">
   </div>
-  <div class="weather-toggle-row">
+  <div class="wx-active-layers" id="wxActiveLayers">
+    <div class="wx-active-layers-title">ACTIVE LAYERS</div>
+    <div class="wx-layers-grid">
+      <div class="wx-layer-ind" id="wxLayRain"><span class="wx-layer-dot"></span>RAIN</div>
+      <div class="wx-layer-ind" id="wxLayWind"><span class="wx-layer-dot"></span>WIND</div>
+      <div class="wx-layer-ind" id="wxLayThunder"><span class="wx-layer-dot"></span>THUNDER</div>
+      <div class="wx-layer-ind" id="wxLayBirds"><span class="wx-layer-dot"></span>BIRDS</div>
+      <div class="wx-layer-ind" id="wxLayCrickets"><span class="wx-layer-dot"></span>CRICKETS</div>
+    </div>
+  </div>
+  <div class="wx-manual-section">
+    <label class="wx-manual-toggle">
+      <input type="checkbox" class="wx-manual-cb" id="wxManualCb">
+      <span class="wx-manual-label">MANUAL MODE</span>
+    </label>
+    <div class="wx-manual-checks" id="wxManualChecks">
+      <label class="wx-manual-check"><input type="checkbox" id="wxManRain" value="rain"><span>RAIN</span></label>
+      <label class="wx-manual-check"><input type="checkbox" id="wxManWind" value="wind"><span>WIND</span></label>
+      <label class="wx-manual-check"><input type="checkbox" id="wxManThunder" value="thunder"><span>THUNDER</span></label>
+      <label class="wx-manual-check"><input type="checkbox" id="wxManBirds" value="birds"><span>BIRDS</span></label>
+      <label class="wx-manual-check"><input type="checkbox" id="wxManCrickets" value="crickets"><span>CRICKETS</span></label>
+    </div>
+  </div>
+    <div class="weather-toggle-row">
     <button class="weather-toggle-btn" id="weatherToggleBtn">ENABLE AMBIENT</button>
     <button class="weather-toggle-btn" id="weatherRefreshBtn">REFRESH</button>
   </div>
@@ -4443,6 +4546,7 @@ function setEqBand(bandIndex, gainDb) {
   if (eqFilters[bandIndex]) eqFilters[bandIndex].gain.value = eqGains[bandIndex];
   saveEqState();
   updateEqSliderVisuals(bandIndex);
+  drawEqCurve();
 }
 
 // ============ EQ PRESETS & UI ============
@@ -4488,6 +4592,7 @@ function applyEqPreset(name) {
   saveEqState();
   renderEqBands();
   renderEqPresets();
+  drawEqCurve();
 }
 
 function resetEq() {
@@ -4541,6 +4646,117 @@ function renderEqBands() {
   }).join('');
 }
 
+function drawEqCurve() {
+  const canvas = document.getElementById('eqCurveCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  const padL = 28, padR = 8, padT = 8, padB = 14;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const minF = 20, maxF = 20000, minDb = -12, maxDb = 12;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Frequency to x
+  function freqToX(f) { return padL + plotW * (Math.log10(f / minF) / Math.log10(maxF / minF)); }
+  function dbToY(db) { return padT + plotH * (1 - (db - minDb) / (maxDb - minDb)); }
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(54,32,80,0.35)';
+  ctx.lineWidth = 0.5;
+  // Horizontal grid at -12, -6, 0, +6, +12
+  [-12, -6, 0, 6, 12].forEach(db => {
+    const y = dbToY(db);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + plotW, y); ctx.stroke();
+  });
+  // 0dB center line brighter
+  ctx.strokeStyle = 'rgba(107,66,160,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(padL, dbToY(0)); ctx.lineTo(padL + plotW, dbToY(0)); ctx.stroke();
+
+  // Vertical grid at decade marks
+  ctx.strokeStyle = 'rgba(54,32,80,0.35)';
+  ctx.lineWidth = 0.5;
+  [100, 1000, 10000].forEach(f => {
+    const x = freqToX(f);
+    ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT + plotH); ctx.stroke();
+  });
+
+  // Axis labels
+  ctx.fillStyle = 'rgba(107,66,160,0.6)';
+  ctx.font = '8px "JetBrains Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('100', freqToX(100), padT + plotH + 11);
+  ctx.fillText('1K', freqToX(1000), padT + plotH + 11);
+  ctx.fillText('10K', freqToX(10000), padT + plotH + 11);
+  // dB labels
+  ctx.textAlign = 'right';
+  ctx.fillText('+12', padL - 3, dbToY(12) + 3);
+  ctx.fillText('0', padL - 3, dbToY(0) + 3);
+  ctx.fillText('-12', padL - 3, dbToY(-12) + 3);
+
+  // Build smooth curve — interpolate gains across the frequency range using Catmull-Rom through band centers
+  const freqs = EQ_FREQUENCIES;
+  const gains = eqGains;
+  // Extend with edge anchors for smooth interpolation
+  const pts = [];
+  pts.push({ f: minF, db: gains[0] });
+  for (let i = 0; i < freqs.length; i++) pts.push({ f: freqs[i], db: gains[i] });
+  pts.push({ f: maxF, db: gains[gains.length - 1] });
+
+  // Convert all points to canvas coords
+  const cPts = pts.map(p => ({ x: freqToX(p.f), y: dbToY(p.db) }));
+
+  // Catmull-Rom spline helper
+  function catmullRom(p0, p1, p2, p3, t) {
+    const t2 = t * t, t3 = t2 * t;
+    return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3);
+  }
+
+  // Build path
+  ctx.beginPath();
+  const steps = 200;
+  for (let s = 0; s <= steps; s++) {
+    const frac = s / steps;
+    // Map frac to a position along the spline segments (cPts has n points, n-1 segments)
+    const segCount = cPts.length - 1;
+    const rawSeg = frac * segCount;
+    const seg = Math.min(Math.floor(rawSeg), segCount - 1);
+    const localT = rawSeg - seg;
+    const i0 = Math.max(seg - 1, 0);
+    const i1 = seg;
+    const i2 = Math.min(seg + 1, cPts.length - 1);
+    const i3 = Math.min(seg + 2, cPts.length - 1);
+    const x = catmullRom(cPts[i0].x, cPts[i1].x, cPts[i2].x, cPts[i3].x, localT);
+    const y = catmullRom(cPts[i0].y, cPts[i1].y, cPts[i2].y, cPts[i3].y, localT);
+    if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+
+  // Stroke the curve
+  ctx.strokeStyle = '#B76EFF';
+  ctx.lineWidth = 2;
+  ctx.shadowColor = 'rgba(183,110,255,0.6)';
+  ctx.shadowBlur = 6;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Fill below the curve with transparent purple gradient
+  ctx.lineTo(padL + plotW, dbToY(0));
+  ctx.lineTo(padL, dbToY(0));
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, padT, 0, padT + plotH);
+  grad.addColorStop(0, 'rgba(157,78,221,0.25)');
+  grad.addColorStop(0.5, 'rgba(123,47,190,0.08)');
+  grad.addColorStop(1, 'rgba(157,78,221,0.25)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+}
+
 function toggleEqPanel() {
   const panel = document.getElementById('eqPanel');
   const btn = document.getElementById('eqToggleBtn');
@@ -4549,6 +4765,7 @@ function toggleEqPanel() {
   if (isOpen) {
     renderEqPresets();
     renderEqBands();
+    drawEqCurve();
   }
 }
 
@@ -8573,6 +8790,36 @@ function searchAddToQueue(songId, event) {
   addToQueueById(songId);
 }
 
+// ============ SKELETON PLACEHOLDERS ============
+function skeletonAlbumCards(count = 8) {
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    html += `<div class="skeleton-album-card"><div class="skeleton skeleton-album-art"></div><div class="skeleton-album-info"><div class="skeleton skeleton-album-title"></div><div class="skeleton skeleton-album-artist"></div></div></div>`;
+  }
+  return html;
+}
+function skeletonTrackRows(count = 10) {
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    html += `<div class="skeleton-track-row" style="animation-delay:${i * 80}ms"><div class="skeleton skeleton-track-num"></div><div class="skeleton-track-title-cell"><div class="skeleton skeleton-track-art"></div><div class="skeleton-track-text"><div class="skeleton skeleton-track-title"></div><div class="skeleton skeleton-track-artist"></div></div></div><div class="skeleton skeleton-track-album"></div><div class="skeleton skeleton-track-format"></div><div class="skeleton skeleton-track-bitrate"></div><div class="skeleton skeleton-track-duration"></div></div>`;
+  }
+  return html;
+}
+function skeletonArtistRows(count = 10) {
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    html += `<div class="skeleton-artist-row" style="animation-delay:${i * 80}ms"><div class="skeleton skeleton-track-num"></div><div class="skeleton-track-title-cell"><div class="skeleton skeleton-track-art"></div><div class="skeleton-track-text"><div class="skeleton skeleton-track-title"></div></div></div><div class="skeleton skeleton-track-album"></div><div class="skeleton skeleton-track-duration"></div></div>`;
+  }
+  return html;
+}
+function skeletonRediscoverCards(count = 8) {
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    html += `<div class="skeleton-rediscover-card"><div class="skeleton skeleton-rediscover-art"></div><div class="skeleton-rediscover-info"><div class="skeleton skeleton-rediscover-title"></div><div class="skeleton skeleton-rediscover-artist"></div><div class="skeleton skeleton-rediscover-meta"></div></div></div>`;
+  }
+  return html;
+}
+
 // ============ VIEWS ============
 async function loadLibraryView() {
   pushNavState(() => loadLibraryView(), 'Library');
@@ -8586,21 +8833,21 @@ async function loadLibraryView() {
 
   // Recently Added section
   html += `<div class="section-header"><div class="section-title">Recently Added</div><div class="section-see-all" onclick="loadAlbumsView()">SEE ALL</div></div>`;
-  html += `<div class="album-grid" id="recentAlbums" style="padding-bottom:10px;"></div>`;
+  html += `<div class="album-grid" id="recentAlbums" style="padding-bottom:10px;">${skeletonAlbumCards(6)}</div>`;
 
   // Most Played section
   html += `<div class="section-header"><div class="section-title">Most Played</div></div>`;
-  html += `<div class="album-grid" id="frequentAlbums" style="padding-bottom:10px;"></div>`;
+  html += `<div class="album-grid" id="frequentAlbums" style="padding-bottom:10px;">${skeletonAlbumCards(6)}</div>`;
 
   // Random picks
   html += `<div class="section-header"><div class="section-title">Discover</div></div>`;
-  html += `<div class="album-grid" id="randomAlbums" style="padding-bottom:10px;"></div>`;
+  html += `<div class="album-grid" id="randomAlbums" style="padding-bottom:10px;">${skeletonAlbumCards(6)}</div>`;
 
   // Track list
   html += `<div class="section-header"><div class="section-title">Random Tracks</div></div>`;
   html += `<div class="track-list-container"><div class="track-list-header">
     <span>#</span><span>TITLE</span><span>ALBUM</span><span>FORMAT</span><span>BITRATE</span><span style="text-align:right">TIME</span>
-  </div><div id="trackList"></div></div>`;
+  </div><div id="trackList">${skeletonTrackRows(8)}</div></div>`;
 
   dc.innerHTML = html;
   dc.classList.remove('content-fade-out');
@@ -8638,7 +8885,7 @@ async function loadAlbumsView() {
   await new Promise(r => setTimeout(r, 150));
 
   document.getElementById('contentTitle').textContent = 'Albums';
-  dc.innerHTML = `<div class="album-grid bottom-pad" id="allAlbumsGrid"></div>`;
+  dc.innerHTML = `<div class="album-grid bottom-pad" id="allAlbumsGrid">${skeletonAlbumCards(8)}</div>`;
   dc.classList.remove('content-fade-out');
   dc.classList.add('content-fade-in');
   setTimeout(() => dc.classList.remove('content-fade-in'), 300);
@@ -8668,7 +8915,7 @@ async function loadArtistsView() {
   await new Promise(r => setTimeout(r, 150));
 
   document.getElementById('contentTitle').textContent = 'Artists';
-  dc.innerHTML = '<div id="artistsList" style="padding:10px 28px 120px;"></div>';
+  dc.innerHTML = `<div id="artistsList" style="padding:10px 28px 120px;">${skeletonArtistRows(10)}</div>`;
   dc.classList.remove('content-fade-out');
   dc.classList.add('content-fade-in');
   setTimeout(() => dc.classList.remove('content-fade-in'), 300);
@@ -15495,7 +15742,7 @@ async function loadRediscoverView(){
   if(titleEl)titleEl.textContent='Rediscover';
   document.getElementById('viewToggles').style.display='none';
   document.querySelector('.search-bar').style.display='none';
-  container.innerHTML='<div style="text-align:center;padding:40px;font-family:var(--font-mono);font-size:0.75rem;color:var(--purple-muted);">Finding forgotten favorites...</div>';
+  container.innerHTML='<div class="rediscover-grid">'+skeletonRediscoverCards(8)+'</div>';
   try{
     const[frequentResp,recentResp]=await Promise.all([SUBSONIC.get('getAlbumList2',{type:'frequent',size:50}).catch(()=>null),SUBSONIC.get('getAlbumList2',{type:'recent',size:50}).catch(()=>null)]);
     const frequentAlbums=frequentResp?.albumList2?.album||[];
@@ -16695,16 +16942,25 @@ async function loadInsightsView() {
   var wxD=null, wxCity=localStorage.getItem('aether_weather_city')||'', wxOn=false;
   var wxVol=parseFloat(localStorage.getItem('aether_weather_volume')||'0.3');
   var wxRefT=null, wxN={}, wxMG=null, wxTT=null, wxBT=null, wxCO=[];
+  var wxManual=false;
   var wxTB=document.getElementById('weatherToggleBtn'), wxRB=document.getElementById('weatherRefreshBtn');
   var wxCI=document.getElementById('weatherCityInput'), wxVS=document.getElementById('weatherVolumeSlider');
   var wxBd=document.getElementById('weatherBadge'), wxBdT=document.getElementById('weatherBadgeText');
+  var wxBP=document.getElementById('wxBadgePulse');
   var wxIB=document.getElementById('weatherIconBig'), wxTE=document.getElementById('weatherTemp'), wxDE=document.getElementById('weatherDescText');
+  var wxEB=document.getElementById('wxErrorBox'), wxEM=document.getElementById('wxErrorMsg'), wxER=document.getElementById('wxErrorRetry');
+  var wxMCb=document.getElementById('wxManualCb'), wxMCks=document.getElementById('wxManualChecks');
+  var wxLayEls={rain:document.getElementById('wxLayRain'),wind:document.getElementById('wxLayWind'),thunder:document.getElementById('wxLayThunder'),birds:document.getElementById('wxLayBirds'),crickets:document.getElementById('wxLayCrickets')};
+  var wxManEls={rain:document.getElementById('wxManRain'),wind:document.getElementById('wxManWind'),thunder:document.getElementById('wxManThunder'),birds:document.getElementById('wxManBirds'),crickets:document.getElementById('wxManCrickets')};
   wxCI.value=wxCity; wxVS.value=Math.round(wxVol*100);
   wxCI.addEventListener('change',function(){wxCity=wxCI.value.trim();localStorage.setItem('aether_weather_city',wxCity);wxFetch();});
   wxVS.addEventListener('input',function(){wxVol=parseInt(wxVS.value)/100;localStorage.setItem('aether_weather_volume',String(wxVol));if(wxMG&&audioCtx)wxMG.gain.setValueAtTime(wxVol,audioCtx.currentTime);});
+  wxMCb.addEventListener('change',function(){wxManual=wxMCb.checked;wxMCks.classList.toggle('show',wxManual);if(wxOn)wxApply();});
+  Object.keys(wxManEls).forEach(function(k){wxManEls[k].addEventListener('change',function(){if(wxManual&&wxOn)wxApply();});});
+  wxER.addEventListener('click',function(){wxEB.classList.remove('show');wxFetch();});
   function wxIcon(code){var c=parseInt(code);if(c===113)return'\u2600\uFE0F';if(c===116)return'\u26C5';if(c===119||c===122)return'\u2601\uFE0F';if([176,263,266,293,296,299,302,305,308,311,314,356,359].indexOf(c)>=0)return'\uD83C\uDF27\uFE0F';if([200,386,389,392,395].indexOf(c)>=0)return'\u26C8\uFE0F';if([227,230,323,326,329,332,335,338,368,371,374,377].indexOf(c)>=0)return'\uD83C\uDF28\uFE0F';if([143,248,260].indexOf(c)>=0)return'\uD83C\uDF2B\uFE0F';return'\uD83C\uDF24\uFE0F';}
   function wxCond(code){var c=parseInt(code);if(c===113)return'clear';if(c===116||c===119||c===122)return'cloudy';if([176,263,266,293,296].indexOf(c)>=0)return'rain';if([299,302,305,308,311,314,356,359].indexOf(c)>=0)return'heavyRain';if([200,386,389,392,395].indexOf(c)>=0)return'thunderstorm';if([227,230,323,326,329,332,335,338,368,371,374,377].indexOf(c)>=0)return'snow';return'clear';}
-  function wxFetch(){var u=wxCity?'https://wttr.in/'+encodeURIComponent(wxCity)+'?format=j1':'https://wttr.in/?format=j1';fetch(u).then(function(r){if(!r.ok)throw new Error('fail');return r.json();}).then(function(d){wxD=d;wxUpdUI();if(wxOn)wxApply();}).catch(function(e){console.error('[Weather]',e);wxDE.textContent='Failed to fetch weather';});}
+  function wxFetch(){wxEB.classList.remove('show');wxDE.textContent='Fetching weather...';var u=wxCity?'https://wttr.in/'+encodeURIComponent(wxCity)+'?format=j1':'https://wttr.in/?format=j1';fetch(u).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){wxD=d;wxEB.classList.remove('show');wxUpdUI();if(wxOn)wxApply();}).catch(function(e){console.error('[Weather]',e);wxDE.textContent='No weather data';wxEM.textContent='Could not reach wttr.in: '+(e.message||'Network error');wxEB.classList.add('show');});}
   function wxUpdUI(){if(!wxD)return;var c=wxD.current_condition[0];wxIB.textContent=wxIcon(c.weatherCode);wxTE.textContent=c.temp_C+'\u00B0C';wxDE.textContent=c.weatherDesc[0].value+(wxD.nearest_area?(' \u2014 '+wxD.nearest_area[0].areaName[0].value):'');wxBdT.textContent=wxIcon(c.weatherCode)+' '+c.temp_C+'\u00B0C';}
   function wxBrown(ctx){var n=2*ctx.sampleRate;var b=ctx.createBuffer(1,n,ctx.sampleRate);var d=b.getChannelData(0);var l=0;for(var i=0;i<n;i++){var w=Math.random()*2-1;d[i]=(l+0.02*w)/1.02;l=d[i];d[i]*=3.5;}var s=ctx.createBufferSource();s.buffer=b;s.loop=true;return s;}
   function wxPink(ctx){var n=2*ctx.sampleRate;var b=ctx.createBuffer(1,n,ctx.sampleRate);var d=b.getChannelData(0);var b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;for(var i=0;i<n;i++){var w=Math.random()*2-1;b0=0.99886*b0+w*0.0555179;b1=0.99332*b1+w*0.0750759;b2=0.96900*b2+w*0.1538520;b3=0.86650*b3+w*0.3104856;b4=0.55000*b4+w*0.5329522;b5=-0.7616*b5-w*0.0168980;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11;b6=w*0.115926;}var s=ctx.createBufferSource();s.buffer=b;s.loop=true;return s;}
@@ -16714,9 +16970,10 @@ async function loadInsightsView() {
   function wxBirds(ctx,dst){var g=ctx.createGain();g.gain.value=0.15;g.connect(dst);function chirp(){if(!wxOn)return;var o=ctx.createOscillator();var cg=ctx.createGain();var sf=2000+Math.random()*4000;o.type='sine';o.frequency.setValueAtTime(sf,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(sf*(0.8+Math.random()*0.6),ctx.currentTime+0.08);cg.gain.setValueAtTime(0.2,ctx.currentTime);cg.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.12);o.connect(cg);cg.connect(g);o.start();o.stop(ctx.currentTime+0.15);if(Math.random()>0.5){var o2=ctx.createOscillator();var g2=ctx.createGain();o2.type='sine';o2.frequency.setValueAtTime(sf*1.1,ctx.currentTime+0.1);o2.frequency.exponentialRampToValueAtTime(sf*0.9,ctx.currentTime+0.18);g2.gain.setValueAtTime(0.15,ctx.currentTime+0.1);g2.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.22);o2.connect(g2);g2.connect(g);o2.start(ctx.currentTime+0.1);o2.stop(ctx.currentTime+0.25);}wxBT=setTimeout(chirp,1000+Math.random()*5000);}wxBT=setTimeout(chirp,500+Math.random()*2000);return{gain:g,stop:function(){if(wxBT){clearTimeout(wxBT);wxBT=null;}}};}
   function wxCrickets(ctx,dst){var g=ctx.createGain();g.gain.value=0.08;g.connect(dst);for(var i=0;i<3;i++){var o=ctx.createOscillator();var cg=ctx.createGain();var lf=ctx.createOscillator();var lg=ctx.createGain();o.type='sine';o.frequency.value=5000+Math.random()*1000;cg.gain.value=0;lf.type='square';lf.frequency.value=3+Math.random()*4;lg.gain.value=0.1;lf.connect(lg);lg.connect(cg.gain);o.connect(cg);cg.connect(g);o.start();lf.start();wxCO.push({osc:o,lfo:lf});}return{gain:g,stop:function(){wxCO.forEach(function(c){try{c.osc.stop();c.lfo.stop();}catch(e){}});wxCO=[];}};}
   function wxIsDay(){var h=new Date().getHours();return h>=6&&h<20;}
-  function wxStopAll(){Object.keys(wxN).forEach(function(k){if(wxN[k]&&wxN[k].stop)wxN[k].stop();});wxN={};if(wxMG){try{wxMG.disconnect();}catch(e){}wxMG=null;}}
-  function wxApply(){wxStopAll();if(!wxD||!wxOn)return;initAudioContext();if(!audioCtx)return;wxMG=audioCtx.createGain();wxMG.gain.value=wxVol;wxMG.connect(audioCtx.destination);var cur=wxD.current_condition[0];var co=wxCond(cur.weatherCode);var dy=wxIsDay();if(co==='clear'){if(dy)wxN.birds=wxBirds(audioCtx,wxMG);else wxN.crickets=wxCrickets(audioCtx,wxMG);}else if(co==='cloudy'){wxN.wind=wxWind(audioCtx,wxMG);if(dy)wxN.birds=wxBirds(audioCtx,wxMG);}else if(co==='rain'){wxN.rain=wxRain(audioCtx,wxMG);}else if(co==='heavyRain'){wxN.rain=wxRain(audioCtx,wxMG);if(wxN.rain.gain)wxN.rain.gain.gain.value=0.9;wxN.thunder=wxThunder(audioCtx,wxMG);}else if(co==='thunderstorm'){wxN.rain=wxRain(audioCtx,wxMG);if(wxN.rain.gain)wxN.rain.gain.gain.value=1.0;wxN.thunder=wxThunder(audioCtx,wxMG);wxN.wind=wxWind(audioCtx,wxMG);}else if(co==='snow'){wxN.wind=wxWind(audioCtx,wxMG);if(wxN.wind.gain)wxN.wind.gain.gain.value=0.2;}}
-  wxTB.addEventListener('click',function(){wxOn=!wxOn;wxTB.classList.toggle('active',wxOn);wxTB.textContent=wxOn?'DISABLE AMBIENT':'ENABLE AMBIENT';if(wxOn){wxBd.classList.add('visible');if(!wxD)wxFetch();else wxApply();if(wxRefT)clearInterval(wxRefT);wxRefT=setInterval(wxFetch,30*60*1000);}else{wxBd.classList.remove('visible');wxStopAll();if(wxRefT){clearInterval(wxRefT);wxRefT=null;}}});
+  function wxUpdLayers(){var all=['rain','wind','thunder','birds','crickets'];all.forEach(function(k){wxLayEls[k].classList.toggle('on',!!wxN[k]);});wxBP.classList.toggle('active',wxOn&&Object.keys(wxN).length>0);}
+  function wxStopAll(){Object.keys(wxN).forEach(function(k){if(wxN[k]&&wxN[k].stop)wxN[k].stop();});wxN={};if(wxMG){try{wxMG.disconnect();}catch(e){}wxMG=null;}wxUpdLayers();}
+  function wxApply(){wxStopAll();if(!wxOn)return;if(!wxManual&&!wxD)return;initAudioContext();if(!audioCtx)return;wxMG=audioCtx.createGain();wxMG.gain.value=wxVol;wxMG.connect(audioCtx.destination);if(wxManual){if(wxManEls.rain.checked)wxN.rain=wxRain(audioCtx,wxMG);if(wxManEls.wind.checked)wxN.wind=wxWind(audioCtx,wxMG);if(wxManEls.thunder.checked)wxN.thunder=wxThunder(audioCtx,wxMG);if(wxManEls.birds.checked)wxN.birds=wxBirds(audioCtx,wxMG);if(wxManEls.crickets.checked)wxN.crickets=wxCrickets(audioCtx,wxMG);}else{var cur=wxD.current_condition[0];var co=wxCond(cur.weatherCode);var dy=wxIsDay();if(co==='clear'){if(dy)wxN.birds=wxBirds(audioCtx,wxMG);else wxN.crickets=wxCrickets(audioCtx,wxMG);}else if(co==='cloudy'){wxN.wind=wxWind(audioCtx,wxMG);if(dy)wxN.birds=wxBirds(audioCtx,wxMG);}else if(co==='rain'){wxN.rain=wxRain(audioCtx,wxMG);}else if(co==='heavyRain'){wxN.rain=wxRain(audioCtx,wxMG);if(wxN.rain.gain)wxN.rain.gain.gain.value=0.9;wxN.thunder=wxThunder(audioCtx,wxMG);}else if(co==='thunderstorm'){wxN.rain=wxRain(audioCtx,wxMG);if(wxN.rain.gain)wxN.rain.gain.gain.value=1.0;wxN.thunder=wxThunder(audioCtx,wxMG);wxN.wind=wxWind(audioCtx,wxMG);}else if(co==='snow'){wxN.wind=wxWind(audioCtx,wxMG);if(wxN.wind.gain)wxN.wind.gain.gain.value=0.2;}}wxUpdLayers();}
+  wxTB.addEventListener('click',function(){wxOn=!wxOn;wxTB.classList.toggle('active',wxOn);wxTB.textContent=wxOn?'DISABLE AMBIENT':'ENABLE AMBIENT';if(wxOn){wxBd.classList.add('visible');if(wxManual){wxApply();}else if(!wxD){wxFetch();}else{wxApply();}if(!wxManual){if(wxRefT)clearInterval(wxRefT);wxRefT=setInterval(wxFetch,30*60*1000);}}else{wxBd.classList.remove('visible');wxBP.classList.remove('active');wxStopAll();if(wxRefT){clearInterval(wxRefT);wxRefT=null;}}});
   wxRB.addEventListener('click',wxFetch);
   wxFetch();
 })();
