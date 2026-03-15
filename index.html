@@ -310,6 +310,95 @@ nav.scrolled::after { opacity:1; }
 .scroll-arrow svg { width:24px; height:24px; stroke:var(--p-muted); fill:none; stroke-width:1.5; }
 @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(10px);} }
 
+/* ══════ VISUALIZER SHOWCASE ══════ */
+.viz-grid {
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:1rem; margin-top:2rem;
+}
+.viz-grid > :nth-child(1) { grid-column:1/3; }
+.viz-grid > :nth-child(4) { grid-column:2/4; }
+.viz-card {
+  background:var(--bg-surface); border:1px solid var(--p-dim); border-radius:12px;
+  overflow:hidden; transition:all 0.4s var(--ease); cursor:pointer;
+}
+.viz-card:hover { border-color:var(--p-muted); box-shadow:var(--glow); transform:translateY(-4px); }
+.viz-preview { height:160px; background:var(--bg); position:relative; overflow:hidden; }
+.viz-grid > :nth-child(1) .viz-preview,
+.viz-grid > :nth-child(4) .viz-preview { height:190px; }
+.viz-info { padding:0.9rem 1.1rem; }
+.viz-name { font-family:var(--font-d); font-size:0.75rem; font-weight:600; color:var(--p-white); letter-spacing:0.08em; margin-bottom:0.2rem; }
+.viz-desc { font-size:0.8rem; color:var(--p-muted); line-height:1.4; }
+
+/* Electric Sheep */
+.viz-sheep { background:radial-gradient(ellipse at 30% 50%,rgba(123,47,190,0.3) 0%,transparent 60%),radial-gradient(ellipse at 70% 40%,rgba(157,78,221,0.2) 0%,transparent 50%),var(--bg); }
+.viz-sheep::before,.viz-sheep::after {
+  content:''; position:absolute; border-radius:50%; animation:sheep-morph 8s infinite alternate;
+}
+.viz-sheep::before {
+  width:200px; height:200px; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(183,110,255,0.4) 0%,rgba(123,47,190,0.1) 40%,transparent 70%);
+  filter:blur(20px);
+}
+.viz-sheep::after {
+  width:150px; height:150px; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(212,160,255,0.3) 0%,transparent 60%);
+  filter:blur(15px); animation-delay:-4s; animation-duration:6s;
+}
+.viz-sheep .fl { position:absolute; width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--p-bright),transparent); opacity:0.2; animation:shl 4s infinite; }
+.viz-sheep .fl:nth-child(1){top:30%} .viz-sheep .fl:nth-child(2){top:50%;animation-delay:1s;transform:scaleX(0.7)} .viz-sheep .fl:nth-child(3){top:70%;animation-delay:2s;transform:scaleX(0.5)}
+@keyframes sheep-morph { 0%{border-radius:40% 60% 60% 40%/60% 40% 60% 40%;transform:translate(-50%,-50%) rotate(0) scale(1)} 100%{border-radius:60% 40% 40% 60%/40% 60% 40% 60%;transform:translate(-50%,-50%) rotate(180deg) scale(1.2)} }
+@keyframes shl { 0%,100%{opacity:0.1;transform:scaleX(0.3)} 50%{opacity:0.4;transform:scaleX(1)} }
+
+/* Particles */
+.viz-ptcl { background:var(--bg); }
+.viz-ptcl .pt { position:absolute; width:2px; height:2px; background:var(--p-bright); border-radius:50%; box-shadow:0 0 4px var(--p-bright); animation:ptf 6s infinite; }
+.viz-card:hover .pt { animation-duration:3s; }
+@keyframes ptf { 0%{transform:translate(0,0) scale(1);opacity:0.3} 25%{transform:translate(20px,-30px) scale(1.5);opacity:0.8} 50%{transform:translate(-10px,-50px) scale(0.8);opacity:0.5} 75%{transform:translate(15px,-20px) scale(1.2);opacity:0.7} 100%{transform:translate(0,0) scale(1);opacity:0.3} }
+
+/* Neural Web */
+.viz-neural { background:var(--bg); }
+.viz-neural .nd { position:absolute; width:6px; height:6px; background:var(--p-bright); border-radius:50%; box-shadow:0 0 8px var(--p-bright); animation:ndp 3s infinite; }
+.viz-neural .cn { position:absolute; height:1px; background:linear-gradient(90deg,rgba(157,78,221,0.3),rgba(183,110,255,0.1)); transform-origin:left center; }
+.viz-card:hover .nd { box-shadow:0 0 15px var(--p-vivid); }
+@keyframes ndp { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.5);opacity:1} }
+
+/* Void Pulse */
+.viz-void { background:var(--bg); display:flex; align-items:center; justify-content:center; }
+.viz-void .rg { position:absolute; border:1px solid var(--p-bright); border-radius:50%; animation:vrg 4s infinite; }
+.viz-card:hover .rg { border-width:2px; }
+@keyframes vrg { 0%{transform:scale(0);opacity:1} 100%{transform:scale(3);opacity:0} }
+
+/* Tron Grid */
+.viz-tron { background:var(--bg); overflow:hidden; }
+.viz-tron .go {
+  position:absolute; inset:0;
+  background:linear-gradient(0deg,rgba(123,47,190,0.2) 1px,transparent 1px),linear-gradient(90deg,rgba(123,47,190,0.2) 1px,transparent 1px);
+  background-size:30px 30px; transform:perspective(400px) rotateX(50deg); transform-origin:center bottom;
+  animation:gs 3s linear infinite;
+}
+.viz-card:hover .go { background-size:25px 25px; }
+@keyframes gs { 0%{background-position:0 0} 100%{background-position:0 30px} }
+.viz-tron .hz { position:absolute; bottom:40%; left:0; right:0; height:2px; background:var(--p-bright); box-shadow:0 0 30px var(--p-bright),0 0 60px rgba(157,78,221,0.3); opacity:0.6; }
+
+/* DNA Helix */
+.viz-dna { background:var(--bg); }
+.viz-dna .hn { position:absolute; width:5px; height:5px; background:var(--p-bright); border-radius:50%; box-shadow:0 0 6px var(--p-bright); animation:hr 4s linear infinite; }
+@keyframes hr { 0%{transform:translateX(0)} 25%{transform:translateX(30px)} 50%{transform:translateX(0)} 75%{transform:translateX(-30px)} 100%{transform:translateX(0)} }
+
+/* Lyric Rain */
+.viz-lyric { background:linear-gradient(180deg,#000 0%,rgba(0,220,245,0.05) 50%,rgba(123,47,190,0.08) 100%); display:flex; align-items:center; justify-content:center; }
+.viz-lyric span { font-family:var(--font-m); font-size:1.5rem; color:rgba(0,220,245,0.5); text-shadow:0 0 12px rgba(0,220,245,0.4); letter-spacing:4px; animation:lyric-flicker 3s infinite; }
+@keyframes lyric-flicker { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+@media(max-width:768px) {
+  .viz-grid { grid-template-columns:repeat(2,1fr); }
+  .viz-grid > :nth-child(1),.viz-grid > :nth-child(4) { grid-column:1/3; }
+  .viz-preview { height:130px; }
+}
+@media(max-width:480px) {
+  .viz-grid { grid-template-columns:1fr; }
+  .viz-grid > :nth-child(1),.viz-grid > :nth-child(4) { grid-column:1; }
+}
+
 /* ══════ FEATURES ══════ */
 .filter-bar {
   display:flex; gap:4px; flex-wrap:wrap; margin-bottom:2rem;
@@ -656,6 +745,51 @@ footer a:hover { color:var(--p-vivid); text-shadow:0 0 8px rgba(183,110,255,0.3)
       </div>
     </div>
     <div class="scroll-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+  </div>
+
+  <!-- VISUALIZER SHOWCASE -->
+  <div class="section" style="padding-top:2rem;">
+    <div class="divider" style="margin-bottom:4rem;"></div>
+    <div class="section-label reveal">17 GENERATIVE SCENES</div>
+    <h2 class="section-title reveal">Every Scene Handcrafted</h2>
+    <p class="section-desc reveal">Canvas 2D. 60fps. Beat-reactive. Auto-rotate or pin your favorite. Each visualizer is a living artwork that breathes with your music.</p>
+
+    <div class="viz-grid reveal">
+      <div class="viz-card">
+        <div class="viz-preview viz-sheep"><div class="fl"></div><div class="fl"></div><div class="fl"></div></div>
+        <div class="viz-info"><div class="viz-name">ELECTRIC SHEEP</div><div class="viz-desc">Video fractal flames with audio-reactive hue rotation, zoom pulse, and beat rings.</div></div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-preview viz-ptcl" id="ptclPrev"></div>
+        <div class="viz-info"><div class="viz-name">PARTICLE FIELD</div><div class="viz-desc">Cosmic dust in slow 3D orbit. Beat-reactive radial explosions.</div></div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-preview viz-neural" id="neuralPrev"></div>
+        <div class="viz-info"><div class="viz-name">NEURAL WEB</div><div class="viz-desc">Force-directed graph. Nodes pulse with frequency bands.</div></div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-preview viz-tron"><div class="go"></div><div class="hz"></div></div>
+        <div class="viz-info"><div class="viz-name">TRON GRID</div><div class="viz-desc">Infinite perspective grid with horizon glow. BPM-synced scroll. Light columns on beats.</div></div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-preview viz-void" id="voidPrev"></div>
+        <div class="viz-info"><div class="viz-name">VOID PULSE</div><div class="viz-desc">Minimalist concentric rings. Maximum OLED contrast.</div></div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-preview viz-dna" id="dnaPrev"></div>
+        <div class="viz-info"><div class="viz-name">DNA HELIX</div><div class="viz-desc">Double strand reactor with frequency-mapped nucleotides.</div></div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-preview viz-lyric"><span>LYRICS</span></div>
+        <div class="viz-info"><div class="viz-name">LYRIC RAIN</div><div class="viz-desc">Matrix rain with bass shockwaves. LRCLIB lyrics materialize on beats.</div></div>
+      </div>
+      <div class="viz-card">
+        <div class="viz-preview" style="background:linear-gradient(135deg,rgba(157,78,221,0.08),rgba(255,45,123,0.05)); display:flex; align-items:center; justify-content:center;">
+          <span style="font-family:var(--font-d);font-size:0.7rem;color:var(--p-muted);letter-spacing:3px">+10 MORE</span>
+        </div>
+        <div class="viz-info"><div class="viz-name">AND MORE...</div><div class="viz-desc">Aurora Borealis, Cosmic Mandala, Bio-Genesis, Command Deck, Plasma Warp, Fractal Flame, and II variants.</div></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1041,6 +1175,31 @@ phases.forEach(function(p) {
   bar.innerHTML = '<span>' + p.label + '</span>';
   arcEl.appendChild(bar);
 });
+
+// ══════ POPULATE VISUALIZER PREVIEWS ══════
+(function() {
+  // Particles
+  var pp = document.getElementById('ptclPrev');
+  if (pp) { for (var i=0;i<15;i++) { var d=document.createElement('div');d.className='pt';d.style.left=Math.random()*90+'%';d.style.top=Math.random()*90+'%';d.style.animationDelay=(-Math.random()*6)+'s';pp.appendChild(d); } }
+  // Neural Web
+  var np = document.getElementById('neuralPrev');
+  if (np) {
+    var nodes=[[20,30],[45,20],[70,45],[30,70],[60,75],[85,25],[15,55]];
+    nodes.forEach(function(n){var d=document.createElement('div');d.className='nd';d.style.left=n[0]+'%';d.style.top=n[1]+'%';d.style.animationDelay=(-Math.random()*3)+'s';np.appendChild(d);});
+    [[0,1],[1,2],[2,3],[3,0],[1,3],[2,4],[4,5],[5,1],[0,6],[6,3]].forEach(function(c){
+      var cn=document.createElement('div');cn.className='cn';var x1=nodes[c[0]][0],y1=nodes[c[0]][1],x2=nodes[c[1]][0],y2=nodes[c[1]][1];
+      var len=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));var ang=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+      cn.style.left=x1+'%';cn.style.top=y1+'%';cn.style.width=len+'%';cn.style.transform='rotate('+ang+'deg)';np.appendChild(cn);
+    });
+  }
+  // Void Pulse
+  var vp = document.getElementById('voidPrev');
+  if (vp) { for (var i=0;i<4;i++) { var r=document.createElement('div');r.className='rg';var s=30+i*15;r.style.width=s+'px';r.style.height=s+'px';r.style.left='calc(50% - '+s/2+'px)';r.style.top='calc(50% - '+s/2+'px)';r.style.animationDelay=(-i)+'s';vp.appendChild(r); } }
+  // DNA Helix
+  var dp = document.getElementById('dnaPrev');
+  if (dp) { for (var i=0;i<8;i++) { var n=document.createElement('div');n.className='hn';n.style.left='calc(50% - 2.5px)';n.style.top=(10+i*11)+'%';n.style.animationDelay=(-i*0.5)+'s';dp.appendChild(n);
+    var n2=document.createElement('div');n2.className='hn';n2.style.left='calc(50% - 2.5px)';n2.style.top=(10+i*11)+'%';n2.style.animationDelay=(-i*0.5-2)+'s';n2.style.background='var(--cyan)';n2.style.boxShadow='0 0 6px var(--cyan)';dp.appendChild(n2); } }
+})();
 
 // ══════ PARTICLE CANVAS ══════
 (function() {
