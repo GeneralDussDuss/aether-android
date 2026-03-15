@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AETHER — The Future of Music</title>
-<meta name="description" content="Not a music player — an experience. OLED-black Tron-purple aesthetic with real-time generative visualizers.">
+<meta name="description" content="Not a music player — an experience. 17,000+ lines. 140+ features. AI DJ engine. 3D sonic map. Stem isolation. Binaural brainwave engine. Zero frameworks.">
 <meta property="og:title" content="AETHER — The Future of Music">
-<meta property="og:description" content="Not a music player — an experience. OLED-black aesthetic with real-time generative visualizers.">
+<meta property="og:description" content="Not a music player — an experience. OLED-black Tron-purple aesthetic with AI DJ engine, stem isolation, and 17 generative visualizers.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://emperorbadussy.github.io/aether/">
 <meta name="twitter:card" content="summary">
@@ -16,3528 +16,1045 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ============================================
-   AETHER — OLED TRON PURPLE DESIGN
-   ============================================ */
+/* ══════════════════════════════════════════
+   AETHER MULTI-PAGE SPA — 2077 DESIGN
+   ══════════════════════════════════════════ */
 
 :root {
-  --bg-void: #000000;
+  --bg: #000000;
   --bg-surface: #09090F;
   --bg-raised: #0F0F1A;
   --bg-input: #12121F;
-  --purple-dim: #2A1B3D;
-  --purple-muted: #4A2D6B;
-  --purple-core: #7B2FBE;
-  --purple-bright: #9D4EDD;
-  --purple-vivid: #B76EFF;
-  --purple-hot: #D4A0FF;
-  --purple-white: #EED4FF;
-  --glow-subtle: 0 0 10px rgba(157,78,221,0.15);
-  --glow-medium: 0 0 20px rgba(157,78,221,0.25), 0 0 40px rgba(123,47,190,0.15);
-  --glow-intense: 0 0 20px rgba(157,78,221,0.4), 0 0 60px rgba(123,47,190,0.25), 0 0 100px rgba(123,47,190,0.1);
+  --p-dim: #2A1B3D;
+  --p-muted: #4A2D6B;
+  --p-core: #7B2FBE;
+  --p-bright: #9D4EDD;
+  --p-vivid: #B76EFF;
+  --p-hot: #D4A0FF;
+  --p-white: #EED4FF;
+  --cyan: #00DCF5;
+  --magenta: #FF2D7B;
+  --glow: 0 0 20px rgba(157,78,221,0.3), 0 0 60px rgba(123,47,190,0.15);
   --glow-text: 0 0 8px rgba(183,110,255,0.6);
-  --glow-neon: 0 0 4px #B76EFF, 0 0 12px rgba(183,110,255,0.5), 0 0 30px rgba(157,78,221,0.3), 0 0 60px rgba(123,47,190,0.15);
-  --font-display: 'Orbitron', sans-serif;
-  --font-body: 'Rajdhani', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --transition-fast: 150ms var(--ease-smooth);
-  --transition-normal: 300ms var(--ease-smooth);
-  --transition-slow: 500ms var(--ease-smooth);
+  --glow-neon: 0 0 4px #B76EFF, 0 0 12px rgba(183,110,255,0.5), 0 0 30px rgba(157,78,221,0.3);
+  --font-d: 'Orbitron', sans-serif;
+  --font-b: 'Rajdhani', sans-serif;
+  --font-m: 'JetBrains Mono', monospace;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --nav-h: 60px;
 }
 
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+::selection { background:rgba(123,47,190,0.4); color:var(--p-white); }
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--p-muted); border-radius:2px; }
+::-webkit-scrollbar-thumb:hover { background:var(--p-bright); }
 
-::selection {
-  background: rgba(123,47,190,0.4);
-  color: var(--purple-white);
-}
+html { scroll-behavior:smooth; background:var(--bg); color:var(--p-white); font-family:var(--font-b); overflow-x:hidden; }
+body { background:var(--bg); min-height:100vh; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg-void); }
-::-webkit-scrollbar-thumb {
-  background: var(--purple-muted);
-  border-radius: 2px;
+/* ══════ NAV ══════ */
+nav {
+  position:fixed; top:0; left:0; right:0; height:var(--nav-h); z-index:1000;
+  background:rgba(0,0,0,0.7); backdrop-filter:blur(20px) saturate(1.5);
+  border-bottom:1px solid rgba(123,47,190,0.15);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 2rem; transition:all 0.3s var(--ease);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--purple-bright);
-  box-shadow: 0 0 8px rgba(157,78,221,0.5);
-}
-
-html {
-  scroll-behavior: smooth;
-  background: var(--bg-void);
-  color: var(--purple-white);
-  font-family: var(--font-body);
-  overflow-x: hidden;
-}
-
-body {
-  background: var(--bg-void);
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ============ REVEAL ANIMATIONS ============ */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.reveal-left {
-  opacity: 0;
-  transform: translateX(-60px);
-  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
-}
-.reveal-left.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-.reveal-right {
-  opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
-}
-.reveal-right.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-.reveal-scale {
-  opacity: 0;
-  transform: scale(0.85);
-  transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
-}
-.reveal-scale.visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ============ NAVIGATION ============ */
-
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  padding: 1.25rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
-  border-bottom: 1px solid transparent;
-}
-.nav.scrolled {
-  background: rgba(9,9,15,0.85);
-  backdrop-filter: blur(20px) saturate(1.2);
-  border-bottom-color: var(--purple-dim);
-}
+nav.scrolled { background:rgba(0,0,0,0.9); border-bottom-color:rgba(123,47,190,0.3); }
 .nav-logo {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.5rem;
-  color: var(--purple-vivid);
-  text-shadow: var(--glow-neon);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: var(--transition-normal);
+  font-family:var(--font-d); font-weight:800; font-size:1.2rem; color:var(--p-vivid);
+  letter-spacing:0.2em; text-decoration:none; text-shadow:var(--glow-neon);
+  transition:all 0.3s;
 }
-.nav-logo:hover { color: var(--purple-hot); }
-.nav-logo .logo-p {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border: 2px solid var(--purple-bright);
-  border-radius: 8px;
-  font-size: 1.2rem;
-  box-shadow: var(--glow-neon);
-  transition: var(--transition-normal);
-}
-.nav-logo:hover .logo-p {
-  box-shadow: var(--glow-intense);
-  border-color: var(--purple-vivid);
-}
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  list-style: none;
-}
+.nav-logo:hover { color:var(--p-hot); text-shadow:0 0 20px rgba(183,110,255,0.8); }
+.nav-links { display:flex; gap:0; list-style:none; }
 .nav-links a {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 1rem;
-  color: var(--purple-hot);
-  text-decoration: none;
-  position: relative;
-  transition: var(--transition-normal);
-  letter-spacing: 0.03em;
+  display:block; padding:0 1.2rem; height:var(--nav-h); line-height:var(--nav-h);
+  font-family:var(--font-d); font-size:0.65rem; font-weight:500;
+  color:var(--p-muted); text-decoration:none; letter-spacing:0.12em;
+  position:relative; transition:color 0.3s;
 }
+.nav-links a:hover, .nav-links a.active { color:var(--p-white); }
 .nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--purple-bright);
-  box-shadow: var(--glow-subtle);
-  transition: width 0.3s var(--ease-smooth);
+  content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:0; height:2px; background:var(--p-vivid);
+  box-shadow:0 0 8px var(--p-bright); transition:width 0.3s var(--ease);
 }
-.nav-links a:hover {
-  color: var(--purple-white);
-  text-shadow: var(--glow-text);
-}
-.nav-links a:hover::after { width: 100%; }
-
+.nav-links a:hover::after, .nav-links a.active::after { width:60%; }
 .nav-cta {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  padding: 0.6rem 1.4rem;
-  border: 1px solid var(--purple-bright);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--purple-white) !important;
-  cursor: pointer;
-  transition: var(--transition-normal);
-  text-decoration: none;
+  background:var(--p-core) !important; color:var(--p-white) !important;
+  border-radius:6px !important; height:34px !important; line-height:34px !important;
+  padding:0 1rem !important; margin-left:0.5rem;
+  box-shadow:0 0 12px rgba(123,47,190,0.3); transition:all 0.3s !important;
 }
-.nav-cta::after { display: none !important; }
-.nav-cta:hover {
-  background: var(--purple-core);
-  box-shadow: var(--glow-medium);
-  border-color: var(--purple-vivid);
+.nav-cta:hover { background:var(--p-bright) !important; box-shadow:0 0 20px rgba(157,78,221,0.5) !important; }
+.nav-cta::after { display:none !important; }
+.nav-hamburger {
+  display:none; background:none; border:none; cursor:pointer; padding:6px;
+  flex-direction:column; gap:5px;
 }
+.nav-hamburger span { display:block; width:22px; height:2px; background:var(--p-vivid); border-radius:1px; transition:all 0.3s; }
+.nav-hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+.nav-hamburger.open span:nth-child(2) { opacity:0; }
+.nav-hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
 
-/* Mobile menu */
-.menu-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  z-index: 1002;
+.mobile-menu {
+  display:none; position:fixed; top:var(--nav-h); left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.95); backdrop-filter:blur(20px); z-index:999;
+  flex-direction:column; align-items:center; justify-content:center; gap:2rem;
+  opacity:0; pointer-events:none; transition:opacity 0.3s;
 }
-.menu-toggle span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--purple-vivid);
-  border-radius: 2px;
-  transition: var(--transition-normal);
+.mobile-menu.open { display:flex; opacity:1; pointer-events:all; }
+.mobile-menu a {
+  font-family:var(--font-d); font-size:1.1rem; color:var(--p-vivid);
+  text-decoration:none; letter-spacing:0.15em; transition:color 0.3s;
 }
-.menu-toggle.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-.menu-toggle.active span:nth-child(2) { opacity: 0; }
-.menu-toggle.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
-.mobile-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.95);
-  backdrop-filter: blur(30px);
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s;
-}
-.mobile-overlay.open {
-  opacity: 1;
-  pointer-events: all;
-}
-.mobile-overlay a {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: var(--purple-hot);
-  text-decoration: none;
-  transition: var(--transition-normal);
-  letter-spacing: 0.08em;
-}
-.mobile-overlay a:hover {
-  color: var(--purple-white);
-  text-shadow: var(--glow-neon);
-}
+.mobile-menu a:hover { color:var(--p-white); text-shadow:var(--glow-text); }
 
-/* ============ HERO ============ */
+/* ══════ PAGES ══════ */
+.page {
+  display:none; min-height:100vh; padding-top:var(--nav-h);
+  opacity:0; transform:translateY(20px);
+  transition:opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.page.active { display:block; }
+.page.visible { opacity:1; transform:translateY(0); }
 
-.hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: 6rem 2rem 4rem;
-}
-#heroCanvas {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-.hero-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 1200px;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 1rem;
-  border: 1px solid var(--purple-dim);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--purple-hot);
-  letter-spacing: 0.08em;
-  margin-bottom: 2rem;
-  animation: fadeInDown 1s 0.2s both;
-}
-.hero-badge .dot {
-  width: 6px;
-  height: 6px;
-  background: var(--purple-bright);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--purple-bright);
-  animation: pulse-dot 2s infinite;
-}
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.7); }
-}
-.hero-title {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(2.5rem, 7vw, 6rem);
-  line-height: 1.05;
-  color: var(--purple-white);
-  text-shadow: var(--glow-neon);
-  margin-bottom: 1rem;
-  letter-spacing: 0.04em;
-}
-.hero-title .char {
-  display: inline-block;
-  animation: charReveal 0.6s both;
-  animation-delay: var(--d);
-}
-@keyframes charReveal {
-  0% { opacity: 0; transform: translateY(40px) rotateX(90deg); filter: blur(10px); }
-  100% { opacity: 1; transform: translateY(0) rotateX(0); filter: blur(0); }
-}
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.hero-tagline {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
-  color: var(--purple-vivid);
-  text-shadow: var(--glow-text);
-  margin-bottom: 1rem;
-  letter-spacing: 0.06em;
-  animation: fadeInUp 0.8s 1s both;
-}
-.hero-sub {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
-  color: var(--purple-hot);
-  opacity: 0.8;
-  max-width: 600px;
-  margin: 0 auto 2.5rem;
-  line-height: 1.6;
-  animation: fadeInUp 0.8s 1.2s both;
-}
-.hero-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 3rem;
-  animation: fadeInUp 0.8s 1.4s both;
-}
-.btn-primary {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.12em;
-  padding: 1rem 2.5rem;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--purple-core), var(--purple-bright));
-  color: var(--purple-white);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s var(--ease-bounce), box-shadow 0.3s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--purple-bright), var(--purple-vivid));
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.btn-primary:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: var(--glow-intense);
-}
-.btn-primary:hover::before { opacity: 1; }
-.btn-primary:active { transform: translateY(0) scale(0.97); }
-.btn-primary span { position: relative; z-index: 1; }
-.btn-primary svg { position: relative; z-index: 1; }
-
-.btn-secondary {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  padding: 1rem 2rem;
-  border: 1px solid var(--purple-muted);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--purple-hot);
-  cursor: pointer;
-  transition: var(--transition-normal);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.btn-secondary:hover {
-  border-color: var(--purple-bright);
-  color: var(--purple-white);
-  box-shadow: var(--glow-medium);
-  background: rgba(123,47,190,0.1);
-}
-
-/* ============ PLAYER MOCKUP ============ */
-
-.mockup-container {
-  animation: fadeInUp 1s 1.6s both;
-  perspective: 1200px;
-  margin-bottom: 2rem;
-}
-.player-mockup {
-  background: var(--bg-surface);
-  border: 1px solid var(--purple-dim);
-  border-radius: 16px;
-  box-shadow: var(--glow-intense), 0 30px 80px rgba(0,0,0,0.8);
-  width: 100%;
-  max-width: 850px;
-  margin: 0 auto;
-  overflow: hidden;
-  transform: rotateX(4deg) scale(0.95);
-  transition: transform 0.6s var(--ease-smooth);
-}
-.player-mockup:hover {
-  transform: rotateX(0) scale(1);
-}
-
-.mock-titlebar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.6rem 1rem;
-  background: rgba(15,15,26,0.9);
-  border-bottom: 1px solid var(--purple-dim);
-}
-.mock-titlebar-left {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.mock-titlebar-logo {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.55rem;
-  color: var(--purple-vivid);
-  text-shadow: var(--glow-text);
-  letter-spacing: 0.15em;
-}
-.mock-dots {
-  display: flex;
-  gap: 6px;
-}
-.mock-dots span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 1px solid var(--purple-dim);
-}
-.mock-dots span:nth-child(1) { background: rgba(123,47,190,0.3); }
-.mock-dots span:nth-child(2) { background: rgba(123,47,190,0.5); }
-.mock-dots span:nth-child(3) { background: rgba(255,68,102,0.5); border-color: rgba(255,68,102,0.3); }
-
-.mock-body {
-  display: grid;
-  grid-template-columns: 52px 1fr;
-  grid-template-rows: 1fr auto;
-  height: 300px;
-}
-.mock-sidebar {
-  background: var(--bg-surface);
-  border-right: 1px solid var(--purple-dim);
-  padding: 0.8rem 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-}
-.mock-sidebar-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition-fast);
-}
-.mock-sidebar-icon.active {
-  background: rgba(123,47,190,0.2);
-  box-shadow: inset 3px 0 0 var(--purple-bright);
-}
-.mock-sidebar-icon svg {
-  width: 14px;
-  height: 14px;
-  stroke: var(--purple-muted);
-  fill: none;
-  stroke-width: 1.5;
-}
-.mock-sidebar-icon.active svg { stroke: var(--purple-bright); }
-
-.mock-main {
-  display: flex;
-  flex-direction: column;
-}
-.mock-visualizer {
-  flex: 1;
-  background: var(--bg-void);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.mock-viz-rings {
-  position: relative;
-  width: 160px;
-  height: 160px;
-}
-.mock-viz-ring {
-  position: absolute;
-  border: 1px solid var(--purple-bright);
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: mock-ring-pulse 3s infinite;
-}
-.mock-viz-ring:nth-child(1) {
-  inset: 0;
-  animation-delay: 0s;
-}
-.mock-viz-ring:nth-child(2) {
-  inset: 15px;
-  animation-delay: 0.5s;
-  border-color: var(--purple-vivid);
-}
-.mock-viz-ring:nth-child(3) {
-  inset: 30px;
-  animation-delay: 1s;
-  border-color: var(--purple-hot);
-}
-.mock-viz-ring:nth-child(4) {
-  inset: 45px;
-  animation-delay: 1.5s;
-}
-.mock-viz-ring:nth-child(5) {
-  inset: 60px;
-  animation-delay: 2s;
-  border-color: var(--purple-vivid);
-}
-@keyframes mock-ring-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.08); opacity: 0.7; box-shadow: 0 0 20px rgba(157,78,221,0.3); }
-}
-
-.mock-track-list {
-  padding: 0.5rem 0.8rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  max-height: 80px;
-  overflow: hidden;
-}
-.mock-track-row {
-  display: grid;
-  grid-template-columns: 16px 1fr 40px;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.4rem;
-  border-radius: 4px;
-  font-size: 0.55rem;
-}
-.mock-track-row.active {
-  background: rgba(123,47,190,0.1);
-}
-.mock-track-num {
-  font-family: var(--font-mono);
-  color: var(--purple-muted);
-  font-size: 0.5rem;
-}
-.mock-eq-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 1px;
-  height: 10px;
-}
-.mock-eq-bar {
-  width: 3px;
-  background: var(--purple-bright);
-  border-radius: 1px;
-  animation: mock-eq 0.4s infinite alternate;
-}
-.mock-eq-bar:nth-child(1) { animation-delay: 0s; height: 4px; }
-.mock-eq-bar:nth-child(2) { animation-delay: 0.1s; height: 8px; }
-.mock-eq-bar:nth-child(3) { animation-delay: 0.2s; height: 5px; }
-@keyframes mock-eq {
-  0% { height: 3px; }
-  100% { height: 10px; }
-}
-.mock-track-name {
-  color: var(--purple-white);
-  font-family: var(--font-body);
-  white-space: nowrap;
-  overflow: hidden;
-}
-.mock-track-name small {
-  color: var(--purple-muted);
-  margin-left: 0.3rem;
-}
-.mock-track-dur {
-  font-family: var(--font-mono);
-  color: var(--purple-muted);
-  font-size: 0.5rem;
-  text-align: right;
-}
-
-.mock-nowplaying {
-  grid-column: 1 / -1;
-  background: var(--bg-raised);
-  border-top: 1px solid var(--purple-dim);
-  padding: 0.6rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-.mock-album-art {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, var(--purple-core), var(--purple-dim));
-  box-shadow: 0 0 12px rgba(157,78,221,0.3);
-  animation: mock-art-spin 30s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes mock-art-spin {
-  to { transform: rotate(360deg); }
-}
-.mock-np-info {
-  flex: 1;
-  min-width: 0;
-}
-.mock-np-title {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  color: var(--purple-white);
-  text-shadow: var(--glow-text);
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.mock-np-artist {
-  font-family: var(--font-body);
-  font-size: 0.55rem;
-  color: var(--purple-vivid);
-}
-.mock-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.mock-ctrl-btn {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.mock-ctrl-btn svg {
-  width: 12px;
-  height: 12px;
-  stroke: var(--purple-muted);
-  fill: none;
-  stroke-width: 1.5;
-}
-.mock-play-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--purple-bright);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 15px rgba(157,78,221,0.5);
-}
-.mock-play-btn svg {
-  width: 12px;
-  height: 12px;
-  fill: var(--purple-white);
-  stroke: none;
-  margin-left: 1px;
-}
-.mock-progress {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-width: 100px;
-}
-.mock-progress-bar {
-  flex: 1;
-  height: 3px;
-  background: var(--purple-dim);
-  border-radius: 2px;
-  overflow: hidden;
-  position: relative;
-}
-.mock-progress-fill {
-  width: 35%;
-  height: 100%;
-  background: var(--purple-bright);
-  border-radius: 2px;
-  box-shadow: 0 0 6px rgba(157,78,221,0.5);
-  animation: mock-progress-anim 8s linear infinite;
-}
-@keyframes mock-progress-anim {
-  0% { width: 0%; }
-  100% { width: 100%; }
-}
-.mock-progress-time {
-  font-family: var(--font-mono);
-  font-size: 0.45rem;
-  color: var(--purple-muted);
-  white-space: nowrap;
-}
-
-/* Scroll indicator */
-.scroll-indicator {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  animation: scroll-bounce 2s infinite;
-}
-.scroll-indicator svg {
-  width: 24px;
-  height: 24px;
-  stroke: var(--purple-muted);
-  fill: none;
-  stroke-width: 1.5;
-}
-@keyframes scroll-bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
-  50% { transform: translateX(-50%) translateY(10px); opacity: 1; }
-}
-
-/* ============ SECTION LAYOUT ============ */
-
-.section {
-  padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 5vw, 4rem);
-  position: relative;
-}
-.section-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-}
+.section { padding:5rem 2rem; max-width:1200px; margin:0 auto; }
 .section-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 400;
-  color: var(--purple-bright);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.section-label::before {
-  content: '';
-  width: 32px;
-  height: 1px;
-  background: var(--purple-bright);
-  box-shadow: 0 0 8px rgba(157,78,221,0.5);
+  font-family:var(--font-m); font-size:0.65rem; color:var(--p-muted);
+  letter-spacing:0.2em; margin-bottom:0.5rem;
 }
 .section-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  color: var(--purple-white);
-  text-shadow: var(--glow-text);
-  margin-bottom: 1rem;
-  line-height: 1.1;
-  letter-spacing: 0.02em;
+  font-family:var(--font-d); font-weight:700; font-size:clamp(1.5rem,4vw,2.5rem);
+  color:var(--p-white); letter-spacing:0.05em; margin-bottom:1rem;
+  text-shadow:var(--glow-text);
 }
 .section-desc {
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  color: var(--purple-hot);
-  opacity: 0.8;
-  max-width: 600px;
-  line-height: 1.6;
-  margin-bottom: 3rem;
+  font-size:1.05rem; color:var(--p-muted); line-height:1.6; max-width:700px;
+}
+.divider {
+  height:1px; max-width:1200px; margin:0 auto;
+  background:linear-gradient(90deg, transparent 5%, var(--p-dim) 20%, var(--p-bright) 50%, var(--p-dim) 80%, transparent 95%);
+  opacity:0.4;
 }
 
-/* ============ VISUALIZER SHOWCASE ============ */
+/* ══════ REVEAL ANIMATION ══════ */
+.reveal {
+  opacity:0; transform:translateY(30px);
+  transition:opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal.vis { opacity:1; transform:translateY(0); }
 
-.viz-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto auto auto;
-  gap: 1.25rem;
+/* ══════ HOME — HERO ══════ */
+#heroCanvas {
+  position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;
 }
-.viz-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--purple-dim);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: var(--transition-normal);
-  cursor: pointer;
-  position: relative;
+.hero {
+  position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center; padding:2rem;
 }
-.viz-card:hover {
-  border-color: var(--purple-muted);
-  box-shadow: var(--glow-medium);
-  transform: translateY(-4px);
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-m); font-size:0.65rem; color:var(--p-bright);
+  letter-spacing:0.15em; margin-bottom:1.5rem;
+  padding:6px 16px; border:1px solid var(--p-dim); border-radius:20px;
+  background:rgba(123,47,190,0.08);
 }
-.viz-card:nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
-.viz-card:nth-child(2) { grid-column: 3; grid-row: 1; }
-.viz-card:nth-child(3) { grid-column: 1; grid-row: 2; }
-.viz-card:nth-child(4) { grid-column: 2 / 4; grid-row: 2; }
-.viz-card:nth-child(5) { grid-column: 1 / 2; grid-row: 3; }
-.viz-card:nth-child(6) { grid-column: 2; grid-row: 3; }
-.viz-card:nth-child(7) { grid-column: 3; grid-row: 3; }
+.hero-badge .dot {
+  width:6px; height:6px; border-radius:50%; background:var(--cyan);
+  box-shadow:0 0 6px var(--cyan); animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
 
-.viz-preview {
-  height: 180px;
-  background: var(--bg-void);
-  position: relative;
-  overflow: hidden;
+.hero-title {
+  font-family:var(--font-d); font-weight:900;
+  font-size:clamp(3rem,10vw,7rem); letter-spacing:0.15em;
+  color:var(--p-white); text-shadow:var(--glow-neon);
+  animation:glitch 8s 2s infinite; margin-bottom:0.5rem;
 }
-.viz-card:nth-child(1) .viz-preview,
-.viz-card:nth-child(4) .viz-preview { height: 200px; }
-
-.viz-info {
-  padding: 1rem 1.25rem;
-}
-.viz-name {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--purple-white);
-  letter-spacing: 0.08em;
-  margin-bottom: 0.3rem;
-}
-.viz-desc {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: var(--purple-muted);
-  line-height: 1.4;
+@keyframes glitch {
+  0%,100%{text-shadow:var(--glow-neon);} 2%{text-shadow:-3px 0 var(--p-core),3px 0 var(--cyan);clip-path:inset(35% 0 25% 0);}
+  4%{text-shadow:var(--glow-neon);clip-path:none;} 42%{text-shadow:2px 0 var(--magenta),-2px 0 var(--p-core);clip-path:inset(15% 0 55% 0);}
+  44%{text-shadow:var(--glow-neon);clip-path:none;}
 }
 
-/* Viz CSS Animations */
+.hero-tagline {
+  font-family:var(--font-d); font-size:clamp(0.9rem,2vw,1.3rem); font-weight:400;
+  color:var(--p-vivid); letter-spacing:0.08em; margin-bottom:1rem;
+}
+.hero-sub {
+  font-family:var(--font-b); font-size:1rem; color:var(--p-muted);
+  max-width:650px; line-height:1.6; margin-bottom:2.5rem;
+}
+.hero-rotating {
+  font-family:var(--font-m); font-size:0.75rem; color:var(--cyan);
+  letter-spacing:0.1em; margin-bottom:2rem; height:1.2em;
+}
+.hero-btns { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
+.btn-primary {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-d); font-size:0.7rem; font-weight:600;
+  color:var(--p-white); background:var(--p-core); letter-spacing:0.1em;
+  padding:14px 28px; border-radius:8px; text-decoration:none; border:none; cursor:pointer;
+  box-shadow:0 0 20px rgba(123,47,190,0.4); transition:all 0.3s;
+}
+.btn-primary:hover { background:var(--p-bright); box-shadow:0 0 30px rgba(157,78,221,0.6); transform:translateY(-2px); }
+.btn-secondary {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-d); font-size:0.7rem; font-weight:600;
+  color:var(--p-vivid); background:transparent; letter-spacing:0.1em;
+  padding:14px 28px; border-radius:8px; text-decoration:none;
+  border:1px solid var(--p-dim); cursor:pointer; transition:all 0.3s;
+}
+.btn-secondary:hover { border-color:var(--p-bright); color:var(--p-white); box-shadow:var(--glow); }
 
-/* Electric Sheep — fractal-like swirling */
-.viz-electric-sheep {
-  background:
-    radial-gradient(ellipse at 30% 50%, rgba(123,47,190,0.3) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 40%, rgba(157,78,221,0.2) 0%, transparent 50%),
-    var(--bg-void);
+.highlight-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:1rem; margin-top:4rem; max-width:900px; width:100%;
 }
-.viz-electric-sheep::before,
-.viz-electric-sheep::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  animation: sheep-morph 8s infinite alternate;
+.highlight-card {
+  background:var(--bg-surface); border:1px solid var(--p-dim); border-radius:12px;
+  padding:1.25rem; text-align:left; transition:all 0.3s var(--ease);
+  position:relative; overflow:hidden;
 }
-.viz-electric-sheep::before {
-  width: 200px;
-  height: 200px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(183,110,255,0.4) 0%, rgba(123,47,190,0.1) 40%, transparent 70%);
-  filter: blur(20px);
+.highlight-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, transparent, var(--p-bright), transparent);
+  opacity:0; transition:opacity 0.3s;
 }
-.viz-electric-sheep::after {
-  width: 150px;
-  height: 150px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(212,160,255,0.3) 0%, transparent 60%);
-  filter: blur(15px);
-  animation-delay: -4s;
-  animation-duration: 6s;
+.highlight-card:hover { border-color:var(--p-muted); box-shadow:var(--glow); transform:translateY(-4px); }
+.highlight-card:hover::before { opacity:1; }
+.highlight-card svg { width:28px; height:28px; stroke:var(--p-bright); fill:none; stroke-width:1.5; margin-bottom:0.75rem; }
+.highlight-card h3 {
+  font-family:var(--font-d); font-size:0.65rem; font-weight:600;
+  color:var(--p-white); letter-spacing:0.06em; margin-bottom:0.3rem;
 }
-.viz-electric-sheep .fractal-line {
-  position: absolute;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--purple-bright), transparent);
-  opacity: 0.2;
-  animation: sheep-line 4s infinite;
-}
-.viz-electric-sheep .fractal-line:nth-child(1) { top: 30%; animation-delay: 0s; }
-.viz-electric-sheep .fractal-line:nth-child(2) { top: 50%; animation-delay: 1s; transform: scaleX(0.7); }
-.viz-electric-sheep .fractal-line:nth-child(3) { top: 70%; animation-delay: 2s; transform: scaleX(0.5); }
-@keyframes sheep-morph {
-  0% { border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
-  100% { border-radius: 60% 40% 40% 60% / 40% 60% 40% 60%; transform: translate(-50%, -50%) rotate(180deg) scale(1.2); }
-}
-@keyframes sheep-line {
-  0%, 100% { opacity: 0.1; transform: scaleX(0.3); }
-  50% { opacity: 0.4; transform: scaleX(1); }
-}
+.highlight-card p { font-size:0.8rem; color:var(--p-muted); line-height:1.4; }
 
-/* Particle Field */
-.viz-particles {
-  background: var(--bg-void);
+.scroll-arrow {
+  position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+  animation:bounce 2s infinite;
 }
-.viz-particles .particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: var(--purple-bright);
-  border-radius: 50%;
-  box-shadow: 0 0 4px var(--purple-bright);
-  animation: particle-float 6s infinite;
-}
-.viz-card:hover .particle { animation-duration: 3s; }
+.scroll-arrow svg { width:24px; height:24px; stroke:var(--p-muted); fill:none; stroke-width:1.5; }
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(10px);} }
 
-@keyframes particle-float {
-  0% { transform: translate(0,0) scale(1); opacity: 0.3; }
-  25% { transform: translate(20px, -30px) scale(1.5); opacity: 0.8; }
-  50% { transform: translate(-10px, -50px) scale(0.8); opacity: 0.5; }
-  75% { transform: translate(15px, -20px) scale(1.2); opacity: 0.7; }
-  100% { transform: translate(0,0) scale(1); opacity: 0.3; }
+/* ══════ FEATURES ══════ */
+.filter-bar {
+  display:flex; gap:4px; flex-wrap:wrap; margin-bottom:2rem;
+  border-bottom:1px solid var(--p-dim); padding-bottom:0.5rem;
 }
-
-/* Waveform Terrain */
-.viz-terrain {
-  background: var(--bg-void);
-  overflow: hidden;
+.filter-btn {
+  font-family:var(--font-d); font-size:0.55rem; font-weight:500;
+  color:var(--p-muted); background:none; border:none; cursor:pointer;
+  padding:8px 14px; letter-spacing:0.1em; border-radius:4px;
+  transition:all 0.2s; position:relative;
 }
-.viz-terrain .terrain-line {
-  position: absolute;
-  width: 100%;
-  height: 1px;
-  left: 0;
-  background: var(--purple-bright);
-  opacity: 0.15;
-  animation: terrain-wave 3s infinite;
+.filter-btn:hover { color:var(--p-vivid); }
+.filter-btn.active { color:var(--p-white); background:rgba(123,47,190,0.15); }
+.filter-btn.active::after {
+  content:''; position:absolute; bottom:-0.5rem; left:30%; right:30%;
+  height:2px; background:var(--p-vivid); box-shadow:0 0 6px var(--p-bright);
 }
-.viz-card:hover .terrain-line { opacity: 0.35; }
-
-@keyframes terrain-wave {
-  0%, 100% { transform: translateY(0) scaleY(1); }
-  50% { transform: translateY(-5px) scaleY(3); }
-}
-
-/* Neural Web */
-.viz-neural {
-  background: var(--bg-void);
-}
-.viz-neural .node {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--purple-bright);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--purple-bright);
-  animation: node-pulse 3s infinite;
-}
-.viz-neural .connection {
-  position: absolute;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(157,78,221,0.3), rgba(183,110,255,0.1));
-  transform-origin: left center;
-}
-.viz-card:hover .node { box-shadow: 0 0 15px var(--purple-vivid); }
-
-@keyframes node-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.5); opacity: 1; }
-}
-
-/* Void Pulse */
-.viz-voidpulse {
-  background: var(--bg-void);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.viz-voidpulse .ring {
-  position: absolute;
-  border: 1px solid var(--purple-bright);
-  border-radius: 50%;
-  animation: void-ring 4s infinite;
-}
-.viz-card:hover .ring { border-width: 2px; }
-
-@keyframes void-ring {
-  0% { transform: scale(0); opacity: 1; }
-  100% { transform: scale(3); opacity: 0; }
-}
-
-/* Tron Grid */
-.viz-trongrid {
-  background: var(--bg-void);
-  overflow: hidden;
-}
-.viz-trongrid .grid-overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(0deg, rgba(123,47,190,0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(123,47,190,0.2) 1px, transparent 1px);
-  background-size: 30px 30px;
-  transform: perspective(400px) rotateX(50deg);
-  transform-origin: center bottom;
-  animation: grid-scroll 3s linear infinite;
-}
-.viz-card:hover .grid-overlay { background-size: 25px 25px; }
-
-@keyframes grid-scroll {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 30px; }
-}
-.viz-trongrid .horizon-glow {
-  position: absolute;
-  bottom: 40%;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--purple-bright);
-  box-shadow: 0 0 30px var(--purple-bright), 0 0 60px rgba(157,78,221,0.3);
-  opacity: 0.6;
-}
-
-/* DNA Helix */
-.viz-dna {
-  background: var(--bg-void);
-}
-.viz-dna .helix-strand {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-.viz-dna .helix-node {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  background: var(--purple-bright);
-  border-radius: 50%;
-  box-shadow: 0 0 6px var(--purple-bright);
-  animation: helix-rotate 4s linear infinite;
-}
-.viz-dna .helix-connector {
-  position: absolute;
-  height: 1px;
-  background: rgba(157,78,221,0.3);
-}
-@keyframes helix-rotate {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(30px); }
-  50% { transform: translateX(0); }
-  75% { transform: translateX(-30px); }
-  100% { transform: translateX(0); }
-}
-
-/* ============ FEATURES ============ */
 
 .features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  gap:1rem;
 }
-.feature-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--purple-dim);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: var(--transition-normal);
-  position: relative;
-  overflow: hidden;
+.feat-card {
+  background:var(--bg-surface); border:1px solid var(--p-dim); border-radius:10px;
+  padding:1.2rem; transition:all 0.3s var(--ease); overflow:hidden; position:relative;
 }
-.feature-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--purple-bright), transparent);
-  opacity: 0;
-  transition: var(--transition-normal);
+.feat-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, transparent, var(--p-bright), transparent);
+  opacity:0; transition:opacity 0.3s;
 }
-.feature-card:hover {
-  border-color: var(--purple-muted);
-  box-shadow: var(--glow-medium);
-  transform: translateY(-3px);
+.feat-card:hover { border-color:var(--p-muted); box-shadow:var(--glow); transform:translateY(-2px); }
+.feat-card:hover::before { opacity:1; }
+.feat-card h4 {
+  font-family:var(--font-d); font-size:0.7rem; font-weight:600;
+  color:var(--p-white); letter-spacing:0.05em; margin-bottom:0.3rem;
 }
-.feature-card:hover::before { opacity: 1; }
+.feat-card p { font-size:0.82rem; color:var(--p-muted); line-height:1.4; }
+.feat-card[data-cat] { display:block; }
+.feat-card.hidden { display:none; }
+.feat-section-header {
+  grid-column:1/-1; font-family:var(--font-d); font-size:0.6rem;
+  color:var(--p-bright); letter-spacing:0.15em; padding:1.5rem 0 0.5rem;
+  border-top:1px solid var(--p-dim); margin-top:0.5rem;
+}
+.feat-section-header:first-of-type { border-top:none; margin-top:0; }
 
-.feature-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: rgba(123,47,190,0.15);
-  border: 1px solid var(--purple-dim);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  transition: var(--transition-normal);
+/* ══════ DJ ENGINE ══════ */
+.dj-hero {
+  display:flex; justify-content:center; align-items:center; gap:2rem;
+  flex-wrap:wrap; margin:3rem 0;
 }
-.feature-card:hover .feature-icon {
-  border-color: var(--purple-muted);
-  box-shadow: var(--glow-subtle);
-  background: rgba(123,47,190,0.25);
+.dj-deck {
+  background:var(--bg-raised); border:1px solid rgba(255,45,123,0.2);
+  border-radius:16px; padding:2rem; min-width:200px; text-align:center;
+  transition:all 0.3s;
 }
-.feature-icon svg {
-  width: 22px;
-  height: 22px;
-  stroke: var(--purple-bright);
-  fill: none;
-  stroke-width: 1.5;
-}
-.feature-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--purple-white);
-  letter-spacing: 0.05em;
-  margin-bottom: 0.4rem;
-}
-.feature-text {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--purple-muted);
-  line-height: 1.5;
-}
+.dj-deck:hover { border-color:rgba(255,45,123,0.5); box-shadow:0 0 30px rgba(255,45,123,0.15); transform:translateY(-4px); }
+.dj-deck-label { font-family:var(--font-d); font-size:0.6rem; color:rgba(255,45,123,0.7); letter-spacing:0.2em; margin-bottom:0.5rem; }
+.dj-deck-bpm { font-family:var(--font-m); font-size:2.2rem; font-weight:700; color:var(--p-white); }
+.dj-deck-bpm span { font-size:0.7rem; color:var(--p-muted); font-weight:400; margin-left:4px; }
+.dj-deck-key { font-family:var(--font-m); font-size:0.8rem; color:var(--cyan); margin-top:0.5rem; }
 
-/* ============ DJ MODE ============ */
+.dj-xfader { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.dj-xfader-track { width:4px; height:80px; background:var(--p-dim); border-radius:2px; position:relative; }
+.dj-xfader-knob {
+  width:16px; height:16px; border-radius:50%;
+  background:linear-gradient(135deg, var(--magenta), var(--p-vivid));
+  box-shadow:0 0 12px rgba(255,45,123,0.5);
+  position:absolute; left:50%; transform:translateX(-50%);
+  animation:xf-slide 3s ease-in-out infinite;
+}
+@keyframes xf-slide { 0%,100%{top:20%;} 50%{top:70%;} }
+.dj-xfader-lbl { font-family:var(--font-m); font-size:0.5rem; color:var(--p-muted); letter-spacing:0.1em; }
 
-.dj-section {
-  background: var(--bg-surface);
-  border-top: 1px solid rgba(255,45,123,0.15);
-  border-bottom: 1px solid rgba(255,45,123,0.15);
-  position: relative;
-  overflow: hidden;
+.trans-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+  gap:1rem; margin:2rem 0;
 }
-.dj-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255,45,123,0.06) 0%, transparent 70%);
-  pointer-events: none;
+.trans-card {
+  background:var(--bg-surface); border:1px solid rgba(255,45,123,0.15);
+  border-radius:10px; padding:1rem; transition:all 0.3s;
 }
-.dj-hero-visual {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin: 2rem 0 2.5rem;
-  flex-wrap: wrap;
+.trans-card:hover { border-color:rgba(255,45,123,0.4); box-shadow:0 0 15px rgba(255,45,123,0.15); }
+.trans-card h4 { font-family:var(--font-d); font-size:0.65rem; color:var(--magenta); letter-spacing:0.08em; margin-bottom:0.3rem; }
+.trans-card p { font-size:0.8rem; color:var(--p-muted); line-height:1.4; }
+
+.journey-arc {
+  display:flex; align-items:flex-end; gap:2px; justify-content:center;
+  height:80px; margin:2rem 0;
 }
-.dj-deck-preview {
-  background: var(--bg-raised);
-  border: 1px solid rgba(255,45,123,0.2);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  min-width: 220px;
-  text-align: center;
-  position: relative;
-  transition: var(--transition-normal);
+.journey-bar {
+  flex:1; max-width:80px; border-radius:4px 4px 0 0; transition:all 0.5s var(--ease);
+  position:relative;
 }
-.dj-deck-preview:hover {
-  border-color: rgba(255,45,123,0.5);
-  box-shadow: 0 0 30px rgba(255,45,123,0.15), 0 0 60px rgba(255,45,123,0.05);
-  transform: translateY(-4px);
-}
-.dj-deck-label {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: rgba(255,45,123,0.7);
-  margin-bottom: 0.75rem;
-}
-.dj-deck-bpm {
-  font-family: var(--font-mono);
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--purple-white);
-  line-height: 1;
-}
-.dj-deck-bpm span {
-  font-size: 0.8rem;
-  color: var(--purple-muted);
-  font-weight: 400;
-  margin-left: 0.3rem;
-}
-.dj-deck-key {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: rgba(0,220,245,0.8);
-  margin-top: 0.5rem;
-}
-.dj-crossfader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 80px;
-}
-.dj-crossfader-track {
-  width: 4px;
-  height: 80px;
-  background: var(--purple-dim);
-  border-radius: 2px;
-  position: relative;
-}
-.dj-crossfader-knob {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FF2D7B, var(--purple-vivid));
-  box-shadow: 0 0 12px rgba(255,45,123,0.5);
-  position: absolute;
-  left: 50%;
-  top: 40%;
-  transform: translate(-50%, -50%);
-  animation: cf-slide 3s ease-in-out infinite;
-}
-@keyframes cf-slide {
-  0%, 100% { top: 25%; }
-  50% { top: 75%; }
-}
-.dj-crossfader-label {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  color: var(--purple-muted);
-}
-.dj-transition-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-.dj-transition-badge {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  padding: 0.35rem 0.75rem;
-  border: 1px solid rgba(255,45,123,0.2);
-  border-radius: 20px;
-  color: rgba(255,45,123,0.8);
-  background: rgba(255,45,123,0.05);
-  letter-spacing: 0.05em;
-  transition: var(--transition-fast);
-}
-.dj-transition-badge:hover {
-  background: rgba(255,45,123,0.15);
-  border-color: rgba(255,45,123,0.4);
-  box-shadow: 0 0 12px rgba(255,45,123,0.2);
-  color: #FF2D7B;
+.journey-bar span {
+  position:absolute; bottom:-22px; left:50%; transform:translateX(-50%);
+  font-family:var(--font-m); font-size:0.45rem; color:var(--p-muted);
+  letter-spacing:0.05em; white-space:nowrap;
 }
 
-/* ============ TECH STACK ============ */
+.terminal {
+  background:var(--bg-surface); border:1px solid var(--p-dim); border-radius:10px;
+  padding:1.5rem; font-family:var(--font-m); font-size:0.7rem; color:var(--p-muted);
+  line-height:1.7; overflow-x:auto; white-space:pre; margin:2rem 0;
+}
+.terminal .cmd { color:var(--cyan); }
+.terminal .val { color:var(--p-vivid); }
+.terminal .cmt { color:var(--p-dim); }
 
-.tech-section {
-  background: var(--bg-surface);
-  border-top: 1px solid var(--purple-dim);
-  border-bottom: 1px solid var(--purple-dim);
+/* ══════ TECH ══════ */
+.stats-row { display:flex; gap:2rem; flex-wrap:wrap; justify-content:center; margin:3rem 0; }
+.stat-box { text-align:center; }
+.stat-num {
+  font-family:var(--font-d); font-size:2.5rem; font-weight:800;
+  color:var(--p-vivid); text-shadow:var(--glow-text);
 }
-.tech-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-}
+.stat-label { font-family:var(--font-m); font-size:0.6rem; color:var(--p-muted); letter-spacing:0.1em; margin-top:0.3rem; }
+
+.badge-grid { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin:2rem 0; }
 .tech-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1.2rem;
-  background: var(--bg-raised);
-  border: 1px solid var(--purple-dim);
-  border-radius: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--purple-hot);
-  transition: var(--transition-normal);
-  cursor: default;
+  font-family:var(--font-m); font-size:0.6rem; color:var(--p-vivid);
+  padding:6px 14px; border:1px solid var(--p-dim); border-radius:20px;
+  letter-spacing:0.05em; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px;
 }
-.tech-badge:hover {
-  border-color: var(--purple-muted);
-  box-shadow: var(--glow-medium);
-  color: var(--purple-white);
-  transform: translateY(-2px);
-}
-.tech-badge .tech-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--purple-bright);
-  box-shadow: 0 0 6px var(--purple-bright);
+.tech-badge:hover { border-color:var(--p-bright); box-shadow:0 0 10px rgba(157,78,221,0.2); color:var(--p-white); }
+.tech-badge .dot { width:5px; height:5px; border-radius:50%; background:var(--p-bright); }
+
+.palette-row { display:flex; gap:4px; justify-content:center; margin:1rem 0; flex-wrap:wrap; }
+.palette-swatch {
+  width:50px; height:50px; border-radius:8px; display:flex; align-items:flex-end;
+  justify-content:center; font-family:var(--font-m); font-size:0.4rem; color:rgba(255,255,255,0.6);
+  padding-bottom:4px; border:1px solid rgba(255,255,255,0.05);
 }
 
-/* Architecture diagram */
-.arch-diagram {
-  margin-top: 3rem;
-  padding: 2rem;
-  background: var(--bg-void);
-  border: 1px solid var(--purple-dim);
-  border-radius: 12px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--purple-hot);
-  overflow-x: auto;
+/* ══════ DOWNLOAD ══════ */
+.dl-box {
+  text-align:center; padding:3rem; background:var(--bg-surface); border:1px solid var(--p-dim);
+  border-radius:16px; max-width:600px; margin:2rem auto;
 }
-.arch-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 0.5rem 0;
+.dl-btn {
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--font-d); font-size:0.85rem; font-weight:700;
+  color:var(--p-white); background:linear-gradient(135deg, var(--p-core), var(--p-bright));
+  padding:18px 40px; border-radius:10px; text-decoration:none;
+  box-shadow:0 0 30px rgba(123,47,190,0.4); transition:all 0.3s; border:none; cursor:pointer;
+  letter-spacing:0.08em;
 }
-.arch-box {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--purple-dim);
-  border-radius: 6px;
-  background: var(--bg-surface);
-  text-align: center;
-  transition: var(--transition-normal);
-  white-space: nowrap;
+.dl-btn:hover { box-shadow:0 0 50px rgba(157,78,221,0.6); transform:translateY(-3px) scale(1.02); }
+.dl-btn svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; }
+
+.steps { text-align:left; max-width:500px; margin:2rem auto; }
+.step {
+  display:flex; gap:1rem; align-items:flex-start; margin-bottom:1.5rem;
 }
-.arch-box:hover {
-  border-color: var(--purple-bright);
-  box-shadow: var(--glow-subtle);
+.step-num {
+  font-family:var(--font-d); font-size:0.7rem; font-weight:700;
+  color:var(--p-bright); background:rgba(123,47,190,0.15);
+  width:28px; height:28px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; flex-shrink:0; border:1px solid var(--p-dim);
 }
-.arch-box.highlight {
-  border-color: var(--purple-bright);
-  box-shadow: var(--glow-medium);
-  color: var(--purple-white);
-}
-.arch-arrow {
-  color: var(--purple-muted);
-  font-size: 1rem;
+.step-text h4 { font-family:var(--font-d); font-size:0.7rem; color:var(--p-white); letter-spacing:0.05em; }
+.step-text p { font-size:0.85rem; color:var(--p-muted); margin-top:0.2rem; }
+.step-text code {
+  font-family:var(--font-m); font-size:0.7rem; color:var(--cyan);
+  background:var(--bg-raised); padding:2px 8px; border-radius:4px;
 }
 
-/* ============ AUDIO ENGINE ============ */
+.companion {
+  display:flex; align-items:center; gap:2rem; margin:3rem auto; max-width:600px;
+  padding:1.5rem; background:var(--bg-surface); border:1px solid rgba(0,220,245,0.15);
+  border-radius:12px; transition:all 0.3s;
+}
+.companion:hover { border-color:rgba(0,220,245,0.3); box-shadow:0 0 20px rgba(0,220,245,0.1); }
+.companion-text h4 { font-family:var(--font-d); font-size:0.8rem; color:var(--cyan); letter-spacing:0.08em; }
+.companion-text p { font-size:0.85rem; color:var(--p-muted); margin-top:0.3rem; }
 
-.pipeline {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  align-items: center;
-  margin: 2rem 0;
+/* ══════ FOOTER ══════ */
+footer {
+  text-align:center; padding:3rem 2rem; border-top:1px solid var(--p-dim);
+  font-family:var(--font-m); font-size:0.6rem; color:var(--p-dim); letter-spacing:0.1em;
 }
-.pipeline-node {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.8rem 1.5rem;
-  background: var(--bg-surface);
-  border: 1px solid var(--purple-dim);
-  border-radius: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--purple-hot);
-  transition: var(--transition-normal);
-  width: fit-content;
-}
-.pipeline-node:hover {
-  border-color: var(--purple-bright);
-  box-shadow: var(--glow-medium);
-  color: var(--purple-white);
-}
-.pipeline-node .node-icon {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--purple-bright);
-  box-shadow: 0 0 8px var(--purple-bright);
-  flex-shrink: 0;
-}
-.pipeline-connector {
-  width: 1px;
-  height: 24px;
-  background: linear-gradient(to bottom, var(--purple-dim), var(--purple-bright), var(--purple-dim));
-}
-.pipeline-branch {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-}
-.pipeline-branch-line {
-  width: 40px;
-  height: 1px;
-  background: var(--purple-dim);
-  align-self: center;
-}
+footer a { color:var(--p-muted); text-decoration:none; transition:color 0.2s; }
+footer a:hover { color:var(--p-vivid); }
 
-.format-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  justify-content: center;
-  margin-top: 2rem;
-}
-.format-badge {
-  padding: 0.5rem 1rem;
-  background: var(--bg-raised);
-  border: 1px solid var(--purple-dim);
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--purple-hot);
-  transition: var(--transition-normal);
-}
-.format-badge:hover {
-  border-color: var(--purple-bright);
-  box-shadow: var(--glow-subtle);
-}
-.format-badge.lossless {
-  border-color: var(--purple-muted);
-  color: var(--purple-vivid);
-}
-
-/* ============ DOWNLOAD CTA ============ */
-
-.download-section {
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.download-section::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 600px;
-  height: 600px;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(123,47,190,0.15) 0%, transparent 70%);
-  pointer-events: none;
-}
-.download-title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.8rem, 4vw, 3.2rem);
-  color: var(--purple-white);
-  text-shadow: var(--glow-neon);
-  margin-bottom: 1rem;
-  line-height: 1.1;
-}
-.download-sub {
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  color: var(--purple-hot);
-  opacity: 0.8;
-  margin-bottom: 2.5rem;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-}
-.download-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
-}
-.btn-download {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.1em;
-  padding: 1.2rem 3rem;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--purple-core), var(--purple-bright));
-  color: var(--purple-white);
-  cursor: pointer;
-  transition: transform 0.2s var(--ease-bounce), box-shadow 0.3s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  position: relative;
-  overflow: hidden;
-}
-.btn-download::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--purple-bright), var(--purple-vivid));
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.btn-download:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: var(--glow-intense), 0 20px 50px rgba(123,47,190,0.3);
-}
-.btn-download:hover::before { opacity: 1; }
-.btn-download span, .btn-download svg { position: relative; z-index: 1; }
-
-.coming-soon-badges {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-.coming-badge {
-  padding: 0.5rem 1.2rem;
-  border: 1px solid var(--purple-dim);
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--purple-muted);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.sys-req {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--purple-muted);
-  line-height: 1.8;
-  margin-top: 2rem;
-}
-
-.github-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: var(--purple-vivid);
-  text-decoration: none;
-  transition: var(--transition-normal);
-}
-.github-link:hover {
-  color: var(--purple-white);
-  text-shadow: var(--glow-text);
-}
-.github-link svg {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
-}
-
-/* ============ FOOTER ============ */
-
-.footer {
-  border-top: 1px solid var(--purple-dim);
-  padding: 3rem 2rem;
-}
-.footer-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.footer-logo {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1rem;
-  color: var(--purple-vivid);
-  text-shadow: var(--glow-text);
-  letter-spacing: 0.1em;
-}
-.footer-tagline {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  color: var(--purple-muted);
-  font-style: italic;
-}
-.footer-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-}
-.footer-links a {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--purple-hot);
-  text-decoration: none;
-  transition: var(--transition-normal);
-}
-.footer-links a:hover {
-  color: var(--purple-white);
-  text-shadow: var(--glow-text);
-}
-.footer-copy {
-  width: 100%;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--purple-dim);
-  margin-top: 1rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(42,27,61,0.4);
-}
-
-/* ============ RESPONSIVE ============ */
-
-@media (max-width: 900px) {
-  .viz-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .viz-card:nth-child(1) { grid-column: 1 / 3; }
-  .viz-card:nth-child(2) { grid-column: 1; }
-  .viz-card:nth-child(3) { grid-column: 2; }
-  .viz-card:nth-child(4) { grid-column: 1 / 3; }
-  .viz-card:nth-child(5) { grid-column: 1; }
-  .viz-card:nth-child(6) { grid-column: 2; }
-  .viz-card:nth-child(7) { grid-column: 1 / 3; }
-  .pipeline-branch {
-    flex-direction: column;
-    gap: 0;
-    align-items: center;
-  }
-  .pipeline-branch-line { display: none; }
-}
-
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .menu-toggle { display: flex; }
-  .mock-body {
-    height: 240px;
-  }
-  .mock-progress { display: none; }
-  .features-grid {
-    grid-template-columns: 1fr;
-  }
-  .footer-inner {
-    flex-direction: column;
-    text-align: center;
-  }
-  .footer-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 600px) {
-  .viz-grid {
-    grid-template-columns: 1fr;
-  }
-  .viz-card:nth-child(n) {
-    grid-column: 1;
-  }
-  .hero { padding-top: 5rem; padding-left: 1rem; padding-right: 1rem; }
-  .hero-sub { max-width: 100%; padding: 0 0.5rem; }
-  .hero-tagline { letter-spacing: 0.02em; }
-  .hero-badge { font-size: 0.55rem; letter-spacing: 0.06em; padding: 0.4rem 0.8rem; }
-  .player-mockup { border-radius: 10px; }
-  .mock-body { grid-template-columns: 1fr; height: auto; }
-  .mock-sidebar { display: none; }
-  .mock-visualizer { height: 140px; }
-  .section { padding-left: 1rem; padding-right: 1rem; }
-  .section-title { word-break: break-word; }
-  .section-desc { font-size: 0.95rem; }
-  .btn-primary, .btn-secondary { font-size: 0.75rem; padding: 0.8rem 1.5rem; letter-spacing: 0.06em; }
-  .btn-download { font-size: 0.8rem; padding: 0.9rem 1.8rem; }
-  .arch-diagram { padding: 1rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .arch-box { white-space: normal; font-size: 0.65rem; padding: 0.4rem 0.6rem; }
-  .arch-row { flex-wrap: wrap; gap: 0.3rem; }
-  .pipeline-node { font-size: 0.7rem; padding: 0.6rem 1rem; max-width: 100%; }
-  .pipeline-branch { flex-direction: column; gap: 0; align-items: center; }
-  .pipeline-branch-line { display: none; }
-  .tech-badge { font-size: 0.7rem; padding: 0.5rem 0.8rem; }
-  .format-badge { font-size: 0.65rem; padding: 0.4rem 0.7rem; }
-  .feature-card { padding: 1.25rem; }
-  .feature-title { font-size: 0.8rem; }
-  .feature-text { font-size: 0.82rem; }
-  .viz-info { padding: 0.8rem 1rem; }
-  .viz-name { font-size: 0.78rem; }
-  .viz-desc { font-size: 0.78rem; }
-  .viz-preview { height: 150px; }
-  .coming-badge { font-size: 0.65rem; }
-  .sys-req { font-size: 0.7rem; padding: 0.8rem; }
-  .download-title { word-break: break-word; }
-  .footer-inner { padding: 0 0.5rem; }
-  .footer-links { gap: 0.8rem; font-size: 0.75rem; }
-  .footer-tagline { font-size: 0.7rem; }
-  .github-link { font-size: 0.8rem; }
-}
-
-@media (max-width: 380px) {
-  .hero-title { letter-spacing: -0.01em; }
-  .hero-buttons { flex-direction: column; align-items: center; gap: 0.6rem; }
-  .btn-primary, .btn-secondary { width: 100%; justify-content: center; font-size: 0.7rem; }
-  .btn-download { width: 100%; justify-content: center; }
-  .section { padding-left: 0.75rem; padding-right: 0.75rem; }
-  .nav { padding: 0 0.75rem; }
-  .tech-grid { gap: 0.5rem; }
-  .tech-badge { font-size: 0.6rem; padding: 0.4rem 0.6rem; }
-  .arch-box { font-size: 0.55rem; padding: 0.3rem 0.5rem; }
-}
-
-/* ============ CUSTOM CURSOR GLOW ============ */
-.cursor-glow {
-  position: fixed;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(123,47,190,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s;
-}
-/* ============ ELECTRON TITLEBAR ============ */
-
-.electron-titlebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10000;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  -webkit-app-region: drag;
-  background: transparent;
-  transition: background 0.4s, border-color 0.4s;
-  border-bottom: 1px solid transparent;
-  padding-left: 12px;
-  user-select: none;
-}
-.electron-titlebar.scrolled {
-  background: rgba(9,9,15,0.95);
-  border-bottom-color: var(--purple-dim);
-}
-.titlebar-title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.55rem;
-  color: var(--purple-muted);
-  letter-spacing: 0.15em;
-  pointer-events: none;
-}
-.titlebar-controls {
-  display: flex;
-  -webkit-app-region: no-drag;
-  height: 100%;
-}
-.titlebar-btn {
-  width: 46px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.15s;
-  position: relative;
-}
-.titlebar-btn svg {
-  width: 10px;
-  height: 10px;
-  stroke: var(--purple-muted);
-  fill: none;
-  stroke-width: 1.5;
-  transition: stroke 0.15s;
-}
-.titlebar-btn:hover svg {
-  stroke: var(--purple-white);
-}
-.titlebar-btn:hover {
-  background: rgba(123,47,190,0.2);
-}
-.titlebar-btn.close:hover {
-  background: rgba(232,17,35,0.9);
-}
-.titlebar-btn.close:hover svg {
-  stroke: var(--purple-white);
-}
-
-/* Adjust nav to sit below titlebar when in Electron */
-body.electron .nav {
-  top: 32px;
-}
-body.electron .hero {
-  padding-top: 8rem;
-}
-body.electron .mobile-overlay {
-  top: 32px;
-}
-
-/* ============ POLISH ENHANCEMENTS ============ */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 99997;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.4;
-}
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--purple-core), var(--purple-vivid), var(--purple-hot));
-  box-shadow: 0 0 8px rgba(183,110,255,0.6), 0 0 20px rgba(157,78,221,0.3);
-  z-index: 10001;
-  width: 0%;
-  transition: width 0.05s linear;
-}
-.section-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent 5%, var(--purple-dim) 20%, var(--purple-bright) 50%, var(--purple-dim) 80%, transparent 95%);
-  box-shadow: 0 0 10px rgba(157,78,221,0.2), 0 0 30px rgba(123,47,190,0.1);
-  opacity: 0.6;
-}
-.hero-title-glitch {
-  animation: titleGlitch 8s 2.5s infinite;
-}
-@keyframes titleGlitch {
-  0%, 100% { text-shadow: var(--glow-neon); }
-  2% { text-shadow: -3px 0 var(--purple-core), 3px 0 var(--purple-vivid); clip-path: inset(35% 0 25% 0); }
-  4% { text-shadow: var(--glow-neon); clip-path: none; }
-  42% { text-shadow: 2px 0 var(--purple-bright), -2px 0 var(--purple-core); clip-path: inset(15% 0 55% 0); }
-  44% { text-shadow: var(--glow-neon); clip-path: none; }
-}
-/* ============ LOADING SCREEN ============ */
-@keyframes loadGlitch {
-  0% { color: #B76EFF; text-shadow: none; }
-  25% { color: #D4A0FF; text-shadow: -2px 0 #7B2FBE, 2px 0 #9D4EDD; }
-  50% { color: #9D4EDD; text-shadow: 2px 0 #B76EFF, -1px 0 #D4A0FF; }
-  75% { color: #B76EFF; text-shadow: -1px 0 #D4A0FF, 1px 0 #7B2FBE; }
-  100% { color: #D4A0FF; text-shadow: none; }
-}
-
-/* ============ DECLASSIFIED MODE ============ */
-.declassified-toggle {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid var(--purple-bright);
-  border-radius: 4px;
-  background: transparent;
-  color: var(--purple-vivid);
-  cursor: pointer;
-  transition: var(--transition-normal);
-  margin-left: 0.5rem;
-}
-.declassified-toggle:hover {
-  background: var(--purple-core);
-  color: var(--purple-white);
-  box-shadow: var(--glow-medium);
-}
-
-body.declassified,
-body.declassified * {
-  font-family: 'JetBrains Mono', monospace !important;
-}
-body.declassified {
-  background: #000 !important;
-}
-body.declassified h1,
-body.declassified h2,
-body.declassified h3,
-body.declassified h4,
-body.declassified h5,
-body.declassified h6,
-body.declassified .section-title,
-body.declassified .hero-title,
-body.declassified .download-title,
-body.declassified .nav-logo,
-body.declassified .footer-logo {
-  color: #0f0 !important;
-  text-shadow: 0 0 8px rgba(0,255,0,0.5) !important;
-}
-body.declassified p,
-body.declassified span,
-body.declassified a,
-body.declassified li,
-body.declassified div,
-body.declassified .hero-sub,
-body.declassified .hero-tagline,
-body.declassified .nav-links a,
-body.declassified .footer-tagline,
-body.declassified .footer-copy {
-  color: #0a0 !important;
-}
-body.declassified img,
-body.declassified canvas,
-body.declassified .viz-preview {
-  filter: grayscale(1) contrast(1.4) !important;
-}
-body.declassified *,
-body.declassified *::before,
-body.declassified *::after {
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-body.declassified .scroll-progress {
-  background: #0f0 !important;
-  box-shadow: 0 0 8px rgba(0,255,0,0.6) !important;
-}
-body.declassified .declassified-toggle {
-  border-color: #0f0 !important;
-  color: #0f0 !important;
-}
-
-/* ============ COMMAND PALETTE ============ */
+/* ══════ COMMAND PALETTE ══════ */
 .cmd-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99998;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(8px);
-  display: none;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 20vh;
+  display:none; position:fixed; inset:0; z-index:2000;
+  background:rgba(0,0,0,0.6); backdrop-filter:blur(8px);
+  align-items:flex-start; justify-content:center; padding-top:20vh;
 }
-.cmd-overlay.open {
-  display: flex;
-}
+.cmd-overlay.open { display:flex; }
 .cmd-box {
-  width: 90%;
-  max-width: 520px;
-  background: var(--bg-raised);
-  border: 1px solid var(--purple-dim);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 40px rgba(123,47,190,0.3);
+  background:var(--bg-surface); border:1px solid var(--p-dim); border-radius:12px;
+  width:90%; max-width:500px; overflow:hidden;
 }
 .cmd-input {
-  width: 100%;
-  padding: 1rem 1.2rem;
-  background: var(--bg-input);
-  border: none;
-  border-bottom: 1px solid var(--purple-dim);
-  color: var(--purple-white);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  outline: none;
+  width:100%; padding:14px 18px; background:transparent; border:none;
+  font-family:var(--font-m); font-size:0.85rem; color:var(--p-white);
+  outline:none; border-bottom:1px solid var(--p-dim);
 }
-.cmd-input::placeholder {
-  color: var(--purple-muted);
-}
-.cmd-results {
-  max-height: 300px;
-  overflow-y: auto;
-  list-style: none;
-}
+.cmd-results { list-style:none; max-height:300px; overflow-y:auto; }
 .cmd-item {
-  padding: 0.7rem 1.2rem;
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--purple-hot);
-  transition: background 0.15s, color 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
+  padding:10px 18px; cursor:pointer; font-family:var(--font-b); font-size:0.9rem;
+  color:var(--p-muted); display:flex; justify-content:space-between; align-items:center;
+  transition:all 0.15s;
 }
-.cmd-item:hover,
-.cmd-item.active {
-  background: var(--purple-core);
-  color: var(--purple-white);
+.cmd-item:hover, .cmd-item.active { background:rgba(123,47,190,0.15); color:var(--p-white); }
+.cmd-item-key { font-family:var(--font-m); font-size:0.55rem; color:var(--cyan); letter-spacing:0.08em; }
+
+/* ══════ RESPONSIVE ══════ */
+@media (max-width:768px) {
+  .nav-links { display:none; }
+  .nav-hamburger { display:flex; }
+  .hero-title { font-size:clamp(2.5rem,12vw,4rem); }
+  .highlight-grid { grid-template-columns:repeat(2, 1fr); }
+  .dj-hero { flex-direction:column; }
+  .companion { flex-direction:column; text-align:center; }
+  .stats-row { gap:1.5rem; }
+  .stat-num { font-size:2rem; }
+  .section { padding:3rem 1.2rem; }
 }
-.cmd-item-key {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--purple-muted);
-  margin-left: auto;
+@media (max-width:480px) {
+  .highlight-grid { grid-template-columns:1fr; }
+  .features-grid { grid-template-columns:1fr; }
+  .trans-grid { grid-template-columns:1fr; }
+  .filter-bar { justify-content:center; }
 }
 
-/* ============ PORTAL TRANSITION ============ */
-@keyframes portalWarp {
-  0% { transform: scale(1); filter: brightness(1) blur(0); opacity: 1; }
-  50% { transform: scale(0.95); filter: brightness(1.5) blur(2px); opacity: 0.8; }
-  100% { transform: scale(0.5); filter: brightness(3) blur(12px); opacity: 0; }
-}
-body.portal-out {
-  animation: portalWarp 0.6s var(--ease-smooth) forwards;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
 }
 </style>
 </head>
 <body>
-<!-- ============ LOADING SCREEN ============ -->
-<div id="loadingScreen" style="position:fixed;inset:0;z-index:99999;background:#09090F;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 0.5s,visibility 0.5s">
-  <div style="font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.5rem);color:#B76EFF;letter-spacing:0.3em;animation:loadGlitch 0.15s infinite">AETHER</div>
-  <div style="width:200px;height:2px;background:#0F0F1A;margin-top:1.5rem;border-radius:1px;overflow:hidden">
-    <div id="loadBar" style="width:0%;height:100%;background:linear-gradient(90deg,#B76EFF,#D4A0FF);transition:width 0.3s"></div>
-  </div>
-</div>
 
-<div class="scroll-progress" id="scrollProgress"></div>
+<!-- ══════ PARTICLE CANVAS ══════ -->
+<canvas id="heroCanvas"></canvas>
 
-<!-- ============ ELECTRON TITLEBAR ============ -->
-<div class="electron-titlebar" id="electronTitlebar" style="display:none;">
-  <span class="titlebar-title">AETHER</span>
-  <div class="titlebar-controls">
-    <button class="titlebar-btn minimize" id="btnMinimize" title="Minimize">
-      <svg viewBox="0 0 10 10"><line x1="0" y1="5" x2="10" y2="5"/></svg>
-    </button>
-    <button class="titlebar-btn maximize" id="btnMaximize" title="Maximize">
-      <svg viewBox="0 0 10 10" id="maxIcon"><rect x="0.5" y="0.5" width="9" height="9" rx="1"/></svg>
-    </button>
-    <button class="titlebar-btn close" id="btnClose" title="Close">
-      <svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10"/><line x1="10" y1="0" x2="0" y2="10"/></svg>
-    </button>
-  </div>
-</div>
-
-<div class="cursor-glow" id="cursorGlow"></div>
-
-<!-- ============ NAVIGATION ============ -->
-<nav class="nav" id="nav">
-  <a href="#" class="nav-logo">
-    <span class="logo-p">A</span>
-    ETHER
-  </a>
+<!-- ══════ NAV ══════ -->
+<nav id="nav">
+  <a href="#home" class="nav-logo" onclick="go('home')">AETHER</a>
   <ul class="nav-links">
-    <li><a href="#visualizers">Visualizers</a></li>
-    <li><a href="#binaural">Binaural</a></li>
-    <li><a href="#djmode">DJ Mode</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#tech">Tech</a></li>
-    <li><a href="https://emperorbadussy.github.io/charon/" target="_blank" style="color:rgba(34,211,238,0.8);">CHARON</a></li>
-    <li><a href="#download" class="nav-cta">DOWNLOAD</a></li>
-    <li><button class="declassified-toggle" id="declassifiedBtn">[CLASSIFIED]</button></li>
+    <li><a href="#home" onclick="go('home')" data-page="home">HOME</a></li>
+    <li><a href="#features" onclick="go('features')" data-page="features">FEATURES</a></li>
+    <li><a href="#dj" onclick="go('dj')" data-page="dj">DJ ENGINE</a></li>
+    <li><a href="#tech" onclick="go('tech')" data-page="tech">TECH</a></li>
+    <li><a href="https://emperorbadussy.github.io/charon/" target="_blank" style="color:rgba(0,220,245,0.7)">CHARON</a></li>
+    <li><a href="#download" onclick="go('download')" data-page="download" class="nav-cta">DOWNLOAD</a></li>
   </ul>
-  <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMobile()">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<div class="mobile-overlay" id="mobileMenu">
-  <a href="#visualizers" onclick="closeMobile()">VISUALIZERS</a>
-  <a href="#binaural" onclick="closeMobile()">BINAURAL</a>
-  <a href="#djmode" onclick="closeMobile()">DJ MODE</a>
-  <a href="#features" onclick="closeMobile()">FEATURES</a>
-  <a href="#tech" onclick="closeMobile()">TECH</a>
-  <a href="#download" onclick="closeMobile()">DOWNLOAD</a>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" onclick="go('home');toggleMobile()">HOME</a>
+  <a href="#features" onclick="go('features');toggleMobile()">FEATURES</a>
+  <a href="#dj" onclick="go('dj');toggleMobile()">DJ ENGINE</a>
+  <a href="#tech" onclick="go('tech');toggleMobile()">TECH</a>
+  <a href="#download" onclick="go('download');toggleMobile()">DOWNLOAD</a>
+  <a href="https://emperorbadussy.github.io/charon/" target="_blank" style="color:var(--cyan)">CHARON</a>
 </div>
 
-<!-- ============ HERO ============ -->
-<section class="hero" id="hero">
-  <canvas id="heroCanvas"></canvas>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="dot"></span>
-      VERSION 1.0 — NOW AVAILABLE FOR WINDOWS
-    </div>
-    <h1 class="hero-title" id="heroTitle"></h1>
+<!-- ══════════════════════════════════════════
+     PAGE: HOME
+     ══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span>VERSION 2.0 — NOW AVAILABLE</div>
+    <h1 class="hero-title">AETHER</h1>
     <p class="hero-tagline">Not a music player — an experience.</p>
-    <p class="hero-sub">OLED-black aesthetic. Tron-purple atmosphere. 17 generative visualizers. AI DJ engine with 9 transitions. Stem isolation. Vinyl warmth simulation. Magic playlists. Sonic similarity maps. Discord presence. Weather ambient layers. Pomodoro focus mode. Hearing profile EQ. This is music from 2077.</p>
-    <div class="hero-buttons">
-      <a href="#download" class="btn-primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>DOWNLOAD FOR WINDOWS</span>
+    <div class="hero-rotating" id="heroRotating"></div>
+    <p class="hero-sub">17,000+ lines of hand-crafted code. AI DJ engine with 9 transitions. 3D sonic galaxy of your library. Stem isolation. Binaural brainwave entrainment. Weather-reactive ambient soundscapes. All in a single Electron file. Zero frameworks.</p>
+    <div class="hero-btns">
+      <a href="https://github.com/EmperorBadussy/aether/releases" target="_blank" class="btn-primary">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        DOWNLOAD FOR WINDOWS
       </a>
-      <a href="#features" class="btn-secondary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 16 16 12 12 8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        <span>EXPLORE FEATURES</span>
+      <a href="#features" onclick="go('features')" class="btn-secondary">
+        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 16 16 12 12 8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        EXPLORE FEATURES
       </a>
     </div>
-    <div class="mockup-container">
-      <div class="player-mockup">
-        <div class="mock-titlebar">
-          <div class="mock-titlebar-left">
-            <span class="mock-titlebar-logo">AETHER</span>
-          </div>
-          <div class="mock-dots">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        <div class="mock-body">
-          <div class="mock-sidebar">
-            <div class="mock-sidebar-icon active">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-            </div>
-            <div class="mock-sidebar-icon">
-              <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-            </div>
-            <div class="mock-sidebar-icon">
-              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </div>
-            <div class="mock-sidebar-icon">
-              <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            </div>
-            <div class="mock-sidebar-icon">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </div>
-          </div>
-          <div class="mock-main">
-            <div class="mock-visualizer">
-              <div class="mock-viz-rings">
-                <div class="mock-viz-ring"></div>
-                <div class="mock-viz-ring"></div>
-                <div class="mock-viz-ring"></div>
-                <div class="mock-viz-ring"></div>
-                <div class="mock-viz-ring"></div>
-              </div>
-            </div>
-            <div class="mock-track-list">
-              <div class="mock-track-row active">
-                <div class="mock-eq-bars"><div class="mock-eq-bar"></div><div class="mock-eq-bar"></div><div class="mock-eq-bar"></div></div>
-                <div class="mock-track-name">Phantom Frequencies<small>Neon Architect</small></div>
-                <div class="mock-track-dur">4:21</div>
-              </div>
-              <div class="mock-track-row">
-                <div class="mock-track-num">2</div>
-                <div class="mock-track-name">Void Protocol<small>Synth Wraith</small></div>
-                <div class="mock-track-dur">3:47</div>
-              </div>
-              <div class="mock-track-row">
-                <div class="mock-track-num">3</div>
-                <div class="mock-track-name">Deep Circuit<small>Black Mesa</small></div>
-                <div class="mock-track-dur">5:12</div>
-              </div>
-            </div>
-          </div>
-          <div class="mock-nowplaying">
-            <div class="mock-album-art"></div>
-            <div class="mock-np-info">
-              <div class="mock-np-title">PHANTOM FREQUENCIES</div>
-              <div class="mock-np-artist">Neon Architect</div>
-            </div>
-            <div class="mock-controls">
-              <div class="mock-ctrl-btn">
-                <svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
-              </div>
-              <div class="mock-play-btn">
-                <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-              </div>
-              <div class="mock-ctrl-btn">
-                <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-              </div>
-            </div>
-            <div class="mock-progress">
-              <span class="mock-progress-time">2:34</span>
-              <div class="mock-progress-bar">
-                <div class="mock-progress-fill"></div>
-              </div>
-              <span class="mock-progress-time">4:21</span>
-            </div>
-          </div>
-        </div>
+    <div class="highlight-grid reveal">
+      <div class="highlight-card">
+        <svg viewBox="0 0 24 24"><circle cx="8" cy="16" r="5"/><circle cx="16" cy="16" r="5"/><line x1="8" y1="11" x2="8" y2="4"/><line x1="16" y1="11" x2="16" y2="4"/><line x1="8" y1="4" x2="16" y2="4"/></svg>
+        <h3>AI DJ ENGINE</h3>
+        <p>9 transitions. Beat-phase alignment. Spectral compatibility. Set journey planning. Zero trainwrecks.</p>
+      </div>
+      <div class="highlight-card">
+        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2.5"/><circle cx="19" cy="14" r="1.5"/><circle cx="10" cy="18" r="1.8"/><line x1="7" y1="11" x2="10" y2="7" stroke-opacity="0.4"/></svg>
+        <h3>3D SONIC MAP</h3>
+        <p>Your library as a 3D constellation. Energy, BPM, danceability axes. Orbit, zoom, click to play.</p>
+      </div>
+      <div class="highlight-card">
+        <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <h3>STEM ISOLATION</h3>
+        <p>Vocals, drums, bass, instruments. Solo, mute, mix. Karaoke and instrumental presets.</p>
+      </div>
+      <div class="highlight-card">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+        <h3>17 VISUALIZERS</h3>
+        <p>Fractal flames to lyric rain. Canvas 2D generative art. 60fps beat-reactive. All hand-crafted.</p>
+      </div>
+      <div class="highlight-card">
+        <svg viewBox="0 0 24 24"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7"/><path d="M2 18c0-2 1.5-5 3.5-5s2 3 3.5 3 1.5-3 3.5-3 2 3 3.5 3 1.5-3 3.5-3 3.5 3 3.5 5" opacity="0.5"/></svg>
+        <h3>BINAURAL ENGINE</h3>
+        <p>Multi-layer brainwave entrainment. Delta to Gamma. Rhythmic divisions. Neural state targeting.</p>
+      </div>
+      <div class="highlight-card">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        <h3>VINYL WARMTH</h3>
+        <p>Crackle, hiss, flutter, tube saturation. 6 presets from clean digital to dusty AM radio.</p>
       </div>
     </div>
+    <div class="scroll-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
   </div>
-  <div class="scroll-indicator">
-    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-  </div>
-</section>
+</div>
 
-<div class="section-divider"></div>
+<!-- ══════════════════════════════════════════
+     PAGE: FEATURES
+     ══════════════════════════════════════════ -->
+<div class="page" id="page-features">
+  <div class="section">
+    <div class="section-label reveal">140+ FEATURES</div>
+    <h2 class="section-title reveal">Engineered Without Compromise</h2>
+    <p class="section-desc reveal">Every detail obsessed over. Every millisecond accounted for. Built for people who care about how music sounds and feels.</p>
 
-<!-- ============ VISUALIZERS ============ -->
-<section class="section" id="visualizers">
-  <div class="section-inner">
-    <div class="section-label reveal">01 // VISUALIZERS</div>
-    <h2 class="section-title reveal">17 Generative Worlds</h2>
-    <p class="section-desc reveal">Each visualizer is a real-time Canvas 2D scene running at 60fps. Audio-reactive to every frequency band, beat, and transient. Switch instantly or let them auto-rotate.</p>
+    <div class="filter-bar reveal">
+      <button class="filter-btn active" onclick="filterFeats('all',this)">ALL</button>
+      <button class="filter-btn" onclick="filterFeats('audio',this)">AUDIO</button>
+      <button class="filter-btn" onclick="filterFeats('dj',this)">DJ</button>
+      <button class="filter-btn" onclick="filterFeats('discovery',this)">DISCOVERY</button>
+      <button class="filter-btn" onclick="filterFeats('visual',this)">VISUAL</button>
+      <button class="filter-btn" onclick="filterFeats('wellness',this)">WELLNESS</button>
+      <button class="filter-btn" onclick="filterFeats('integration',this)">INTEGRATION</button>
+    </div>
 
-    <div class="viz-grid">
-      <!-- Electric Sheep -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.05s">
-        <div class="viz-preview viz-electric-sheep">
-          <div class="fractal-line"></div>
-          <div class="fractal-line"></div>
-          <div class="fractal-line"></div>
-        </div>
-        <div class="viz-info">
-          <div class="viz-name">ELECTRIC SHEEP</div>
-          <div class="viz-desc">Video-based fractal flames with full audio reactivity. Playback speed, hue-rotation, brightness, and zoom pulse all driven by frequency bands. Beat-triggered pulse rings and floating particles.</div>
-        </div>
-      </div>
+    <div class="features-grid" id="featGrid">
+      <div class="feat-section-header" data-cat="audio">AUDIO PROCESSING</div>
+      <div class="feat-card" data-cat="audio"><h4>10-BAND PARAMETRIC EQ</h4><p>Full parametric equalizer with frequency response curve, 10 presets, real-time Catmull-Rom spline visualization.</p></div>
+      <div class="feat-card" data-cat="audio"><h4>VINYL / LO-FI ENGINE</h4><p>Analog warmth: vinyl crackle, tape hiss, wow & flutter, tube saturation, frequency rolloff. 6 presets.</p></div>
+      <div class="feat-card" data-cat="audio"><h4>STEM ISOLATION</h4><p>4-channel playback: vocals, drums, bass, instruments. Solo/mute/volume per stem. Karaoke, Instrumental, A Capella presets.</p></div>
+      <div class="feat-card" data-cat="audio"><h4>SIGNAL PATH DISPLAY</h4><p>Real-time processing chain visualization. Codec, sample rate, bit depth, lossless indicator. Every DSP stage visible.</p></div>
+      <div class="feat-card" data-cat="audio"><h4>HEARING PROFILE EQ</h4><p>Built-in audiometric test at 6 frequencies. Auto-generates compensation EQ curve from your personal audiogram.</p></div>
+      <div class="feat-card" data-cat="audio"><h4>GAPLESS PLAYBACK</h4><p>Dual HTMLAudioElement crossfade strategy. Pre-buffer next track. Zero gap between songs.</p></div>
+      <div class="feat-card" data-cat="audio"><h4>WAVEFORM SEEK BAR</h4><p>Pre-computed full-track waveform visualization. Seek with surgical precision.</p></div>
+      <div class="feat-card" data-cat="audio"><h4>BEAT DETECTION</h4><p>FFT analysis with sub-bass, bass, mid, high, and energy band extraction. Powers visualizers and DJ engine.</p></div>
+      <div class="feat-card" data-cat="audio"><h4>MASTER LIMITER</h4><p>DynamicsCompressor at -3dB prevents clipping during DJ double drops and stem mixing.</p></div>
 
-      <!-- Particle Field -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.1s">
-        <div class="viz-preview viz-particles" id="particlePreview"></div>
-        <div class="viz-info">
-          <div class="viz-name">PARTICLE FIELD</div>
-          <div class="viz-desc">100k+ GPU-instanced particles. Beat-reactive radial explosions.</div>
-        </div>
-      </div>
+      <div class="feat-section-header" data-cat="dj">DJ ENGINE</div>
+      <div class="feat-card" data-cat="dj"><h4>9 TRANSITION PATTERNS</h4><p>Blend, cut, bass swap, echo out, loop tease, double drop, backspin, filter sweep, power down.</p></div>
+      <div class="feat-card" data-cat="dj"><h4>ESSENTIA.JS WASM ANALYSIS</h4><p>Float-precision BPM from RhythmExtractor2013. Key detection. Danceability scoring. Background queue pre-analysis.</p></div>
+      <div class="feat-card" data-cat="dj"><h4>CAMELOT KEY MATCHING</h4><p>Full Camelot wheel harmonic mixing. Compatible keys scored and prioritized. Every mix sounds intentional.</p></div>
+      <div class="feat-card" data-cat="dj"><h4>BEAT-PHASE ALIGNMENT</h4><p>Modular arithmetic aligns incoming beats to outgoing grid. Micro-drift correction in all overlapping transitions.</p></div>
+      <div class="feat-card" data-cat="dj"><h4>SPECTRAL COMPATIBILITY</h4><p>Real DFT 16-band spectral profiling. Detects frequency clashes before overlap. Vocal clash prevention.</p></div>
+      <div class="feat-card" data-cat="dj"><h4>SET JOURNEY PLANNING</h4><p>5-phase arc: warmup, building, peak, cooldown, finale. Adapts energy targets per phase.</p></div>
+      <div class="feat-card" data-cat="dj"><h4>SMART TRACK SELECTION</h4><p>BPM affinity, key compatibility, spectral scoring, danceability continuity, artist variety, user behavior learning.</p></div>
+      <div class="feat-card" data-cat="dj"><h4>PROGRESSIVE EQ HANDOFF</h4><p>DJ-standard EQ at 200Hz/1.2kHz/2.5kHz. Highs fade, bass swaps on beat, mids restore.</p></div>
 
-      <!-- Waveform Terrain -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.15s">
-        <div class="viz-preview viz-terrain" id="terrainPreview"></div>
-        <div class="viz-info">
-          <div class="viz-name">WAVEFORM TERRAIN</div>
-          <div class="viz-desc">3D terrain mesh displaced by live waveform data. Fly over your audio landscape.</div>
-        </div>
-      </div>
+      <div class="feat-section-header" data-cat="discovery">DISCOVERY</div>
+      <div class="feat-card" data-cat="discovery"><h4>MAGIC PLAYLIST</h4><p>Type a vibe, get a playlist. Natural language mood/energy/tempo keyword matching. Full library search.</p></div>
+      <div class="feat-card" data-cat="discovery"><h4>AI AUTO-TAGGER</h4><p>Energy, mood, tempo, danceability, vocal tags from audio analysis. Color-coded badges in track lists.</p></div>
+      <div class="feat-card" data-cat="discovery"><h4>REDISCOVER MODE</h4><p>Surfaces forgotten favorites — tracks with high play counts you haven't touched in months.</p></div>
+      <div class="feat-card" data-cat="discovery"><h4>DAYLIST</h4><p>7 time-of-day periods with auto-curated playlists. Early morning through late night. Full library search.</p></div>
+      <div class="feat-card" data-cat="discovery"><h4>3D SONIC MAP</h4><p>Interactive nebula visualization. Energy × BPM × Danceability. Starfield, constellations, orbit, click to play.</p></div>
+      <div class="feat-card" data-cat="discovery"><h4>MUSIC DNA FINGERPRINT</h4><p>Unique circular 360-segment artwork per track. Exportable as PNG. Every song becomes visual art.</p></div>
+      <div class="feat-card" data-cat="discovery"><h4>TASTE EVOLUTION</h4><p>Session history with sparkline charts, genre bars, vibe classification. Watch your taste evolve.</p></div>
+      <div class="feat-card" data-cat="discovery"><h4>LAST.FM SCROBBLING</h4><p>Full auth flow. Now playing updates. Auto-scrobble at 50% or 4 minutes. Inline MD5 signing.</p></div>
 
-      <!-- Neural Web -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.2s">
-        <div class="viz-preview viz-neural" id="neuralPreview"></div>
-        <div class="viz-info">
-          <div class="viz-name">NEURAL WEB</div>
-          <div class="viz-desc">Force-directed graph network. Nodes pulse with assigned frequency bands. Connections flow with audio data.</div>
-        </div>
-      </div>
+      <div class="feat-section-header" data-cat="visual">VISUAL</div>
+      <div class="feat-card" data-cat="visual"><h4>17 GENERATIVE VISUALIZERS</h4><p>Fractal Flame, Void Pulse, Tron Grid, Particle Field, Waveform Bars, Plasma Warp, Neural Web, Aurora Borealis, DNA Helix, Cosmic Mandala, Electric Sheep, Bio-Genesis, Command Deck, and more.</p></div>
+      <div class="feat-card" data-cat="visual"><h4>OLED-OPTIMIZED</h4><p>True #000000 black. 12-shade purple palette. Designed for OLED power efficiency and visual depth.</p></div>
+      <div class="feat-card" data-cat="visual"><h4>LOADING SKELETONS</h4><p>Shimmer placeholders for albums, tracks, artists. No blank → pop-in. Smooth content arrival.</p></div>
+      <div class="feat-card" data-cat="visual"><h4>WALLPAPER ENGINE</h4><p>Steam Workshop video backgrounds with audio-reactive canvas overlay. Adjustable opacity and brightness.</p></div>
 
-      <!-- Void Pulse -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.25s">
-        <div class="viz-preview viz-voidpulse" id="voidPreview"></div>
-        <div class="viz-info">
-          <div class="viz-name">VOID PULSE</div>
-          <div class="viz-desc">Minimalist concentric rings. Maximum OLED contrast.</div>
-        </div>
-      </div>
+      <div class="feat-section-header" data-cat="wellness">WELLNESS</div>
+      <div class="feat-card" data-cat="wellness"><h4>SLEEP TIMER</h4><p>Intelligent 5-minute fade with Delta binaural crossfade. Presets + custom. Moon badge countdown.</p></div>
+      <div class="feat-card" data-cat="wellness"><h4>POMODORO FOCUS MODE</h4><p>25/5 work/break cycles. Alpha brainwave integration. Auto-selects calm/upbeat tracks. UI dimming.</p></div>
+      <div class="feat-card" data-cat="wellness"><h4>WEATHER AMBIENT</h4><p>Rain, wind, thunder, birds, crickets — all synthesized live via Web Audio. Manual mode for study sessions.</p></div>
 
-      <!-- Tron Grid -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.3s">
-        <div class="viz-preview viz-trongrid">
-          <div class="grid-overlay"></div>
-          <div class="horizon-glow"></div>
-        </div>
-        <div class="viz-info">
-          <div class="viz-name">TRON GRID</div>
-          <div class="viz-desc">Infinite perspective grid. BPM-synced scroll. Light columns on beats.</div>
-        </div>
-      </div>
-
-      <!-- DNA Helix -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.35s">
-        <div class="viz-preview viz-dna" id="dnaPreview"></div>
-        <div class="viz-info">
-          <div class="viz-name">DNA HELIX</div>
-          <div class="viz-desc">Double helix reactor. Nucleotides pulse per band. Cross-connections glow in sequence.</div>
-        </div>
-      </div>
-
-      <!-- Lyric Rain -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.4s">
-        <div class="viz-preview" style="background:linear-gradient(180deg, #000 0%, rgba(0,220,245,0.05) 50%, rgba(123,47,190,0.08) 100%); display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:1.5rem; color:rgba(0,220,245,0.6); text-shadow:0 0 12px rgba(0,220,245,0.5); letter-spacing:4px;">LYRICS</div>
-        <div class="viz-info">
-          <div class="viz-name">LYRIC RAIN</div>
-          <div class="viz-desc">Matrix-style falling rain with deep audio reactivity. Bass shockwaves ripple through columns. Frequency-mapped brightness per column. LRCLIB lyrics materialize letter-by-letter on beats.</div>
-        </div>
-      </div>
-
-      <!-- + 10 more -->
-      <div class="viz-card reveal-scale" style="transition-delay:0.45s">
-        <div class="viz-preview" style="background:linear-gradient(135deg, rgba(157,78,221,0.1), rgba(255,45,123,0.08)); display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-size:0.7rem; color:var(--purple-muted); letter-spacing:3px;">+9 MORE</div>
-        <div class="viz-info">
-          <div class="viz-name">AND MORE...</div>
-          <div class="viz-desc">Aurora Borealis, Cosmic Mandala, Bio-Genesis, UFO Command Deck (holographic disc with alien telemetry), Plasma Warp, Fractal Flame, Waveform Bars, and II variants.</div>
-        </div>
-      </div>
+      <div class="feat-section-header" data-cat="integration">INTEGRATION</div>
+      <div class="feat-card" data-cat="integration"><h4>NAVIDROME / SUBSONIC</h4><p>Full Subsonic API support. Stream your self-hosted library. Albums, artists, genres, playlists, search.</p></div>
+      <div class="feat-card" data-cat="integration"><h4>DISCORD RICH PRESENCE</h4><p>Shows current track in Discord status. Direct IPC pipe protocol — zero npm dependencies.</p></div>
+      <div class="feat-card" data-cat="integration"><h4>LRCLIB LYRICS</h4><p>Auto-fetch synced lyrics. Powers the Lyric Rain visualizer — words materialize on beats.</p></div>
+      <div class="feat-card" data-cat="integration"><h4>MEDIA KEY SUPPORT</h4><p>System play/pause/next/prev. Windows media overlay with album art via MediaSession API.</p></div>
+      <div class="feat-card" data-cat="integration"><h4>ESSENTIA.JS WASM</h4><p>Client-side audio analysis. BPM, key, danceability, onset detection, spectral profiling.</p></div>
     </div>
   </div>
-</section>
+</div>
 
-<div class="section-divider"></div>
+<!-- ══════════════════════════════════════════
+     PAGE: DJ ENGINE
+     ══════════════════════════════════════════ -->
+<div class="page" id="page-dj">
+  <div class="section">
+    <div class="section-label reveal">AI-POWERED MIXING</div>
+    <h2 class="section-title reveal" style="background:linear-gradient(135deg,var(--magenta),var(--p-vivid),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Dual-Deck AI Mixing That Reads the Room</h2>
+    <p class="section-desc reveal">Not a crossfader with a timer. A real mixing engine powered by Essentia.js WASM audio intelligence.</p>
 
-<!-- ============ BINAURAL BRAINWAVE ENGINE ============ -->
-<section class="section" id="binaural" style="border-top: 1px solid rgba(157,78,221,0.15);">
-  <div class="section-inner">
-    <div class="section-label reveal" style="color:rgba(255,45,123,0.8);">01.5 // NEURAL ENTRAINMENT</div>
-    <h2 class="section-title reveal" style="background:linear-gradient(135deg, var(--purple-vivid), #FF2D7B, #00DCF5); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Rhythmic Binaural Brainwave Layering Engine</h2>
-    <p class="section-desc reveal">Not just binaural beats — a full multi-layer neural entrainment system. Stack brainwave frequencies at different rhythmic divisions. Delta droning on whole notes while Gamma flickers on sixteenths. Your brain, your patterns.</p>
-
-    <div class="features-grid" style="margin-top:2rem;">
-      <div class="feature-card reveal" style="transition-delay:0.05s; border-color:rgba(255,45,123,0.2);">
-        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7"/></svg>
-        </div>
-        <div class="feature-title">5 BRAINWAVE PRESETS</div>
-        <div class="feature-text">Delta (2Hz), Theta (6Hz), Alpha (10Hz), Beta (20Hz), Gamma (40Hz). Instant neural state targeting.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.1s; border-color:rgba(0,220,245,0.2);">
-        <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        </div>
-        <div class="feature-title">RHYTHM LAYER ENGINE</div>
-        <div class="feature-text">Stack unlimited layers. 7 rhythmic divisions — whole, half, quarter, eighth, triplet, 6-tuplet, sixteenth. All BPM-synced.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.15s; border-color:rgba(183,110,255,0.2);">
-        <div class="feature-icon" style="background:rgba(183,110,255,0.08); border-color:rgba(183,110,255,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(183,110,255,0.9);"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
-        <div class="feature-title">5 RHYTHM PRESETS</div>
-        <div class="feature-text">Deep Meditation, Focus Flow, Lucid Dream, Peak Performance, Shamanic Journey. One-click brain states.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.2s; border-color:rgba(255,45,123,0.2);">
-        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
-        <div class="feature-title">SAMPLE-ACCURATE</div>
-        <div class="feature-text">Lookahead scheduler with Web Audio API timing. Gain envelopes with attack/sustain/release. Zero drift.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ============ AI DJ MODE ============ -->
-<section class="section dj-section" id="djmode">
-  <div class="section-inner">
-    <div class="section-label reveal" style="color:rgba(255,45,123,0.8);">02 // AI DJ ENGINE</div>
-    <h2 class="section-title reveal" style="background:linear-gradient(135deg, #FF2D7B, var(--purple-vivid), #00DCF5); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Dual-Deck AI Mixing That Reads the Room</h2>
-    <p class="section-desc reveal">Not a crossfader with a timer. A real mixing engine powered by Essentia.js WASM audio intelligence. Float-precision BPM, key analysis, spectral compatibility scoring, set journey planning. Nine transition patterns. Master limiter. Background queue pre-analysis. Zero trainwrecks.</p>
-
-    <div class="dj-hero-visual reveal">
-      <div class="dj-deck-preview">
+    <div class="dj-hero reveal">
+      <div class="dj-deck">
         <div class="dj-deck-label">DECK A — OUTGOING</div>
         <div class="dj-deck-bpm">128<span>BPM</span></div>
         <div class="dj-deck-key">8B — A min</div>
       </div>
-      <div class="dj-crossfader">
-        <div class="dj-crossfader-label">XFADE</div>
-        <div class="dj-crossfader-track">
-          <div class="dj-crossfader-knob"></div>
-        </div>
-        <div class="dj-crossfader-label">BLEND</div>
+      <div class="dj-xfader">
+        <div class="dj-xfader-lbl">XFADE</div>
+        <div class="dj-xfader-track"><div class="dj-xfader-knob"></div></div>
+        <div class="dj-xfader-lbl">BLEND</div>
       </div>
-      <div class="dj-deck-preview">
+      <div class="dj-deck">
         <div class="dj-deck-label">DECK B — INCOMING</div>
         <div class="dj-deck-bpm">126<span>BPM</span></div>
         <div class="dj-deck-key">9B — E min</div>
       </div>
     </div>
 
-    <div class="dj-transition-badges reveal">
-      <div class="dj-transition-badge">BLEND</div>
-      <div class="dj-transition-badge">CUT</div>
-      <div class="dj-transition-badge">ECHO OUT</div>
-      <div class="dj-transition-badge">BACKSPIN</div>
-      <div class="dj-transition-badge">FILTER SWEEP</div>
-      <div class="dj-transition-badge">DROP</div>
-      <div class="dj-transition-badge">SLAM</div>
-      <div class="dj-transition-badge">FILTER SWEEP</div>
-      <div class="dj-transition-badge">POWER DOWN</div>
+    <h3 class="section-title reveal" style="font-size:1.2rem;margin-top:3rem;">9 Transition Patterns</h3>
+    <div class="trans-grid reveal">
+      <div class="trans-card"><h4>BLEND</h4><p>S-curve crossfade with progressive EQ handoff. Highs → bass swap → mids restore.</p></div>
+      <div class="trans-card"><h4>CUT</h4><p>Instant beat-locked switch. 30ms anti-click ramp. Prefers cutting into drops.</p></div>
+      <div class="trans-card"><h4>BASS SWAP</h4><p>Low-end handoff on the downbeat. 8 bars together, bass swap, 4-bar fade.</p></div>
+      <div class="trans-card"><h4>ECHO OUT</h4><p>Tempo-synced delay chain with high-pass feedback. Dry signal fades while echo sustains.</p></div>
+      <div class="trans-card"><h4>LOOP TEASE</h4><p>Tease incoming twice (percussion only, then with mids), pull back, then commit.</p></div>
+      <div class="trans-card"><h4>DOUBLE DROP</h4><p>Align both tracks' drops to hit simultaneously. Exponential gain build into the moment.</p></div>
+      <div class="trans-card"><h4>BACKSPIN</h4><p>Vinyl backspin simulation. Exponential slowdown with pitch drop and volume fade.</p></div>
+      <div class="trans-card"><h4>FILTER SWEEP</h4><p>Low-pass filter 20kHz → 200Hz with resonance. Overlapping crossfade at midpoint.</p></div>
+      <div class="trans-card"><h4>POWER DOWN</h4><p>Turntable power-loss effect. Pitch drops, slows to stop, slams into new track.</p></div>
     </div>
 
-    <div class="features-grid" style="margin-top:2.5rem;">
-      <div class="feature-card reveal" style="transition-delay:0.05s; border-color:rgba(255,45,123,0.2);">
-        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        </div>
-        <div class="feature-title">ESSENTIA.JS WASM ANALYSIS</div>
-        <div class="feature-text">Float-precision BPM from RhythmExtractor2013 — not rounded integers. Key detection, danceability scoring, onset rate analysis. 60-second segment optimization. Background queue pre-analysis so every track is ready before it's needed.</div>
-      </div>
+    <h3 class="section-title reveal" style="font-size:1.2rem;margin-top:3rem;">Set Journey Arc</h3>
+    <p class="section-desc reveal">The DJ thinks in chapters, not track pairs. Five-phase energy management across your entire session.</p>
+    <div class="journey-arc reveal" id="journeyArc"></div>
 
-      <div class="feature-card reveal" style="transition-delay:0.1s; border-color:rgba(0,220,245,0.2);">
-        <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
-        <div class="feature-title">BEAT-PHASE ALIGNMENT</div>
-        <div class="feature-text">Beats land on the grid — not near it. Modular arithmetic aligns the incoming track's phase to the outgoing beat grid. Beat-locked drift correction runs in every overlapping transition — blend, bass swap, double drop, loop tease, and filter sweep.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.15s; border-color:rgba(183,110,255,0.2);">
-        <div class="feature-icon" style="background:rgba(183,110,255,0.08); border-color:rgba(183,110,255,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(183,110,255,0.9);"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
-        <div class="feature-title">CAMELOT KEY MATCHING</div>
-        <div class="feature-text">Harmonic mixing by the book. Full Camelot wheel implementation — compatible keys scored and prioritized. No clashing transitions. Every mix sounds intentional.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.2s; border-color:rgba(255,45,123,0.2);">
-        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7"/><path d="M2 20c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7" opacity="0.4"/></svg>
-        </div>
-        <div class="feature-title">SET JOURNEY PLANNING</div>
-        <div class="feature-text">Five-phase set arc: warmup → building → peak → cooldown → finale. Tracks momentum across mixes, adapts energy targets per phase. Learns from your behavior — skips = negative feedback, full plays = positive signal.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.25s; border-color:rgba(0,220,245,0.2);">
-        <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        </div>
-        <div class="feature-title">9 TRANSITION PATTERNS</div>
-        <div class="feature-text">Blend, cut, bass swap, echo out, loop tease, double drop, backspin, filter sweep, power down. AI selects based on spectral compatibility, vocal clash detection, set journey phase, and pattern variety.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.3s; border-color:rgba(183,110,255,0.2);">
-        <div class="feature-icon" style="background:rgba(183,110,255,0.08); border-color:rgba(183,110,255,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(183,110,255,0.9);"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-        </div>
-        <div class="feature-title">SMART TRACK SELECTION</div>
-        <div class="feature-text">Scored by BPM affinity (half/double-time aware), Camelot key compatibility, spectral compatibility, energy trajectory, danceability continuity, artist variety, duration filtering, and user behavior learning. Not random — curated by algorithm.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.35s; border-color:rgba(255,45,123,0.2);">
-        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-        </div>
-        <div class="feature-title">PROGRESSIVE EQ HANDOFF</div>
-        <div class="feature-text">DJ-standard EQ at 200Hz/1.2kHz/2.5kHz. Highs fade first, then bass swaps on the beat, then mids restore. Master limiter prevents clipping during double drops. Drift correction across all overlapping transitions.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.4s; border-color:rgba(0,220,245,0.2);">
-        <div class="feature-icon" style="background:rgba(0,220,245,0.08); border-color:rgba(0,220,245,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(0,220,245,0.9);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div class="feature-title">SPECTRAL INTELLIGENCE</div>
-        <div class="feature-text">Real DFT-based 16-band spectral profiling with Hann windowing. Compatibility scoring detects frequency clashes before overlap. Vocal detection prevents vocal-over-vocal trainwrecks. Novelty-based structure mapping identifies intros, drops, breakdowns, and outros.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.45s; border-color:rgba(255,45,123,0.2);">
-        <div class="feature-icon" style="background:rgba(255,45,123,0.08); border-color:rgba(255,45,123,0.3);">
-          <svg viewBox="0 0 24 24" style="stroke:rgba(255,45,123,0.9);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div class="feature-title">FULL KEYBOARD CONTROL</div>
-        <div class="feature-text">D to toggle DJ mode. 9 transition hotkeys. Level meters, BPM sync with spectral compatibility indicator, set journey phase display, and transition progress — all live.</div>
-      </div>
-    </div>
+    <h3 class="section-title reveal" style="font-size:1.2rem;margin-top:3rem;">Intelligence Pipeline</h3>
+    <div class="terminal reveal"><span class="cmd">ESSENTIA.JS</span> → BPM (float) + Key + Danceability + Onset Rate
+  ↓
+<span class="cmd">SPECTRAL DFT</span> → 16-band frequency profile (Hann window)
+  ↓
+<span class="cmd">STRUCTURE MAP</span> → intro / buildup / drop / breakdown / outro
+  ↓
+<span class="cmd">COMPATIBILITY</span> → spectral overlap + Camelot key + vocal clash check
+  ↓
+<span class="cmd">TRANSITION AI</span> → pattern selection (energy + phase + history + variety)
+  ↓
+<span class="cmd">BEAT ALIGN</span> → phase offset + drift correction (all transitions)
+  ↓
+<span class="val">SEAMLESS MIX</span> <span class="cmt">// zero trainwrecks</span></div>
   </div>
-</section>
+</div>
 
-<div class="section-divider"></div>
+<!-- ══════════════════════════════════════════
+     PAGE: TECH
+     ══════════════════════════════════════════ -->
+<div class="page" id="page-tech">
+  <div class="section" style="text-align:center;">
+    <div class="section-label reveal" style="display:flex;justify-content:center;">ARCHITECTURE</div>
+    <h2 class="section-title reveal">Built Different</h2>
 
-<!-- ============ FEATURES ============ -->
-<section class="section" id="features">
-  <div class="section-inner">
-    <div class="section-label reveal">03 // FEATURES</div>
-    <h2 class="section-title reveal">Engineered Without Compromise</h2>
-    <p class="section-desc reveal">Every detail obsessed over. Every millisecond accounted for. Built for people who care about how music sounds and feels.</p>
-
-    <div class="features-grid">
-      <div class="feature-card reveal" style="transition-delay:0.05s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <div class="feature-title">17 GENERATIVE VISUALIZERS</div>
-        <div class="feature-text">Canvas 2D hand-crafted scenes. From fractal flames to UFO cockpits to Matrix lyric rain with bass shockwaves. Deep audio reactivity at 60fps.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.1s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
-        <div class="feature-title">OLED-OPTIMIZED</div>
-        <div class="feature-text">True #000000 black. Monochromatic purple palette. Designed to make OLED screens sing and save power.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.15s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
-        <div class="feature-title">NAVIDROME INTEGRATION</div>
-        <div class="feature-text">Full Subsonic API support. Stream your self-hosted library. Automatic sync, art caching, scrobbling.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.2s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><polygon points="13 4 23 12 13 20 13 4" opacity="0.5"/></svg>
-        </div>
-        <div class="feature-title">GAPLESS PLAYBACK</div>
-        <div class="feature-text">Dual HTMLAudioElement crossfade strategy. Pre-buffer next track. Zero gap between songs.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.25s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M2 12h4l3-9 6 18 3-9h4"/></svg>
-        </div>
-        <div class="feature-title">WAVEFORM SEEK BAR</div>
-        <div class="feature-text">Pre-computed full-track waveform visualization. SoundCloud-style. Seek with surgical precision.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.3s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
-        </div>
-        <div class="feature-title">10-BAND PARAMETRIC EQ</div>
-        <div class="feature-text">Full parametric equalizer with 10 built-in presets. Slide-up panel from now-playing bar. Shape your sound with precision.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.35s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        </div>
-        <div class="feature-title">100K+ TRACK LIBRARY</div>
-        <div class="feature-text">Virtualized scrolling. SQLite-cached. Instant search under 100ms. Handles massive collections.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.4s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div class="feature-title">KEYBOARD-FIRST</div>
-        <div class="feature-text">Full shortcut system. Ctrl+K search. Number keys switch visualizers. Space to play. Zero mouse required.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.45s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
-        <div class="feature-title">BINAURAL BRAINWAVE ENGINE</div>
-        <div class="feature-text">Multi-layer rhythmic neural entrainment. Stack brainwave frequencies at different rhythmic divisions. Sample-accurate scheduling.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.5s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        </div>
-        <div class="feature-title">SMART PLAYLISTS</div>
-        <div class="feature-text">Auto-generated playlists based on play history, genre, mood, and custom rules. Your library, organized.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.55s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" stroke="currentColor" fill="none" stroke-width="1.5"/><path d="M5.636 5.636l12.728 12.728M18.364 5.636L5.636 18.364" stroke="currentColor" fill="none" stroke-width="1" opacity="0.5"/></svg>
-        </div>
-        <div class="feature-title">LRCLIB LYRICS</div>
-        <div class="feature-text">Automatic lyrics fetched from LRCLIB's open database with search fallback. Powers the Lyric Rain visualizer — words materialize on beats with bass shockwaves.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.6s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-        </div>
-        <div class="feature-title">VINYL / LO-FI ENGINE</div>
-        <div class="feature-text">Analog warmth simulation: vinyl crackle, tape hiss, wow & flutter, tube saturation, frequency rolloff. 6 presets from Warm Vinyl to AM Radio. WaveShaper soft-clipping.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.65s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        </div>
-        <div class="feature-title">STEM ISOLATION</div>
-        <div class="feature-text">4-channel stem playback: vocals, drums, bass, instruments. Solo, mute, and volume per stem. Karaoke, Instrumental, A Capella presets. Synchronized multi-element routing.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.7s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <div class="feature-title">DISCORD RICH PRESENCE</div>
-        <div class="feature-text">Shows current track, artist, album, and elapsed time in Discord status. Direct IPC pipe protocol — no npm dependencies. Auto-reconnect.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.75s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
-        <div class="feature-title">MAGIC PLAYLIST</div>
-        <div class="feature-text">Type a vibe — get a playlist. Natural language prompt parsing with mood, energy, tempo, and genre keyword matching. Energy arc sorting. No external AI required.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.8s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
-        </div>
-        <div class="feature-title">3D SONIC SIMILARITY MAP</div>
-        <div class="feature-text">Interactive 3D scatter plot of your entire library. Energy × BPM × Danceability axes with perspective projection. Orbit, zoom, auto-rotate. Camelot key → color. Click any dot to play. DJ mix paths traced in 3D space.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.85s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-        </div>
-        <div class="feature-title">MUSIC DNA FINGERPRINT</div>
-        <div class="feature-text">Unique circular 360-segment artwork per track. Color = spectral position, radius = energy. Exportable as PNG. Every song becomes visual art.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.9s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="feature-title">AI AUTO-TAGGER</div>
-        <div class="feature-text">Auto-generates mood, energy, tempo, danceability, and vocal tags from audio analysis. Color-coded badges. Batch processing. Powers smart playlist generation.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:0.95s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2" stroke="var(--bg-void)" fill="none" stroke-width="1.5"/></svg>
-        </div>
-        <div class="feature-title">DAYLIST + REDISCOVER</div>
-        <div class="feature-text">Time-of-day adaptive playlists across 7 periods. Plus Rediscover mode: surfaces forgotten favorites you haven't played in months. Nostalgia-powered.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:1.0s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </div>
-        <div class="feature-title">SLEEP + FOCUS + WEATHER</div>
-        <div class="feature-text">Sleep timer with Delta binaural fade. Pomodoro focus mode with Alpha waves and auto-track selection. Weather-reactive ambient layers — rain, wind, thunder, birds — all synthesized live.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:1.05s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
-        <div class="feature-title">SIGNAL PATH + HEARING EQ</div>
-        <div class="feature-text">Full signal chain transparency display. Built-in hearing test generates personalized compensation EQ from your audiogram. See every DSP stage in real-time.</div>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:1.1s">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M2 12c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7"/><path d="M2 20c0-3 2-7 5-7s3 4 5 4 2-4 5-4 5 4 5 7" opacity="0.4"/></svg>
-        </div>
-        <div class="feature-title">TASTE EVOLUTION</div>
-        <div class="feature-text">Tracks your listening habits across sessions. Sparkline charts, genre bars, vibe classification, artist trends. Watch your taste evolve over time.</div>
-      </div>
-
+    <div class="stats-row reveal">
+      <div class="stat-box"><div class="stat-num" id="statLines">17,000+</div><div class="stat-label">LINES OF CODE</div></div>
+      <div class="stat-box"><div class="stat-num">140+</div><div class="stat-label">FEATURES</div></div>
+      <div class="stat-box"><div class="stat-num">0</div><div class="stat-label">FRAMEWORKS</div></div>
+      <div class="stat-box"><div class="stat-num">1</div><div class="stat-label">FILE</div></div>
     </div>
+
+    <h3 class="section-title reveal" style="font-size:1.1rem;margin-top:3rem;">Tech Stack</h3>
+    <div class="badge-grid reveal">
+      <div class="tech-badge"><span class="dot"></span>Electron 33</div>
+      <div class="tech-badge"><span class="dot"></span>Vanilla JS</div>
+      <div class="tech-badge"><span class="dot"></span>Canvas 2D</div>
+      <div class="tech-badge"><span class="dot"></span>Web Audio API</div>
+      <div class="tech-badge"><span class="dot"></span>Essentia.js WASM</div>
+      <div class="tech-badge"><span class="dot"></span>Subsonic API</div>
+      <div class="tech-badge"><span class="dot"></span>LRCLIB API</div>
+      <div class="tech-badge"><span class="dot"></span>Discord IPC</div>
+      <div class="tech-badge"><span class="dot"></span>Last.fm API</div>
+      <div class="tech-badge"><span class="dot"></span>wttr.in API</div>
+      <div class="tech-badge"><span class="dot"></span>Camelot Wheel</div>
+      <div class="tech-badge"><span class="dot"></span>Spectral DFT</div>
+      <div class="tech-badge"><span class="dot"></span>WaveShaper DSP</div>
+      <div class="tech-badge"><span class="dot"></span>DynamicsCompressor</div>
+      <div class="tech-badge"><span class="dot"></span>MediaSession API</div>
+      <div class="tech-badge"><span class="dot"></span>localStorage</div>
+    </div>
+
+    <h3 class="section-title reveal" style="font-size:1.1rem;margin-top:3rem;">Audio Pipeline</h3>
+    <div class="terminal reveal" style="text-align:left;max-width:700px;margin:2rem auto;"><span class="val">AudioElement</span> → MediaElementSource
+  ↓
+<span class="cmd">BiquadFilter ×10</span> <span class="cmt">// Parametric EQ</span>
+  ↓
+<span class="cmd">Hearing Compensation</span> <span class="cmt">// Audiogram-based peaking filters</span>
+  ↓
+<span class="cmd">Warmth Engine</span> <span class="cmt">// Noise + WaveShaper + LFO Delay + LP Filter</span>
+  ↓
+<span class="cmd">GainNode</span> → <span class="cmd">AnalyserNode</span> (FFT 2048)
+  ↓
+<span class="cmd">DynamicsCompressor</span> <span class="cmt">// Master Limiter @ -3dB</span>
+  ↓
+<span class="val">AudioContext.destination</span>
+
+<span class="cmt">// Parallel chains:</span>
+<span class="cmd">Binaural Engine</span> → OscL + OscR × N layers → RhythmMasterGain
+<span class="cmd">Stem Engine</span> → 4× (Audio → Gain → Analyser) → Master
+<span class="cmd">Weather Ambient</span> → Noise generators → Gain → Destination</div>
+
+    <h3 class="section-title reveal" style="font-size:1.1rem;margin-top:3rem;">Design System</h3>
+    <div class="palette-row reveal">
+      <div class="palette-swatch" style="background:#000000">#000</div>
+      <div class="palette-swatch" style="background:#09090F">#090</div>
+      <div class="palette-swatch" style="background:#0F0F1A">#0F0</div>
+      <div class="palette-swatch" style="background:#2A1B3D">#2A1</div>
+      <div class="palette-swatch" style="background:#4A2D6B">#4A2</div>
+      <div class="palette-swatch" style="background:#7B2FBE">#7B2</div>
+      <div class="palette-swatch" style="background:#9D4EDD">#9D4</div>
+      <div class="palette-swatch" style="background:#B76EFF">#B76</div>
+      <div class="palette-swatch" style="background:#D4A0FF">#D4A</div>
+      <div class="palette-swatch" style="background:#EED4FF;color:rgba(0,0,0,0.5)">#EED</div>
+    </div>
+    <p class="reveal" style="text-align:center;font-family:var(--font-m);font-size:0.6rem;color:var(--p-muted);letter-spacing:0.1em;margin-top:0.5rem;">ORBITRON · RAJDHANI · JETBRAINS MONO</p>
   </div>
-</section>
+</div>
 
-<div class="section-divider"></div>
+<!-- ══════════════════════════════════════════
+     PAGE: DOWNLOAD
+     ══════════════════════════════════════════ -->
+<div class="page" id="page-download">
+  <div class="section" style="text-align:center;">
+    <div class="section-label reveal" style="display:flex;justify-content:center;">GET AETHER</div>
+    <h2 class="section-title reveal">Download & Install</h2>
 
-<!-- ============ TECH STACK ============ -->
-<section class="section tech-section" id="tech">
-  <div class="section-inner" style="text-align:center;">
-    <div class="section-label reveal" style="justify-content:center;">04 // TECH STACK</div>
-    <h2 class="section-title reveal" style="margin-left:auto;margin-right:auto;">Built With the Best</h2>
-    <p class="section-desc reveal" style="margin-left:auto;margin-right:auto;">Modern tooling. Zero compromises. Every dependency chosen for performance and developer experience.</p>
-
-    <div class="tech-grid reveal">
-      <div class="tech-badge"><span class="tech-dot"></span>Electron 33</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Vanilla JS</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Canvas 2D</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Web Audio API</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Subsonic API</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Binaural Engine</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Single-File App</div>
-      <div class="tech-badge"><span class="tech-dot"></span>localStorage</div>
-      <div class="tech-badge"><span class="tech-dot"></span>10-Band EQ</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Beat Detection</div>
-      <div class="tech-badge"><span class="tech-dot"></span>FFT Analysis</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Essentia.js WASM</div>
-      <div class="tech-badge"><span class="tech-dot"></span>DJ Mixing Engine</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Camelot Key Match</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Spectral DFT Analysis</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Master Limiter</div>
-      <div class="tech-badge"><span class="tech-dot"></span>LRCLIB API</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Discord IPC</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Stem Isolation</div>
-      <div class="tech-badge"><span class="tech-dot"></span>WaveShaper DSP</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Audiogram EQ</div>
-      <div class="tech-badge"><span class="tech-dot"></span>Pomodoro Engine</div>
-      <div class="tech-badge"><span class="tech-dot"></span>wttr.in Weather</div>
-      <div class="tech-badge"><span class="tech-dot"></span>npm</div>
-    </div>
-
-    <div class="arch-diagram reveal">
-      <div style="text-align:center;margin-bottom:1rem;color:var(--purple-vivid);font-size:0.8rem;letter-spacing:0.15em;">ARCHITECTURE</div>
-      <div class="arch-row">
-        <div class="arch-box highlight">MAIN PROCESS</div>
-      </div>
-      <div class="arch-row">
-        <div class="arch-box">System Tray</div>
-        <div class="arch-box">FS Scanner</div>
-        <div class="arch-box">IPC Bridge</div>
-        <div class="arch-box">Window Mgmt</div>
-      </div>
-      <div class="arch-row">
-        <span class="arch-arrow">&#x2502;</span>
-      </div>
-      <div class="arch-row">
-        <div class="arch-box highlight">RENDERER — Single File</div>
-      </div>
-      <div class="arch-row">
-        <div class="arch-box">Subsonic API</div>
-        <div class="arch-box">Web Audio</div>
-        <div class="arch-box">Canvas 2D</div>
-        <div class="arch-box">Binaural Engine</div>
-        <div class="arch-box">10-Band EQ</div>
-        <div class="arch-box">DJ Engine</div>
-        <div class="arch-box">Essentia.js</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ============ AUDIO ENGINE ============ -->
-<section class="section" id="engine">
-  <div class="section-inner" style="text-align:center;">
-    <div class="section-label reveal" style="justify-content:center;">04 // AUDIO ENGINE</div>
-    <h2 class="section-title reveal" style="margin-left:auto;margin-right:auto;">The Signal Chain</h2>
-    <p class="section-desc reveal" style="margin-left:auto;margin-right:auto;">A carefully crafted Web Audio API pipeline. Every sample processed. Every frequency analyzed. Every beat detected.</p>
-
-    <div class="pipeline reveal">
-      <div class="pipeline-node"><span class="node-icon"></span>HTMLAudioElement</div>
-      <div class="pipeline-connector"></div>
-      <div class="pipeline-node"><span class="node-icon"></span>MediaElementSourceNode</div>
-      <div class="pipeline-connector"></div>
-      <div class="pipeline-node"><span class="node-icon"></span>GainNode (Master Volume)</div>
-      <div class="pipeline-connector"></div>
-      <div class="pipeline-node"><span class="node-icon"></span>BiquadFilter &times; 10 (Parametric EQ)</div>
-      <div class="pipeline-connector"></div>
-      <div class="pipeline-branch">
-        <div style="display:flex;flex-direction:column;align-items:center;">
-          <div class="pipeline-node"><span class="node-icon"></span>AnalyserNode (2048 FFT)</div>
-          <div class="pipeline-connector"></div>
-          <div class="pipeline-node" style="font-size:0.7rem;"><span class="node-icon"></span>Visualizer Uniforms</div>
-        </div>
-        <div class="pipeline-branch-line"></div>
-        <div style="display:flex;flex-direction:column;align-items:center;">
-          <div class="pipeline-node"><span class="node-icon"></span>AudioDestination</div>
-          <div class="pipeline-connector"></div>
-          <div class="pipeline-node" style="font-size:0.7rem;"><span class="node-icon"></span>Speakers</div>
-        </div>
-        <div class="pipeline-branch-line"></div>
-        <div style="display:flex;flex-direction:column;align-items:center;">
-          <div class="pipeline-node"><span class="node-icon"></span>AnalyserNode (8192 FFT)</div>
-          <div class="pipeline-connector"></div>
-          <div class="pipeline-node" style="font-size:0.7rem;"><span class="node-icon"></span>Hi-Res Shader Data</div>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:3rem;" class="reveal">
-      <div style="font-family:var(--font-display);font-size:0.85rem;color:var(--purple-vivid);letter-spacing:0.1em;margin-bottom:1rem;">BEAT DETECTION</div>
-      <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--purple-hot);line-height:2;max-width:500px;margin:0 auto;text-align:left;">
-        <span style="color:var(--purple-muted)">01</span>&nbsp; Compute FFT for current frame<br>
-        <span style="color:var(--purple-muted)">02</span>&nbsp; Compare with previous frame (spectral flux)<br>
-        <span style="color:var(--purple-muted)">03</span>&nbsp; Maintain running average over ~43 frames<br>
-        <span style="color:var(--purple-muted)">04</span>&nbsp; Beat = flux &gt; average &times; 1.5 threshold<br>
-        <span style="color:var(--purple-muted)">05</span>&nbsp; Enforce 200ms minimum interval<br>
-        <span style="color:var(--purple-muted)">06</span>&nbsp; Fire event &rarr; visualizer reactive pulse
-      </div>
-    </div>
-
-    <div class="reveal" style="margin-top:2rem;">
-      <div style="font-family:var(--font-display);font-size:0.85rem;color:var(--purple-vivid);letter-spacing:0.1em;margin-bottom:1rem;">FORMAT SUPPORT</div>
-      <div class="format-badges">
-        <div class="format-badge lossless">FLAC</div>
-        <div class="format-badge lossless">ALAC</div>
-        <div class="format-badge lossless">WAV</div>
-        <div class="format-badge lossless">AIFF</div>
-        <div class="format-badge">MP3</div>
-        <div class="format-badge">AAC</div>
-        <div class="format-badge">OGG</div>
-        <div class="format-badge">OPUS</div>
-        <div class="format-badge lossless">DSD</div>
-        <div class="format-badge lossless">24-bit / 192kHz</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ============ DOWNLOAD CTA ============ -->
-<section class="section download-section" id="download">
-  <div class="section-inner">
-    <div class="section-label reveal" style="justify-content:center;">05 // DOWNLOAD</div>
-    <h2 class="download-title reveal">Ready to Experience<br>the Future of Music?</h2>
-    <p class="download-sub reveal">Free. Open source. Built for audiophiles who demand more from their music player.</p>
-
-    <div class="download-buttons reveal">
-      <a href="https://github.com/EmperorBadussy/aether/releases" class="btn-download" target="_blank">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>DOWNLOAD FOR WINDOWS</span>
+    <div class="dl-box reveal">
+      <a href="https://github.com/EmperorBadussy/aether/releases" target="_blank" class="dl-btn">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        DOWNLOAD v2.0.0
       </a>
+      <p style="margin-top:1rem;font-family:var(--font-m);font-size:0.6rem;color:var(--p-muted);">Windows x64 · Electron 33 · NSIS Installer</p>
     </div>
 
-    <div class="coming-soon-badges reveal">
-      <div class="coming-badge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06z"/><path d="M10 2c1 .5 2 2 2 5"/></svg>
-        macOS — COMING SOON
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><h4>Clone & Install</h4><p><code>git clone https://github.com/EmperorBadussy/aether.git && cd aether && npm install</code></p></div>
       </div>
-      <div class="coming-badge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        Linux — COMING SOON
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><h4>Launch</h4><p><code>npm start</code></p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><h4>Connect</h4><p>Open Settings, enter your Navidrome server URL, username, and password. Click APPLY.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><h4>Experience</h4><p>Your library loads. Pick a visualizer. Start the DJ. Enter the void.</p></div>
       </div>
     </div>
 
-    <div class="reveal">
-      <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);margin-bottom:0.3rem;">v1.0.0 &bull; 89.4 MB &bull; Windows 10/11 (x64)</div>
-    </div>
+    <div class="divider"></div>
 
-    <div class="sys-req reveal">
-      <strong style="color:var(--purple-vivid);">System Requirements</strong><br>
-      Windows 10+ (64-bit) &bull; 4GB RAM &bull; GPU with WebGL2 support &bull; 200MB disk space
-    </div>
-
-    <a href="https://github.com/EmperorBadussy/aether" class="github-link reveal" target="_blank">
-      <svg viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-      View on GitHub
+    <a href="https://emperorbadussy.github.io/charon/" target="_blank" style="text-decoration:none;">
+      <div class="companion reveal">
+        <div style="font-family:var(--font-d);font-size:2rem;color:var(--cyan);text-shadow:0 0 12px rgba(0,220,245,0.5);">C</div>
+        <div class="companion-text">
+          <h4>CHARON — Companion App</h4>
+          <p>AETHER plays. CHARON harvests. Search Tidal, queue lossless albums, download straight into your Navidrome library.</p>
+        </div>
+      </div>
     </a>
 
-    <div class="reveal" style="margin-top:2.5rem;padding:1.5rem 2rem;border:1px solid rgba(6,182,212,0.3);border-radius:12px;background:rgba(6,182,212,0.05);display:inline-flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:center;">
-      <span style="font-family:var(--font-mono);font-size:0.75rem;color:rgba(103,232,249,0.8);letter-spacing:0.08em;">COMPANION APP</span>
-      <a href="https://emperorbadussy.github.io/charon/" target="_blank" style="font-family:var(--font-display);font-weight:700;font-size:0.85rem;color:rgba(34,211,238,0.9);text-decoration:none;letter-spacing:0.1em;transition:all 0.3s;text-shadow:0 0 8px rgba(6,182,212,0.5);">CHARON — Tidal Ripper</a>
-      <span style="font-family:var(--font-body);font-size:0.85rem;color:var(--purple-muted);">Rip from Tidal. Feed your library. The ferryman to AETHER.</span>
-    </div>
+    <a href="https://github.com/EmperorBadussy/aether" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-family:var(--font-m);font-size:0.75rem;color:var(--p-muted);margin-top:2rem;transition:color 0.2s;">
+      <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      VIEW ON GITHUB
+    </a>
   </div>
-</section>
+</div>
 
-<!-- ============ FOOTER ============ -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="footer-logo">AETHER</div>
-      <div class="footer-tagline">Built for OLED. Engineered for audiophiles. Designed from 2077.</div>
-    </div>
-    <ul class="footer-links">
-      <li><a href="#visualizers">Visualizers</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#tech">Tech Stack</a></li>
-      <li><a href="#download">Download</a></li>
-      <li><a href="https://github.com/EmperorBadussy/aether" target="_blank">GitHub</a></li>
-      <li><a href="https://emperorbadussy.github.io/charon/" target="_blank" style="color:rgba(34,211,238,0.8);">CHARON</a></li>
-      <li><a href="https://discord.com/users/1417265255150522519" target="_blank">Discord</a></li>
-    </ul>
-    <div style="width:100%;text-align:center;margin-top:1rem;"><a href="https://emperorbadussy.github.io/suite/" style="font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.12em;color:var(--purple-muted);text-decoration:none;border:1px solid var(--purple-dim);padding:0.3rem 0.8rem;border-radius:4px;transition:all 0.3s;" onmouseover="this.style.color='var(--purple-vivid)';this.style.borderColor='var(--purple-bright)';this.style.boxShadow='0 0 12px rgba(157,78,221,0.3)'" onmouseout="this.style.color='';this.style.borderColor='';this.style.boxShadow=''">PART OF THE SUITE</a></div>
-    <div class="footer-copy">&copy; 2077 AETHER. All rights reserved. Free and open source software.</div>
-  </div>
+<!-- ══════ FOOTER ══════ -->
+<footer>
+  <p>AETHER v2.0.0 — Built for OLED. Engineered for audiophiles. Designed from 2077.</p>
+  <p style="margin-top:0.5rem;">
+    <a href="https://github.com/EmperorBadussy/aether" target="_blank">GitHub</a> ·
+    <a href="https://emperorbadussy.github.io/charon/" target="_blank">CHARON</a> ·
+    MIT License
+  </p>
 </footer>
 
-<!-- ============ COMMAND PALETTE ============ -->
+<!-- ══════ COMMAND PALETTE ══════ -->
 <div class="cmd-overlay" id="cmdOverlay">
   <div class="cmd-box">
-    <input class="cmd-input" id="cmdInput" type="text" placeholder="Type a command..." autocomplete="off">
+    <input class="cmd-input" id="cmdInput" placeholder="Type a command..." autocomplete="off">
     <ul class="cmd-results" id="cmdResults"></ul>
   </div>
 </div>
 
 <script>
-// ============ HERO TITLE CHARACTER ANIMATION ============
-(function() {
-  const title = document.getElementById('heroTitle');
-  const text = 'AETHER';
-  let html = '';
-  let delay = 0.4;
-  for (let i = 0; i < text.length; i++) {
-    if (text[i] === ' ') {
-      html += ' ';
-    } else {
-      html += `<span class="char" style="--d:${delay.toFixed(2)}s">${text[i]}</span>`;
-      delay += 0.04;
-    }
+// ══════ ROUTER ══════
+function go(page) {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active','visible'); });
+  var el = document.getElementById('page-' + page);
+  if (el) {
+    el.classList.add('active');
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
   }
-  title.innerHTML = html;
-})();
+  document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === page);
+  });
+  window.scrollTo(0, 0);
+  history.replaceState(null, '', '#' + page);
+  // Trigger reveal animations
+  setTimeout(() => {
+    el.querySelectorAll('.reveal').forEach(r => {
+      var rect = r.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 100) r.classList.add('vis');
+    });
+  }, 100);
+}
 
-// ============ HERO CANVAS — TRON GRID + PARTICLES ============
+// Init from hash
+var initPage = (location.hash || '#home').replace('#', '');
+if (!document.getElementById('page-' + initPage)) initPage = 'home';
+go(initPage);
+
+// ══════ SCROLL EFFECTS ══════
+var nav = document.getElementById('nav');
+window.addEventListener('scroll', function() {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+  // Reveal on scroll
+  document.querySelectorAll('.page.active .reveal').forEach(function(el) {
+    if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('vis');
+  });
+});
+
+// ══════ MOBILE MENU ══════
+function toggleMobile() {
+  var menu = document.getElementById('mobileMenu');
+  var btn = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+// ══════ FEATURE FILTER ══════
+function filterFeats(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#featGrid > *').forEach(function(el) {
+    if (cat === 'all') { el.classList.remove('hidden'); }
+    else { el.classList.toggle('hidden', el.dataset.cat !== cat); }
+  });
+}
+
+// ══════ HERO ROTATING TEXT ══════
+var rotatingTexts = [
+  'AI DJ ENGINE WITH 9 TRANSITIONS',
+  '3D SONIC SIMILARITY MAP',
+  'STEM ISOLATION — VOCALS / DRUMS / BASS',
+  '17 GENERATIVE VISUALIZERS AT 60FPS',
+  'BINAURAL BRAINWAVE ENTRAINMENT',
+  'VINYL WARMTH SIMULATION',
+  'MAGIC PLAYLIST FROM NATURAL LANGUAGE',
+  'WEATHER-REACTIVE AMBIENT SOUNDSCAPES',
+  'LAST.FM SCROBBLING',
+  'DISCORD RICH PRESENCE',
+  'SLEEP TIMER WITH DELTA BINAURAL FADE',
+  'POMODORO FOCUS MODE WITH ALPHA WAVES',
+];
+var rotIdx = 0;
+var rotEl = document.getElementById('heroRotating');
+function rotateText() {
+  rotEl.style.opacity = 0;
+  setTimeout(function() {
+    rotEl.textContent = '// ' + rotatingTexts[rotIdx];
+    rotEl.style.opacity = 1;
+    rotIdx = (rotIdx + 1) % rotatingTexts.length;
+  }, 400);
+}
+rotateText();
+setInterval(rotateText, 3000);
+rotEl.style.transition = 'opacity 0.4s';
+
+// ══════ JOURNEY ARC ══════
+var arcEl = document.getElementById('journeyArc');
+var phases = [
+  { label:'WARMUP', h:25, color:'rgba(0,220,245,0.6)' },
+  { label:'BUILDING', h:45, color:'rgba(183,110,255,0.7)' },
+  { label:'BUILDING', h:60, color:'rgba(183,110,255,0.8)' },
+  { label:'PEAK', h:80, color:'rgba(255,45,123,0.9)' },
+  { label:'PEAK', h:75, color:'rgba(255,45,123,0.8)' },
+  { label:'COOLDOWN', h:50, color:'rgba(0,220,245,0.6)' },
+  { label:'COOLDOWN', h:35, color:'rgba(0,220,245,0.5)' },
+  { label:'FINALE', h:65, color:'rgba(255,200,50,0.8)' },
+];
+phases.forEach(function(p) {
+  var bar = document.createElement('div');
+  bar.className = 'journey-bar';
+  bar.style.height = p.h + '%';
+  bar.style.background = p.color;
+  bar.innerHTML = '<span>' + p.label + '</span>';
+  arcEl.appendChild(bar);
+});
+
+// ══════ PARTICLE CANVAS ══════
 (function() {
-  const canvas = document.getElementById('heroCanvas');
-  const ctx = canvas.getContext('2d');
-  let w, h, particles = [], mouse = { x: 0, y: 0 };
+  var c = document.getElementById('heroCanvas');
+  var ctx = c.getContext('2d');
+  var particles = [];
+  var mx = 0, my = 0;
+  var W, H;
 
-  function resize() {
-    w = canvas.width = canvas.offsetWidth;
-    h = canvas.height = canvas.offsetHeight;
-  }
+  function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
 
-  // Create particles
-  for (let i = 0; i < 80; i++) {
+  for (var i = 0; i < 80; i++) {
     particles.push({
-      x: Math.random() * 2000,
-      y: Math.random() * 2000,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      size: Math.random() * 2 + 0.5,
-      alpha: Math.random() * 0.5 + 0.1
+      x: Math.random() * 2000, y: Math.random() * 2000,
+      vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+      r: 1 + Math.random() * 2, a: 0.1 + Math.random() * 0.4
     });
   }
 
-  document.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
-  function drawGrid(time) {
-    const horizon = h * 0.65;
-    const gridLines = 30;
-    const speed = time * 0.00005;
-
-    ctx.save();
-    // Horizontal lines (perspective)
-    for (let i = 0; i < gridLines; i++) {
-      const t = (i / gridLines + speed) % 1;
-      const y = horizon + (h - horizon) * Math.pow(t, 1.5);
-      const alpha = t * 0.25;
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(w, y);
-      ctx.strokeStyle = `rgba(123, 47, 190, ${alpha})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-
-    // Vertical lines (converging to vanishing point)
-    const vanishX = w / 2;
-    const vanishY = horizon;
-    const vLines = 20;
-    for (let i = -vLines; i <= vLines; i++) {
-      const baseX = vanishX + i * (w / vLines) * 1.5;
-      const alpha = 0.12 - Math.abs(i) * 0.004;
-      if (alpha <= 0) continue;
-      ctx.beginPath();
-      ctx.moveTo(vanishX, vanishY);
-      ctx.lineTo(baseX, h);
-      ctx.strokeStyle = `rgba(123, 47, 190, ${Math.max(alpha, 0)})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-
-    // Horizon glow
-    const grad = ctx.createLinearGradient(0, vanishY - 40, 0, vanishY + 40);
-    grad.addColorStop(0, 'transparent');
-    grad.addColorStop(0.5, 'rgba(157, 78, 221, 0.15)');
-    grad.addColorStop(1, 'transparent');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, vanishY - 40, w, 80);
-
-    ctx.restore();
-  }
-
-  function drawParticles(time) {
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0) p.x = w;
-      if (p.x > w) p.x = 0;
-      if (p.y < 0) p.y = h;
-      if (p.y > h) p.y = 0;
-
-      const dx = mouse.x - p.x;
-      const dy = mouse.y - p.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const glow = dist < 200 ? (1 - dist / 200) * 0.5 : 0;
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      // Mouse repulsion
+      var dx = p.x - mx, dy = p.y - my;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 150 && dist > 0) {
+        var force = (150 - dist) / 150 * 0.5;
+        p.vx += (dx / dist) * force;
+        p.vy += (dy / dist) * force;
+      }
+      p.vx *= 0.98; p.vy *= 0.98;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(183, 110, 255, ${p.alpha + glow})`;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(157, 78, 221, ' + p.a + ')';
       ctx.fill();
 
-      if (p.size > 1) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(157, 78, 221, ${(p.alpha + glow) * 0.15})`;
-        ctx.fill();
-      }
-    });
-
-    // Draw connections between close particles
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 150) {
+      // Connect nearby particles
+      for (var j = i + 1; j < particles.length; j++) {
+        var p2 = particles[j];
+        var d = Math.hypot(p.x - p2.x, p.y - p2.y);
+        if (d < 120) {
           ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(123, 47, 190, ${0.1 * (1 - dist / 150)})`;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = 'rgba(123, 47, 190, ' + (1 - d / 120) * 0.15 + ')';
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
       }
     }
+    requestAnimationFrame(draw);
   }
-
-  function animate(time) {
-    ctx.clearRect(0, 0, w, h);
-    drawGrid(time);
-    drawParticles(time);
-    requestAnimationFrame(animate);
-  }
-  requestAnimationFrame(animate);
+  draw();
 })();
 
-// ============ CURSOR GLOW ============
-(function() {
-  const glow = document.getElementById('cursorGlow');
-  let mx = 0, my = 0, cx = 0, cy = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  function update() {
-    cx += (mx - cx) * 0.08;
-    cy += (my - cy) * 0.08;
-    glow.style.left = cx + 'px';
-    glow.style.top = cy + 'px';
-    requestAnimationFrame(update);
-  }
-  update();
-  // Hide on mobile
-  if ('ontouchstart' in window) glow.style.display = 'none';
-})();
-
-// ============ NAV SCROLL EFFECT ============
-(function() {
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 50);
-  });
-})();
-
-// ============ MOBILE MENU ============
-function closeMobile() {
-  document.getElementById('mobileMenu').classList.remove('open');
-  document.getElementById('menuToggle').classList.remove('active');
-}
-document.getElementById('menuToggle').addEventListener('click', function() {
-  this.classList.toggle('active');
-  document.getElementById('mobileMenu').classList.toggle('open');
-});
-
-// ============ SCROLL REVEAL ============
-(function() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
-    observer.observe(el);
-  });
-})();
-
-// ============ POPULATE VISUALIZER PREVIEWS ============
-(function() {
-  // Particle field
-  const pp = document.getElementById('particlePreview');
-  if (pp) {
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.top = Math.random() * 100 + '%';
-      p.style.animationDelay = (Math.random() * 6) + 's';
-      p.style.animationDuration = (3 + Math.random() * 4) + 's';
-      const size = Math.random() * 3 + 1;
-      p.style.width = size + 'px';
-      p.style.height = size + 'px';
-      pp.appendChild(p);
-    }
-  }
-
-  // Terrain lines
-  const tp = document.getElementById('terrainPreview');
-  if (tp) {
-    for (let i = 0; i < 20; i++) {
-      const line = document.createElement('div');
-      line.className = 'terrain-line';
-      line.style.top = (30 + i * 3.5) + '%';
-      line.style.animationDelay = (i * 0.15) + 's';
-      line.style.animationDuration = (2 + Math.random() * 2) + 's';
-      line.style.opacity = 0.08 + (i / 20) * 0.2;
-      tp.appendChild(line);
-    }
-  }
-
-  // Neural web nodes + connections
-  const np = document.getElementById('neuralPreview');
-  if (np) {
-    const nodes = [];
-    for (let i = 0; i < 12; i++) {
-      const node = document.createElement('div');
-      node.className = 'node';
-      const x = 10 + Math.random() * 80;
-      const y = 10 + Math.random() * 80;
-      node.style.left = x + '%';
-      node.style.top = y + '%';
-      node.style.animationDelay = (Math.random() * 3) + 's';
-      np.appendChild(node);
-      nodes.push({ x, y });
-    }
-    // Connections
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dx = nodes[j].x - nodes[i].x;
-        const dy = nodes[j].y - nodes[i].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 40) {
-          const conn = document.createElement('div');
-          conn.className = 'connection';
-          conn.style.left = nodes[i].x + '%';
-          conn.style.top = nodes[i].y + '%';
-          conn.style.width = dist + '%';
-          conn.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
-          np.appendChild(conn);
-        }
-      }
-    }
-  }
-
-  // Void pulse rings
-  const vp = document.getElementById('voidPreview');
-  if (vp) {
-    for (let i = 0; i < 5; i++) {
-      const ring = document.createElement('div');
-      ring.className = 'ring';
-      ring.style.width = '40px';
-      ring.style.height = '40px';
-      ring.style.animationDelay = (i * 0.8) + 's';
-      vp.appendChild(ring);
-    }
-  }
-
-  // DNA helix nodes
-  const dp = document.getElementById('dnaPreview');
-  if (dp) {
-    for (let i = 0; i < 16; i++) {
-      const node = document.createElement('div');
-      node.className = 'helix-node';
-      const phase = (i / 16) * Math.PI * 2;
-      const x = 50 + Math.sin(phase) * 25;
-      const y = 5 + (i / 16) * 90;
-      node.style.left = x + '%';
-      node.style.top = y + '%';
-      node.style.animationDelay = (i * 0.25) + 's';
-      dp.appendChild(node);
-
-      // Mirror strand
-      const node2 = document.createElement('div');
-      node2.className = 'helix-node';
-      const x2 = 50 - Math.sin(phase) * 25;
-      node2.style.left = x2 + '%';
-      node2.style.top = y + '%';
-      node2.style.animationDelay = (i * 0.25) + 's';
-      node2.style.background = 'var(--purple-vivid)';
-      node2.style.boxShadow = '0 0 6px var(--purple-vivid)';
-      node2.style.width = '4px';
-      node2.style.height = '4px';
-      dp.appendChild(node2);
-
-      // Connector
-      if (i % 2 === 0) {
-        const conn = document.createElement('div');
-        conn.className = 'helix-connector';
-        conn.style.left = Math.min(x, x2) + '%';
-        conn.style.top = y + '%';
-        conn.style.width = Math.abs(x - x2) + '%';
-        dp.appendChild(conn);
-      }
-    }
-  }
-})();
-
-// ============ SMOOTH SCROLL FOR ANCHOR LINKS ============
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-
-// ============ ELECTRON WINDOW CONTROLS ============
-(function() {
-  if (!window.electronAPI) return;
-
-  // We're in Electron — show titlebar, adjust layout
-  document.body.classList.add('electron');
-  const titlebar = document.getElementById('electronTitlebar');
-  titlebar.style.display = 'flex';
-
-  document.getElementById('btnMinimize').addEventListener('click', () => {
-    window.electronAPI.minimize();
-  });
-
-  document.getElementById('btnMaximize').addEventListener('click', () => {
-    window.electronAPI.maximize();
-  });
-
-  document.getElementById('btnClose').addEventListener('click', () => {
-    window.electronAPI.close();
-  });
-
-  // Sync maximize icon state
-  const maxIcon = document.getElementById('maxIcon');
-  function updateMaxIcon(isMax) {
-    if (isMax) {
-      // Restore icon (two overlapping squares)
-      maxIcon.innerHTML = '<rect x="2" y="0" width="8" height="8" rx="0.5" fill="none"/><rect x="0" y="2" width="8" height="8" rx="0.5" fill="none"/>';
-    } else {
-      maxIcon.innerHTML = '<rect x="0.5" y="0.5" width="9" height="9" rx="1" fill="none"/>';
-    }
-  }
-
-  window.electronAPI.onWindowState((state) => {
-    updateMaxIcon(state === 'maximized');
-  });
-
-  // Initial check
-  window.electronAPI.isMaximized().then(updateMaxIcon);
-
-  // Titlebar scroll effect (sync with nav)
-  window.addEventListener('scroll', () => {
-    titlebar.classList.toggle('scrolled', window.scrollY > 50);
-  });
-
-  // Double-click titlebar to maximize
-  titlebar.addEventListener('dblclick', (e) => {
-    if (e.target.closest('.titlebar-controls')) return;
-    window.electronAPI.maximize();
-  });
-
-  // Disable external link navigation in Electron
-  document.addEventListener('click', (e) => {
-    const link = e.target.closest('a[href^="http"]');
-    if (link) {
-      e.preventDefault();
-      // Could shell.openExternal here if needed
-    }
-  });
-})();
-
-// ============ SCROLL PROGRESS BAR ============
-(function(){var b=document.getElementById('scrollProgress');if(!b)return;window.addEventListener('scroll',function(){var h=document.documentElement.scrollHeight-window.innerHeight;b.style.width=(h>0?(window.scrollY/h)*100:0)+'%';});})();
-
-// ============ GLITCH TITLE ============
-(function(){setTimeout(function(){var t=document.getElementById('heroTitle');if(t)t.classList.add('hero-title-glitch');},2500);})();
-
-// ============ TEXT SCRAMBLE REVEAL ============
-(function() {
-  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
-  var scrambleEls = document.querySelectorAll('.section-title, .download-title');
-  var scrambled = new Set();
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting && !scrambled.has(entry.target)) {
-        scrambled.add(entry.target);
-        var el = entry.target;
-        var original = el.textContent;
-        var iterations = 0;
-        var interval = setInterval(function() {
-          el.textContent = original.split('').map(function(char, i) {
-            if (i < iterations / 3) return original[i];
-            if (char === ' ' || char === '\n') return char;
-            return chars[Math.floor(Math.random() * chars.length)];
-          }).join('');
-          iterations++;
-          if (iterations > original.length * 3) { el.textContent = original; clearInterval(interval); }
-        }, 30);
-      }
-    });
-  }, { threshold: 0.3 });
-  scrambleEls.forEach(function(el) { observer.observe(el); });
-})();
-
-// ============ 3D TILT CARDS ============
-(function() {
-  var cards = document.querySelectorAll('.feature-card');
-  cards.forEach(function(card) {
-    card.addEventListener('mousemove', function(e) {
-      var rect = card.getBoundingClientRect();
-      var x = (e.clientX - rect.left) / rect.width - 0.5;
-      var y = (e.clientY - rect.top) / rect.height - 0.5;
-      card.style.transform = 'perspective(600px) rotateY(' + (x * 8) + 'deg) rotateX(' + (-y * 8) + 'deg) translateY(-4px)';
-      card.style.transition = 'transform 0.1s ease';
-    });
-    card.addEventListener('mouseleave', function() {
-      card.style.transform = '';
-      card.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    });
-  });
-})();
-
-// ============ MAGNETIC BUTTONS ============
-(function() {
-  var btns = document.querySelectorAll('.btn-primary, .btn-download');
-  btns.forEach(function(btn) {
-    btn.addEventListener('mousemove', function(e) {
-      var rect = btn.getBoundingClientRect();
-      var x = e.clientX - rect.left - rect.width / 2;
-      var y = e.clientY - rect.top - rect.height / 2;
-      btn.style.transform = 'translate(' + (x * 0.15) + 'px, ' + (y * 0.15) + 'px) scale(1.03)';
-    });
-    btn.addEventListener('mouseleave', function() {
-      btn.style.transform = '';
-      btn.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      setTimeout(function() { btn.style.transition = ''; }, 400);
-    });
-  });
-})();
-
-// ============ KONAMI CODE EASTER EGG ============
-(function() {
-  var code = [38,38,40,40,37,39,37,39,66,65];
-  var pos = 0;
-  document.addEventListener('keydown', function(e) {
-    if (e.keyCode === code[pos]) {
-      pos++;
-      if (pos === code.length) {
-        pos = 0;
-        var overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;pointer-events:none;background:rgba(255,0,0,0.08);animation:breachFlash 0.15s infinite;';
-        var style = document.createElement('style');
-        style.textContent = '@keyframes breachFlash{0%,100%{opacity:1}50%{opacity:0.3}} .breach-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100000;font-family:var(--font-display);font-size:clamp(2rem,8vw,5rem);color:#ff0033;text-shadow:0 0 20px #ff0033,0 0 60px #ff0033;letter-spacing:0.2em;pointer-events:none;animation:breachGlitch 0.1s infinite;}@keyframes breachGlitch{0%{transform:translate(-50%,-50%)}25%{transform:translate(-48%,-52%)}50%{transform:translate(-52%,-48%)}75%{transform:translate(-50%,-50%) skewX(2deg)}}';
-        document.head.appendChild(style);
-        document.body.appendChild(overlay);
-        var text = document.createElement('div');
-        text.className = 'breach-text';
-        text.textContent = '[ BREACH DETECTED ]';
-        document.body.appendChild(text);
-        document.documentElement.style.filter = 'hue-rotate(180deg) saturate(2)';
-        setTimeout(function() { overlay.remove(); text.remove(); style.remove(); document.documentElement.style.filter = ''; }, 3000);
-      }
-    } else { pos = 0; }
-  });
-})();
-
-// ============ MOUSE PARTICLE TRAIL ============
-(function() {
-  var particles = [];
-  document.addEventListener('mousemove', function(e) {
-    if (Math.random() > 0.6) return;
-    particles.push({ x: e.clientX, y: e.clientY, life: 1, size: Math.random() * 2 + 0.5 });
-  });
-  var trailCanvas = document.createElement('canvas');
-  trailCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:99996;pointer-events:none;';
-  document.body.appendChild(trailCanvas);
-  var tctx = trailCanvas.getContext('2d');
-  function resizeTrail() { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; }
-  resizeTrail();
-  window.addEventListener('resize', resizeTrail);
-  function drawTrail() {
-    tctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
-    for (var i = particles.length - 1; i >= 0; i--) {
-      var p = particles[i];
-      p.life -= 0.025;
-      p.y -= 0.3;
-      if (p.life <= 0) { particles.splice(i, 1); continue; }
-      tctx.beginPath();
-      tctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-      tctx.fillStyle = 'rgba(183, 110, 255, ' + (p.life * 0.5) + ')';
-      tctx.fill();
-    }
-    requestAnimationFrame(drawTrail);
-  }
-  drawTrail();
-})();
-
-// ============ LOADING SCREEN ============
-(function() {
-  var bar = document.getElementById('loadBar');
-  var screen = document.getElementById('loadingScreen');
-  var progress = 0;
-  function advance() {
-    progress += Math.random() * 15 + 5;
-    if (progress > 100) progress = 100;
-    bar.style.width = progress + '%';
-    if (progress < 100) {
-      setTimeout(advance, Math.random() * 200 + 80);
-    } else {
-      setTimeout(function() {
-        screen.style.opacity = '0';
-        screen.style.visibility = 'hidden';
-        setTimeout(function() { screen.remove(); }, 500);
-      }, 300);
-    }
-  }
-  advance();
-})();
-
-// ============ DECLASSIFIED MODE ============
-(function() {
-  var btn = document.getElementById('declassifiedBtn');
-  btn.addEventListener('click', function() {
-    document.body.classList.toggle('declassified');
-    btn.textContent = document.body.classList.contains('declassified') ? '[DECLASSIFIED]' : '[CLASSIFIED]';
-  });
-})();
-
-// ============ COMMAND PALETTE ============
+// ══════ COMMAND PALETTE ══════
 (function() {
   var overlay = document.getElementById('cmdOverlay');
   var input = document.getElementById('cmdInput');
   var results = document.getElementById('cmdResults');
   var activeIdx = -1;
-
   var commands = [
-    { name: 'Go to Top', action: function() { window.scrollTo({ top: 0, behavior: 'smooth' }); } },
-    { name: 'Navigate to Visualizers', action: function() { document.getElementById('visualizers').scrollIntoView({ behavior: 'smooth' }); } },
-    { name: 'Navigate to Binaural', action: function() { document.getElementById('binaural').scrollIntoView({ behavior: 'smooth' }); } },
-    { name: 'Navigate to Features', action: function() { document.getElementById('features').scrollIntoView({ behavior: 'smooth' }); } },
-    { name: 'Navigate to Tech', action: function() { document.getElementById('tech').scrollIntoView({ behavior: 'smooth' }); } },
-    { name: 'Navigate to Engine', action: function() { document.getElementById('engine').scrollIntoView({ behavior: 'smooth' }); } },
-    { name: 'Navigate to Download', action: function() { document.getElementById('download').scrollIntoView({ behavior: 'smooth' }); } },
-    { name: 'Toggle Declassified Mode', action: function() { document.getElementById('declassifiedBtn').click(); } },
-    { name: 'Visit GitHub', action: function() { window.open('https://github.com/EmperorBadussy/aether', '_blank'); } },
-    { name: 'Visit CHARON', action: function() { portalNavigate('https://emperorbadussy.github.io/charon/'); }, portal: true },
-    { name: 'Visit HYDRA', action: function() { portalNavigate('https://emperorbadussy.github.io/hydra/'); }, portal: true },
-    { name: 'Visit THE SUITE Hub', action: function() { portalNavigate('https://emperorbadussy.github.io/suite/'); }, portal: true }
+    { name:'Go Home', action:function(){ go('home'); } },
+    { name:'View Features', action:function(){ go('features'); } },
+    { name:'DJ Engine', action:function(){ go('dj'); } },
+    { name:'Tech Stack', action:function(){ go('tech'); } },
+    { name:'Download', action:function(){ go('download'); } },
+    { name:'Visit GitHub', action:function(){ window.open('https://github.com/EmperorBadussy/aether','_blank'); } },
+    { name:'Visit CHARON', action:function(){ window.open('https://emperorbadussy.github.io/charon/','_blank'); }, portal:true },
   ];
-
-  function open() {
-    overlay.classList.add('open');
-    input.value = '';
-    activeIdx = -1;
-    render('');
-    setTimeout(function() { input.focus(); }, 50);
-  }
-  function close() {
-    overlay.classList.remove('open');
-    input.value = '';
-  }
-  function render(query) {
-    var q = query.toLowerCase();
-    var filtered = commands.filter(function(c) { return c.name.toLowerCase().indexOf(q) !== -1; });
-    results.innerHTML = '';
-    activeIdx = -1;
-    filtered.forEach(function(cmd, i) {
-      var li = document.createElement('li');
-      li.className = 'cmd-item';
-      li.textContent = cmd.name;
-      if (cmd.portal) {
-        var badge = document.createElement('span');
-        badge.className = 'cmd-item-key';
-        badge.textContent = 'PORTAL';
-        li.appendChild(badge);
-      }
-      li.addEventListener('click', function() { cmd.action(); close(); });
-      li.addEventListener('mouseenter', function() {
-        activeIdx = i;
-        updateActive(filtered);
-      });
+  function open(){ overlay.classList.add('open'); input.value=''; activeIdx=-1; render(''); setTimeout(function(){input.focus();},50); }
+  function close(){ overlay.classList.remove('open'); }
+  function render(q){
+    var f=commands.filter(function(c){return c.name.toLowerCase().indexOf(q.toLowerCase())!==-1;});
+    results.innerHTML='';activeIdx=-1;
+    f.forEach(function(cmd,i){
+      var li=document.createElement('li');li.className='cmd-item';li.textContent=cmd.name;
+      if(cmd.portal){var b=document.createElement('span');b.className='cmd-item-key';b.textContent='PORTAL';li.appendChild(b);}
+      li.addEventListener('click',function(){cmd.action();close();});
+      li.addEventListener('mouseenter',function(){activeIdx=i;upd(f);});
       results.appendChild(li);
     });
   }
-  function updateActive(filtered) {
-    var items = results.querySelectorAll('.cmd-item');
-    items.forEach(function(el, i) {
-      el.classList.toggle('active', i === activeIdx);
-    });
-  }
-
-  input.addEventListener('input', function() { render(input.value); });
-
-  document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-      e.preventDefault();
-      if (overlay.classList.contains('open')) { close(); } else { open(); }
-    }
-    if (!overlay.classList.contains('open')) return;
-    if (e.key === 'Escape') { close(); return; }
-    var items = results.querySelectorAll('.cmd-item');
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      activeIdx = (activeIdx + 1) % items.length;
-      updateActive();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      activeIdx = (activeIdx - 1 + items.length) % items.length;
-      updateActive();
-    } else if (e.key === 'Enter' && activeIdx >= 0 && activeIdx < items.length) {
-      e.preventDefault();
-      items[activeIdx].click();
-    }
+  function upd(){results.querySelectorAll('.cmd-item').forEach(function(el,i){el.classList.toggle('active',i===activeIdx);});}
+  input.addEventListener('input',function(){render(input.value);});
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();overlay.classList.contains('open')?close():open();}
+    if(!overlay.classList.contains('open'))return;
+    if(e.key==='Escape'){close();return;}
+    var items=results.querySelectorAll('.cmd-item');
+    if(e.key==='ArrowDown'){e.preventDefault();activeIdx=(activeIdx+1)%items.length;upd();}
+    else if(e.key==='ArrowUp'){e.preventDefault();activeIdx=(activeIdx-1+items.length)%items.length;upd();}
+    else if(e.key==='Enter'&&activeIdx>=0){e.preventDefault();items[activeIdx].click();}
   });
-
-  overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) close();
-  });
+  overlay.addEventListener('click',function(e){if(e.target===overlay)close();});
 })();
 
-// ============ INTER-SITE PORTAL EFFECT ============
-function portalNavigate(url) {
-  document.body.classList.add('portal-out');
-  setTimeout(function() { window.location.href = url; }, 600);
-}
-(function() {
-  var suiteHosts = ['emperorbadussy.github.io/charon', 'emperorbadussy.github.io/hydra', 'emperorbadussy.github.io/suite'];
-  document.addEventListener('click', function(e) {
-    var link = e.target.closest('a[href]');
-    if (!link) return;
-    var href = link.getAttribute('href') || '';
-    for (var i = 0; i < suiteHosts.length; i++) {
-      if (href.indexOf(suiteHosts[i]) !== -1) {
-        e.preventDefault();
-        portalNavigate(href);
-        return;
-      }
-    }
-  });
-})();
+// ══════ PORTAL NAVIGATION ══════
+function portalNavigate(url){document.body.style.opacity=0;document.body.style.transition='opacity 0.5s';setTimeout(function(){window.location.href=url;},500);}
+document.addEventListener('click',function(e){
+  var a=e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';
+  var hosts=['emperorbadussy.github.io/charon','emperorbadussy.github.io/hydra','emperorbadussy.github.io/suite'];
+  for(var i=0;i<hosts.length;i++){if(h.indexOf(hosts[i])!==-1){e.preventDefault();portalNavigate(h);return;}}
+});
 </script>
 </body>
 </html>
