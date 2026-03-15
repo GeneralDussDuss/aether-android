@@ -6949,6 +6949,10 @@ function selectTransitionPattern(outgoing, incoming) {
 function selectNextTrack(currentTrack, candidates) {
   if (candidates.length === 0) return null;
 
+  // Filter out binaural/meditation tracks from DJ auto-selection
+  candidates = candidates.filter(t => !isBinauralTrack(t));
+  if (candidates.length === 0) return null;
+
   // Pull cached analysis data for candidates (from pre-analysis)
   const enrichedCandidates = candidates.map(track => {
     const cached = bpmCache[track.id];
@@ -15664,7 +15668,15 @@ function parsePrompt(prompt){
   return{targetEnergy,targetBpm,keyPref,targetDance,genreKeywords};
 }
 
+// Filter out binaural/meditation/frequency tone tracks from curated playlists
+var _binauralFilterWords = /binaural|brainwave|meditation|solfeggio|isochronic|hz\s*tone|tone\s*hz|432\s*hz|528\s*hz|frequency\s*heal|sleep\s*sound|white\s*noise|brown\s*noise|pink\s*noise|rain\s*sounds|nature\s*sounds|ambient\s*noise|sound\s*bath|theta\s*wave|delta\s*wave|alpha\s*wave|beta\s*wave|gamma\s*wave/i;
+function isBinauralTrack(track) {
+  var fields = [track.title || '', track.artist || '', track.album || '', track.genre || ''].join(' ');
+  return _binauralFilterWords.test(fields);
+}
+
 function scoreTrack(track,params){
+  if (isBinauralTrack(track)) return -999; // Exclude from magic playlists
   const{targetEnergy,targetBpm,keyPref,targetDance,genreKeywords}=params;
   const cached=bpmCache[track.id],tags=trackTags[track.id];let score=0;
   if(cached){
@@ -15787,6 +15799,7 @@ function getCurrentDaylistPeriod(){const h=new Date().getHours();for(const p of 
 let daylistTracks=[],daylistCurrentPeriod=null;
 
 function scoreDaylistTrack(track,period){
+  if (isBinauralTrack(track)) return -999; // Exclude binaural/meditation from daylist
   const cached=bpmCache[track.id];let score=0;
   if(cached){
     const bpm=cached.bpm||120,bM=(period.bpm[0]+period.bpm[1])/2,bR=(period.bpm[1]-period.bpm[0])/2;
