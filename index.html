@@ -287,7 +287,8 @@ nav.scrolled::after { opacity:1; }
   background:radial-gradient(circle at 30% 20%, rgba(123,47,190,0.06) 0%, transparent 60%);
   opacity:0; transition:opacity 0.4s;
 }
-.highlight-card:hover { border-color:var(--p-muted); box-shadow:var(--glow), inset 0 0 30px rgba(123,47,190,0.05); transform:translateY(-5px); }
+.highlight-card { transform-style:preserve-3d; transition:all 0.4s var(--ease), transform 0.15s ease-out; }
+.highlight-card:hover { border-color:var(--p-muted); box-shadow:var(--glow), inset 0 0 30px rgba(123,47,190,0.05); }
 .highlight-card:hover::before { opacity:1; }
 .highlight-card:hover::after { opacity:1; }
 .highlight-card .card-icon {
@@ -320,7 +321,8 @@ nav.scrolled::after { opacity:1; }
   background:var(--bg-surface); border:1px solid var(--p-dim); border-radius:12px;
   overflow:hidden; transition:all 0.4s var(--ease); cursor:pointer;
 }
-.viz-card:hover { border-color:var(--p-muted); box-shadow:var(--glow); transform:translateY(-4px); }
+.viz-card { transform-style:preserve-3d; transition:all 0.4s var(--ease), transform 0.15s ease-out; }
+.viz-card:hover { border-color:var(--p-muted); box-shadow:var(--glow); }
 .viz-preview { height:160px; background:var(--bg); position:relative; overflow:hidden; }
 .viz-grid > :nth-child(1) .viz-preview,
 .viz-grid > :nth-child(4) .viz-preview { height:190px; }
@@ -436,7 +438,8 @@ nav.scrolled::after { opacity:1; }
   background:radial-gradient(circle, rgba(123,47,190,0.06) 0%, transparent 70%);
   opacity:0; transition:opacity 0.4s; pointer-events:none;
 }
-.feat-card:hover { border-color:var(--p-muted); box-shadow:var(--glow), inset 0 0 20px rgba(123,47,190,0.04); transform:translateY(-3px); }
+.feat-card { transform-style:preserve-3d; transition:all 0.35s var(--ease), transform 0.15s ease-out; }
+.feat-card:hover { border-color:var(--p-muted); box-shadow:var(--glow), inset 0 0 20px rgba(123,47,190,0.04); }
 .feat-card:hover::before { opacity:1; }
 .feat-card:hover::after { opacity:1; }
 .feat-card h4 {
@@ -489,6 +492,7 @@ nav.scrolled::after { opacity:1; }
   background:var(--bg-surface); border:1px solid rgba(255,45,123,0.15);
   border-radius:10px; padding:1rem; transition:all 0.3s;
 }
+.trans-card { transform-style:preserve-3d; transition:all 0.3s var(--ease), transform 0.15s ease-out; }
 .trans-card:hover { border-color:rgba(255,45,123,0.4); box-shadow:0 0 15px rgba(255,45,123,0.15); }
 .trans-card h4 { font-family:var(--font-d); font-size:0.65rem; color:var(--magenta); letter-spacing:0.08em; margin-bottom:0.3rem; }
 .trans-card p { font-size:0.8rem; color:var(--p-muted); line-height:1.4; }
@@ -1613,6 +1617,56 @@ terminalEls.forEach(function(term, idx) {
   lerpGlow();
 })();
 
+// ══════ 3D TILT ON CARDS (mouse hover) ══════
+(function() {
+  function addTilt(selector, intensity) {
+    document.querySelectorAll(selector).forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = (e.clientX - rect.left) / rect.width - 0.5;  // -0.5 to 0.5
+        var y = (e.clientY - rect.top) / rect.height - 0.5;
+        var rotX = -y * intensity;  // Tilt up when mouse is at top
+        var rotY = x * intensity;   // Tilt right when mouse is at right
+        card.style.transform = 'perspective(800px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) translateY(-4px)';
+      });
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+      });
+    });
+  }
+  // Add glare shine effect on hover
+  function addGlare(card) {
+    var glare = document.createElement('div');
+    glare.style.cssText = 'position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity 0.3s;z-index:10;';
+    card.style.position = 'relative';
+    card.appendChild(glare);
+    card.addEventListener('mousemove', function(e) {
+      var rect = card.getBoundingClientRect();
+      var x = ((e.clientX - rect.left) / rect.width) * 100;
+      var y = ((e.clientY - rect.top) / rect.height) * 100;
+      glare.style.background = 'radial-gradient(circle at ' + x + '% ' + y + '%, rgba(183,110,255,0.08) 0%, transparent 60%)';
+      glare.style.opacity = '1';
+    });
+    card.addEventListener('mouseleave', function() {
+      glare.style.opacity = '0';
+    });
+  }
+
+  // Apply with different intensities per card type
+  setTimeout(function() {
+    addTilt('.highlight-card', 8);
+    addTilt('.feat-card', 6);
+    addTilt('.trans-card', 8);
+    addTilt('.viz-card', 10);
+    addTilt('.dj-deck', 6);
+    addTilt('.stat-box', 5);
+    addTilt('.dl-box', 4);
+    addTilt('.companion', 5);
+    // Glare on all interactive cards
+    document.querySelectorAll('.highlight-card, .feat-card, .trans-card, .viz-card').forEach(addGlare);
+  }, 500);
+})();
+
 // ══════ POPULATE VISUALIZER PREVIEWS ══════
 (function() {
   // Particles
@@ -1651,22 +1705,23 @@ terminalEls.forEach(function(term, idx) {
   window.addEventListener('resize', resize);
   document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
 
-  // Evenly distributed across the ACTUAL viewport — not a 3000px void
+  // Calm, sparse constellation — no mouse chasing
   function spawnParticles() {
     particles.length = 0;
-    // ~1 particle per 12,000 sq pixels — scales with screen size
-    var count = Math.max(50, Math.floor((W * H) / 12000));
+    // ~1 particle per 18,000 sq pixels — sparser, more elegant
+    var count = Math.max(35, Math.floor((W * H) / 18000));
     for (var i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * W,
         y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: (Math.random() - 0.5) * 0.12,
-        r: 0.8 + Math.random() * 2.2,
-        a: 0.1 + Math.random() * 0.4,
+        // Very slow drift — barely perceptible movement
+        vx: (Math.random() - 0.5) * 0.06,
+        vy: (Math.random() - 0.5) * 0.06,
+        r: 0.8 + Math.random() * 2,
+        a: 0.08 + Math.random() * 0.3,
         hue: 250 + Math.random() * 55,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: 0.2 + Math.random() * 0.5
+        pulseSpeed: 0.15 + Math.random() * 0.35
       });
     }
   }
@@ -1675,72 +1730,55 @@ terminalEls.forEach(function(term, idx) {
 
   var t = 0;
   function draw() {
-    t += 0.005;
-    // Gentle fade for trail persistence — lower = longer trails
-    ctx.fillStyle = 'rgba(0,0,0,0.06)';
-    ctx.fillRect(0, 0, W, H);
+    t += 0.004;
+    // Full clear — no trails, clean render each frame
+    ctx.clearRect(0, 0, W, H);
 
     for (var i = 0; i < particles.length; i++) {
       var p = particles[i];
 
-      // Gentle mouse interaction — attract slightly instead of repel, feels magnetic
-      var dx = p.x - mx, dy = p.y - my;
-      var dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 300 && dist > 30) {
-        // Slight attraction to cursor — makes the web cluster around your mouse
-        var force = (300 - dist) / 300 * 0.08;
-        p.vx -= (dx / dist) * force;
-        p.vy -= (dy / dist) * force;
-      } else if (dist <= 30 && dist > 0) {
-        // Repel if too close — prevents clumping on the cursor
-        p.vx += (dx / dist) * 0.5;
-        p.vy += (dy / dist) * 0.5;
-      }
-
-      p.vx *= 0.99; p.vy *= 0.99;
+      // No mouse physics — nodes drift on their own, undisturbed
       p.x += p.vx; p.y += p.vy;
-      // Wrap around viewport edges
-      if (p.x < -30) p.x = W + 30; if (p.x > W + 30) p.x = -30;
-      if (p.y < -30) p.y = H + 30; if (p.y > H + 30) p.y = -30;
+      if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
+      if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
 
       // Slow breathing
-      var twinkle = p.a * (0.35 + 0.65 * Math.sin(t * p.pulseSpeed + p.pulse));
+      var twinkle = p.a * (0.3 + 0.7 * Math.sin(t * p.pulseSpeed + p.pulse));
 
-      // Glow halo on every node (not just large ones)
+      // Soft glow halo
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r * 5, 0, Math.PI * 2);
-      ctx.fillStyle = 'hsla(' + p.hue + ', 55%, 40%, ' + (twinkle * 0.025) + ')';
+      ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'hsla(' + p.hue + ', 50%, 40%, ' + (twinkle * 0.02) + ')';
       ctx.fill();
 
       // Node dot
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'hsla(' + p.hue + ', 65%, 60%, ' + twinkle + ')';
+      ctx.fillStyle = 'hsla(' + p.hue + ', 60%, 55%, ' + twinkle + ')';
       ctx.fill();
 
-      // Constellation webs
+      // Constellation webs — mouse proximity lights them up (but doesn't move anything)
       for (var j = i + 1; j < particles.length; j++) {
         var p2 = particles[j];
         var d = Math.hypot(p.x - p2.x, p.y - p2.y);
-        if (d < 200) {
-          // Both nodes' breathing affects the line
-          var breath1 = 0.35 + 0.65 * Math.sin(t * p.pulseSpeed + p.pulse);
-          var breath2 = 0.35 + 0.65 * Math.sin(t * p2.pulseSpeed + p2.pulse);
+        if (d < 180) {
+          var breath1 = 0.3 + 0.7 * Math.sin(t * p.pulseSpeed + p.pulse);
+          var breath2 = 0.3 + 0.7 * Math.sin(t * p2.pulseSpeed + p2.pulse);
           var avgBreath = (breath1 + breath2) * 0.5;
-          var lineAlpha = (1 - d / 200) * 0.1 * avgBreath;
+          var lineAlpha = (1 - d / 180) * 0.07 * avgBreath;
 
-          // Mouse proximity brightens nearby webs
+          // Mouse hover reveals nearby webs — the only mouse interaction
           var mDist = Math.min(
             Math.hypot(p.x - mx, p.y - my),
             Math.hypot(p2.x - mx, p2.y - my)
           );
-          if (mDist < 250) lineAlpha *= 1 + (250 - mDist) / 250 * 2;
+          if (mDist < 200) lineAlpha *= 1 + (200 - mDist) / 200 * 3;
 
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = 'hsla(270, 50%, 55%, ' + lineAlpha + ')';
-          ctx.lineWidth = 0.6;
+          ctx.strokeStyle = 'hsla(270, 45%, 50%, ' + lineAlpha + ')';
+          ctx.lineWidth = 0.5;
           ctx.stroke();
         }
       }
