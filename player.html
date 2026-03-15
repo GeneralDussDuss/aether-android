@@ -287,10 +287,10 @@ body.vertical-mode .track-list-header { grid-template-columns:30px 2fr 1fr 60px;
 .track-duration { font-family:var(--font-mono); font-size:0.75rem; color:var(--purple-bright); text-align:right; }
 
 /* NOW PLAYING BAR */
-.now-playing { grid-column:2; background:var(--bg-surface); border-top:1px solid var(--purple-dim); display:grid; grid-template-columns:260px 1fr 200px; align-items:center; padding:0 20px; gap:16px; z-index:100; }
-.np-left { display:flex; align-items:center; gap:12px; min-width:0; }
-.np-art { width:52px; height:52px; border-radius:8px; background:linear-gradient(135deg, var(--purple-core), var(--purple-dim)); box-shadow:0 0 16px rgba(157,78,221,0.3); flex-shrink:0; overflow:hidden; transition:transform 0.3s; }
-.np-art img { width:100%; height:100%; object-fit:cover; display:block; }
+.now-playing { grid-column:2; background:var(--bg-surface); border-top:1px solid var(--purple-dim); display:grid; grid-template-columns:220px 1fr auto; align-items:center; padding:0 16px; gap:12px; z-index:100; }
+.np-left { display:flex; align-items:center; gap:10px; min-width:0; overflow:hidden; }
+.np-art { width:48px; height:48px; border-radius:8px; position:relative; background:linear-gradient(135deg, var(--purple-core), var(--purple-dim)); box-shadow:0 0 16px rgba(157,78,221,0.3); flex-shrink:0; overflow:visible; transition:transform 0.3s; }
+.np-art img { width:100%; height:100%; object-fit:cover; display:block; border-radius:8px; }
 .np-art.rotating img { animation:art-rotate 30s linear infinite; }
 .np-art.rotating-paused img { animation:art-rotate 30s linear infinite; animation-play-state:paused; }
 @keyframes art-rotate { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
@@ -323,16 +323,19 @@ body.vertical-mode .track-list-header { grid-template-columns:30px 2fr 1fr 60px;
 .waveform-bar:hover { background:var(--purple-vivid) !important; }
 .waveform-container::after { content:''; position:absolute; top:0; left:0; width:60px; height:100%; background:linear-gradient(90deg, rgba(183,110,255,0.15), transparent); animation:shimmer 3s infinite linear; pointer-events:none; }
 @keyframes shimmer { 0% { left:-60px; } 100% { left:100%; } }
-.np-right { display:flex; align-items:center; justify-content:flex-end; gap:12px; }
-.volume-group { display:flex; align-items:center; gap:8px; }
+.np-right { display:flex; align-items:center; justify-content:flex-end; gap:8px; flex-shrink:0; white-space:nowrap; }
+.np-toggles { display:flex; align-items:center; gap:2px; border:1px solid var(--purple-dim); border-radius:6px; padding:2px; background:rgba(42,27,61,0.15); }
+.np-badges { display:flex; align-items:center; gap:4px; margin-left:2px; }
+.volume-group { display:flex; align-items:center; gap:6px; }
 .volume-btn { border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform 0.1s; }
 .volume-btn:active { transform:scale(0.94); }
 .volume-btn svg { width:16px; height:16px; stroke:var(--purple-muted); fill:none; stroke-width:1.5; transition:stroke 0.2s; }
 .volume-btn:hover svg { stroke:var(--purple-vivid); }
-.volume-slider { -webkit-appearance:none; width:80px; height:4px; background:var(--purple-dim); border-radius:2px; outline:none; cursor:pointer; }
+.volume-slider { -webkit-appearance:none; width:70px; height:3px; background:var(--purple-dim); border-radius:2px; outline:none; cursor:pointer; }
 .volume-slider::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--purple-bright); box-shadow:0 0 6px rgba(157,78,221,0.5); cursor:pointer; transition:transform 0.15s; }
 .volume-slider::-webkit-slider-thumb:hover { transform:scale(1.3); }
-.quality-badge { font-family:var(--font-mono); font-size:0.55rem; color:var(--purple-bright); border:1px solid var(--purple-dim); border-radius:4px; padding:2px 6px; letter-spacing:0.05em; white-space:nowrap; }
+.quality-badge { font-family:var(--font-mono); font-size:0.5rem; color:var(--purple-bright); border:1px solid var(--purple-dim); border-radius:3px; padding:1px 5px; letter-spacing:0.05em; white-space:nowrap; opacity:0.7; transition:opacity 0.2s; }
+.quality-badge:hover { opacity:1; }
 
 /* SEARCH OVERLAY */
 .search-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(30px) saturate(1.2); z-index:9998; display:flex; align-items:flex-start; justify-content:center; padding-top:15vh; opacity:0; pointer-events:none; transition:opacity 0.3s; }
@@ -446,9 +449,9 @@ body.vertical-mode .track-list-header { grid-template-columns:30px 2fr 1fr 60px;
 .dna-track-artist{font-family:var(--font-body);font-size:0.8rem;color:var(--purple-vivid)}
 .dna-save-btn{background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:8px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.65rem;letter-spacing:0.1em;padding:10px 20px;cursor:pointer;transition:all 0.2s}
 .dna-save-btn:hover{border-color:var(--purple-bright);color:var(--purple-white);box-shadow:var(--glow-subtle)}
-.dna-badge{width:28px;height:28px;border-radius:6px;cursor:pointer;flex-shrink:0;overflow:hidden;border:1px solid var(--purple-dim);transition:border-color 0.2s,box-shadow 0.2s;display:none}
+.dna-badge{width:18px;height:18px;border-radius:4px;cursor:pointer;overflow:hidden;border:1px solid rgba(42,27,61,0.5);transition:border-color 0.2s,box-shadow 0.2s,opacity 0.2s;display:none;position:absolute;bottom:-2px;right:-2px;z-index:2;opacity:0.8}
 .dna-badge.visible{display:block}
-.dna-badge:hover{border-color:var(--purple-bright);box-shadow:var(--glow-subtle)}
+.dna-badge:hover{border-color:var(--purple-bright);box-shadow:var(--glow-subtle);opacity:1}
 .dna-badge canvas{width:100%;height:100%;display:block}
 
 /* ============ TASTE EVOLUTION TIMELINE ============ */
@@ -822,8 +825,8 @@ button:active, .album-card:active { transform:scale(0.94); transition-duration:0
 }
 
 /* RESPONSIVE */
-@media (max-width:900px) { .now-playing { grid-template-columns:200px 1fr 120px; } .album-grid { grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); } }
-@media (max-width:600px) { .now-playing { grid-template-columns:1fr; grid-template-rows:auto auto auto; gap:6px; padding:8px 14px; } :root { --nowplaying-h:140px; } .np-center { width:100%; } .np-right { justify-content:center; } .track-list-header,.track-row { grid-template-columns:30px 2fr 80px; } .track-album,.track-format { display:none; } }
+@media (max-width:900px) { .now-playing { grid-template-columns:180px 1fr auto; } .np-badges { display:none; } .album-grid { grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); } }
+@media (max-width:600px) { .now-playing { grid-template-columns:1fr; grid-template-rows:auto auto auto; gap:6px; padding:8px 14px; } :root { --nowplaying-h:140px; } .np-center { width:100%; } .np-right { justify-content:center; flex-wrap:wrap; } .np-toggles { order:2; } .volume-group { order:1; } .np-badges { order:3; display:none; } .track-list-header,.track-row { grid-template-columns:30px 2fr 80px; } .track-album,.track-format { display:none; } }
 
 /* Beat-reactive properties (set by JS) */
 .main-content::before {
@@ -1430,6 +1433,46 @@ body::after {
   color: var(--magenta-bright) !important;
 }
 
+/* ============ SETTINGS TABS ============ */
+.settings-tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--purple-dim);
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.settings-tab-bar::-webkit-scrollbar { display: none; }
+.settings-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--purple-muted);
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  padding: 10px 12px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  position: relative;
+}
+.settings-tab-btn:hover {
+  color: var(--purple-hot);
+}
+.settings-tab-btn.active {
+  color: var(--purple-white);
+  border-bottom-color: var(--purple-bright);
+  text-shadow: 0 0 12px rgba(157, 78, 221, 0.5);
+}
+.settings-tab-content {
+  display: none;
+  padding: 20px 24px;
+}
+.settings-tab-content.active {
+  display: block;
+}
+
 /* BEAT DOT — alternates cyan/magenta based on beat */
 .beat-dot {
   background: linear-gradient(135deg, var(--cyan-bright), var(--magenta-bright)) !important;
@@ -1859,18 +1902,16 @@ body::after {
 
 /* ============ EQUALIZER PANEL ============ */
 .eq-toggle-btn {
-  background: none; border: 1px solid var(--purple-dim); border-radius: 4px;
-  padding: 3px 8px; cursor: pointer; transition: all 0.2s var(--ease-smooth);
-  display: flex; align-items: center; gap: 4px;
+  background: none; border: none; border-radius: 4px;
+  padding: 4px; cursor: pointer; transition: all 0.2s var(--ease-smooth);
+  display: flex; align-items: center; justify-content: center;
 }
-.eq-toggle-btn:hover { border-color: var(--purple-bright); box-shadow: var(--glow-subtle); }
-.eq-toggle-btn.active { border-color: var(--cyan-bright); box-shadow: var(--cyan-glow); }
+.eq-toggle-btn:hover { background: rgba(123,47,190,0.2); }
+.eq-toggle-btn.active { background: rgba(0,180,216,0.15); }
 .eq-toggle-btn svg { width: 14px; height: 14px; stroke: var(--purple-muted); fill: none; stroke-width: 1.5; transition: stroke 0.2s; }
 .eq-toggle-btn:hover svg { stroke: var(--purple-bright); }
 .eq-toggle-btn.active svg { stroke: var(--cyan-bright); }
-.eq-toggle-btn span { font-family: var(--font-mono); font-size: 0.55rem; color: var(--purple-muted); letter-spacing: 0.05em; transition: color 0.2s; }
-.eq-toggle-btn:hover span { color: var(--purple-bright); }
-.eq-toggle-btn.active span { color: var(--cyan-bright); }
+.eq-toggle-btn span { display: none; }
 
 .eq-panel {
   position: fixed; bottom: var(--nowplaying-h); right: 12px;
@@ -2530,18 +2571,16 @@ body::after {
 
 /* ============ WARMTH ENGINE (Vinyl/Lo-Fi) ============ */
 .warmth-toggle-btn {
-  background: none; border: 1px solid var(--purple-dim); border-radius: 4px;
-  padding: 3px 8px; cursor: pointer; transition: all 0.2s var(--ease-smooth);
-  display: flex; align-items: center; gap: 4px;
+  background: none; border: none; border-radius: 4px;
+  padding: 4px; cursor: pointer; transition: all 0.2s var(--ease-smooth);
+  display: flex; align-items: center; justify-content: center;
 }
-.warmth-toggle-btn:hover { border-color: var(--purple-bright); box-shadow: var(--glow-subtle); }
-.warmth-toggle-btn.active { border-color: var(--cyan-bright); box-shadow: var(--cyan-glow); }
+.warmth-toggle-btn:hover { background: rgba(123,47,190,0.2); }
+.warmth-toggle-btn.active { background: rgba(0,180,216,0.15); }
 .warmth-toggle-btn svg { width: 14px; height: 14px; stroke: var(--purple-muted); fill: none; stroke-width: 1.5; transition: stroke 0.2s; }
 .warmth-toggle-btn:hover svg { stroke: var(--purple-bright); }
 .warmth-toggle-btn.active svg { stroke: var(--cyan-bright); }
-.warmth-toggle-btn span { font-family: var(--font-mono); font-size: 0.55rem; color: var(--purple-muted); letter-spacing: 0.05em; transition: color 0.2s; }
-.warmth-toggle-btn:hover span { color: var(--purple-bright); }
-.warmth-toggle-btn.active span { color: var(--cyan-bright); }
+.warmth-toggle-btn span { display: none; }
 
 .warmth-panel {
   position: fixed; bottom: var(--nowplaying-h); right: 520px;
@@ -2651,18 +2690,16 @@ body::after {
 
 /* ============ SIGNAL PATH TRANSPARENCY ============ */
 .signal-path-btn {
-  background: none; border: 1px solid var(--purple-dim); border-radius: 4px;
-  padding: 3px 8px; cursor: pointer; transition: all 0.2s var(--ease-smooth);
-  display: flex; align-items: center; gap: 4px;
+  background: none; border: none; border-radius: 4px;
+  padding: 4px; cursor: pointer; transition: all 0.2s var(--ease-smooth);
+  display: flex; align-items: center; justify-content: center;
 }
-.signal-path-btn:hover { border-color: var(--purple-bright); box-shadow: var(--glow-subtle); }
-.signal-path-btn.active { border-color: var(--cyan-bright); box-shadow: var(--cyan-glow); }
+.signal-path-btn:hover { background: rgba(123,47,190,0.2); }
+.signal-path-btn.active { background: rgba(0,180,216,0.15); }
 .signal-path-btn svg { width: 14px; height: 14px; stroke: var(--purple-muted); fill: none; stroke-width: 1.5; transition: stroke 0.2s; }
 .signal-path-btn:hover svg { stroke: var(--purple-bright); }
 .signal-path-btn.active svg { stroke: var(--cyan-bright); }
-.signal-path-btn span { font-family: var(--font-mono); font-size: 0.55rem; color: var(--purple-muted); letter-spacing: 0.05em; transition: color 0.2s; }
-.signal-path-btn:hover span { color: var(--purple-bright); }
-.signal-path-btn.active span { color: var(--cyan-bright); }
+.signal-path-btn span { display: none; }
 
 .signal-path-panel {
   position: fixed; bottom: var(--nowplaying-h); left: 50%; transform: translateX(-50%) translateY(calc(100% + 12px));
@@ -2736,19 +2773,17 @@ body::after {
 
 /* ============ STEM ISOLATION PANEL ============ */
 .stems-toggle-btn {
-  background: none; border: 1px solid var(--purple-dim); border-radius: 4px;
-  padding: 3px 8px; cursor: pointer; transition: all 0.2s var(--ease-smooth);
-  display: none; align-items: center; gap: 4px;
+  background: none; border: none; border-radius: 4px;
+  padding: 4px; cursor: pointer; transition: all 0.2s var(--ease-smooth);
+  display: none; align-items: center; justify-content: center;
 }
 .stems-toggle-btn.available { display: flex; }
-.stems-toggle-btn:hover { border-color: var(--purple-bright); box-shadow: var(--glow-subtle); }
-.stems-toggle-btn.active { border-color: var(--cyan-bright); box-shadow: var(--cyan-glow); }
+.stems-toggle-btn:hover { background: rgba(123,47,190,0.2); }
+.stems-toggle-btn.active { background: rgba(0,180,216,0.15); }
 .stems-toggle-btn svg { width: 14px; height: 14px; stroke: var(--purple-muted); fill: none; stroke-width: 1.5; transition: stroke 0.2s; }
 .stems-toggle-btn:hover svg { stroke: var(--purple-bright); }
 .stems-toggle-btn.active svg { stroke: var(--cyan-bright); }
-.stems-toggle-btn span { font-family: var(--font-mono); font-size: 0.55rem; color: var(--purple-muted); letter-spacing: 0.05em; transition: color 0.2s; }
-.stems-toggle-btn:hover span { color: var(--purple-bright); }
-.stems-toggle-btn.active span { color: var(--cyan-bright); }
+.stems-toggle-btn span { display: none; }
 
 .stems-panel {
   position: fixed; bottom: var(--nowplaying-h); left: 50%; transform: translateX(-50%) translateY(calc(100% + 12px));
@@ -3040,9 +3075,10 @@ body::after {
 .sleep-timer-cancel-btn:hover { border-color:var(--magenta-bright); color:var(--magenta-bright); }
 .sleep-timer-countdown { font-family:var(--font-mono); font-size:0.65rem; color:var(--purple-vivid); margin-top:12px; text-align:center; display:none; }
 .sleep-timer-countdown.visible { display:block; }
-.sleep-timer-badge { font-family:var(--font-mono); font-size:0.55rem; color:var(--purple-vivid); background:rgba(123,47,190,0.2); border:1px solid var(--purple-dim); border-radius:4px; padding:2px 6px; white-space:nowrap; display:none; cursor:pointer; }
-.sleep-timer-badge.visible { display:inline-flex; align-items:center; gap:4px; }
-.sleep-timer-badge svg { width:10px; height:10px; stroke:var(--purple-vivid); fill:none; stroke-width:1.5; }
+.sleep-timer-badge { font-family:var(--font-mono); font-size:0.48rem; color:var(--purple-vivid); background:none; border:none; border-radius:3px; padding:1px 4px; white-space:nowrap; display:none; cursor:pointer; opacity:0.7; transition:opacity 0.2s; }
+.sleep-timer-badge:hover { opacity:1; }
+.sleep-timer-badge.visible { display:inline-flex; align-items:center; gap:3px; }
+.sleep-timer-badge svg { width:9px; height:9px; stroke:var(--purple-vivid); fill:none; stroke-width:1.5; }
 
 /* ============ POMODORO FOCUS MODE ============ */
 .pomodoro-panel { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.95); background:var(--bg-surface); border:1px solid var(--purple-dim); border-radius:16px; padding:24px; min-width:360px; z-index:9500; opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.3s var(--ease-smooth); box-shadow:0 20px 60px rgba(0,0,0,0.6); }
@@ -3091,8 +3127,9 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
 .weather-toggle-btn { flex:1; background:var(--bg-raised); border:1px solid var(--purple-dim); border-radius:8px; color:var(--purple-hot); font-family:var(--font-display); font-size:0.65rem; letter-spacing:0.08em; padding:10px; cursor:pointer; transition:all 0.2s; }
 .weather-toggle-btn:hover { border-color:var(--purple-bright); }
 .weather-toggle-btn.active { background:rgba(123,47,190,0.2); border-color:var(--purple-vivid); color:var(--purple-vivid); }
-.weather-badge { font-family:var(--font-mono); font-size:0.55rem; color:var(--cyan-bright); background:rgba(0,180,216,0.15); border:1px solid var(--cyan-dim); border-radius:4px; padding:2px 6px; white-space:nowrap; display:none; cursor:pointer; }
-.weather-badge.visible { display:inline-flex; align-items:center; gap:4px; }
+.weather-badge { font-family:var(--font-mono); font-size:0.48rem; color:var(--cyan-bright); background:none; border:none; border-radius:3px; padding:1px 4px; white-space:nowrap; display:none; cursor:pointer; opacity:0.7; transition:opacity 0.2s; }
+.weather-badge:hover { opacity:1; }
+.weather-badge.visible { display:inline-flex; align-items:center; gap:3px; }
 </style>
 </head>
 <body>
@@ -3446,12 +3483,13 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
   <!-- NOW PLAYING -->
   <div class="now-playing">
     <div class="np-left">
-      <div class="np-art" id="npArt"></div>
-      <div class="dna-badge" id="dnaBadge" title="Music DNA"><canvas id="dnaBadgeCanvas" width="56" height="56"></canvas></div>
+      <div class="np-art" id="npArt">
+        <div class="dna-badge" id="dnaBadge" title="Music DNA"><canvas id="dnaBadgeCanvas" width="56" height="56"></canvas></div>
+      </div>
       <div class="np-info">
         <div class="np-title" id="npTitle">No track selected</div>
         <div class="np-artist" id="npArtist">--</div>
-        <div class="np-album" id="npAlbum">--</div>
+        <div class="np-album" id="npAlbum" style="display:none">--</div>
       </div>
     </div>
     <div class="np-center">
@@ -3472,29 +3510,21 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
       </div>
     </div>
     <div class="np-right">
+      <div class="np-toggles">
+        <button class="eq-toggle-btn" id="eqToggleBtn" title="Equalizer"><svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>EQ</span></button>
+        <button class="warmth-toggle-btn" id="warmthToggleBtn" title="Warmth Engine [W]"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 0-5 5c0 3 5 8 5 8s5-5 5-8a5 5 0 0 0-5-5z"/><path d="M12 18v4" stroke-linecap="round"/><path d="M8 22h8" stroke-linecap="round"/></svg><span>WARM</span></button>
+        <button class="signal-path-btn" id="signalPathBtn" title="Signal Path [I]"><svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M10 12h4" stroke-linecap="round"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg><span>SIG</span></button>
+        <button class="stems-toggle-btn" id="stemsToggleBtn" title="Stem Isolation [Ctrl+S]"><svg viewBox="0 0 24 24"><path d="M4 4v16" stroke-linecap="round"/><path d="M10 4v16" stroke-linecap="round"/><path d="M16 4v16" stroke-linecap="round"/><path d="M22 4v16" stroke-linecap="round"/></svg><span>STEMS</span></button>
+      </div>
       <div class="volume-group">
         <button class="volume-btn" id="btnMute"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
         <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="75">
       </div>
-      <button class="eq-toggle-btn" id="eqToggleBtn" title="Equalizer">
-        <svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-        <span>EQ</span>
-      </button>
-      <button class="warmth-toggle-btn" id="warmthToggleBtn" title="Warmth Engine [W]">
-        <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 0-5 5c0 3 5 8 5 8s5-5 5-8a5 5 0 0 0-5-5z"/><path d="M12 18v4" stroke-linecap="round"/><path d="M8 22h8" stroke-linecap="round"/></svg>
-        <span>WARM</span>
-      </button>
-      <button class="signal-path-btn" id="signalPathBtn" title="Signal Path [I]">
-        <svg viewBox="0 0 24 24"><path d="M2 12h4M18 12h4M10 12h4" stroke-linecap="round"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg>
-        <span>SIG</span>
-      </button>
-      <button class="stems-toggle-btn" id="stemsToggleBtn" title="Stem Isolation [Ctrl+S]">
-        <svg viewBox="0 0 24 24"><path d="M4 4v16" stroke-linecap="round"/><path d="M10 4v16" stroke-linecap="round"/><path d="M16 4v16" stroke-linecap="round"/><path d="M22 4v16" stroke-linecap="round"/></svg>
-        <span>STEMS</span>
-      </button>
-      <div class="sleep-timer-badge" id="sleepTimerBadge" title="Sleep Timer active" onclick="document.getElementById('sleepTimerPanel').classList.toggle('open')"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span id="sleepTimerBadgeTime"></span></div>
-      <div class="weather-badge" id="weatherBadge" title="Weather Ambient" onclick="document.getElementById('weatherPanel').classList.toggle('open')"><span id="weatherBadgeText">--</span></div>
-      <div class="quality-badge" id="qualityBadge">--</div>
+      <div class="np-badges">
+        <div class="quality-badge" id="qualityBadge">--</div>
+        <div class="sleep-timer-badge" id="sleepTimerBadge" title="Sleep Timer active" onclick="document.getElementById('sleepTimerPanel').classList.toggle('open')"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span id="sleepTimerBadgeTime"></span></div>
+        <div class="weather-badge" id="weatherBadge" title="Weather Ambient" onclick="document.getElementById('weatherPanel').classList.toggle('open')"><span id="weatherBadgeText">--</span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -3654,54 +3684,19 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
       <span style="font-family:var(--font-display);font-weight:700;font-size:0.9rem;color:var(--purple-white);letter-spacing:0.08em;">SETTINGS</span>
       <button onclick="document.getElementById('settingsOverlay').classList.remove('open')" style="background:none;border:none;cursor:pointer;padding:4px;"><svg width="16" height="16" viewBox="0 0 24 24" stroke="var(--purple-muted)" fill="none" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
-    <div style="padding:20px 24px;">
-      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">VISUALIZER</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="sceneButtons"></div>
-      <label style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;">
-        <input type="checkbox" id="settAutoRotate" style="accent-color:var(--purple-bright);">
-        <span style="font-family:var(--font-body);font-size:0.9rem;color:var(--purple-hot);">Auto-rotate scenes</span>
-      </label>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);">Interval:</span>
-        <select id="settRotateInterval" style="background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.75rem;padding:4px 8px;outline:none;">
-          <option value="30000">30s</option>
-          <option value="60000" selected>60s</option>
-          <option value="120000">120s</option>
-          <option value="300000">5m</option>
-        </select>
-      </div>
+    <!-- SETTINGS TAB BAR -->
+    <div class="settings-tab-bar">
+      <button class="settings-tab-btn active" data-settings-tab="connection">CONNECTION</button>
+      <button class="settings-tab-btn" data-settings-tab="audio">AUDIO</button>
+      <button class="settings-tab-btn" data-settings-tab="dj">DJ</button>
+      <button class="settings-tab-btn" data-settings-tab="display">DISPLAY</button>
+      <button class="settings-tab-btn" data-settings-tab="integrations">INTEGRATIONS</button>
+      <button class="settings-tab-btn" data-settings-tab="about">ABOUT</button>
+    </div>
 
-      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">ELECTRIC SHEEP</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" id="settSheepFolder" placeholder="Video folder path (e.g. C:\Sheep)" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.75rem;padding:8px 12px;outline:none;transition:border-color 0.2s;">
-          <button id="settSheepBrowse" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 12px;cursor:pointer;transition:all 0.2s;white-space:nowrap;">BROWSE</button>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button id="settSheepScan" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">SCAN FOLDER</button>
-          <button id="settSheepAddFiles" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">ADD FILES</button>
-          <button id="settSheepClear" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-muted);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">CLEAR</button>
-        </div>
-        <div id="settSheepStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);padding:4px 0;">No videos loaded</div>
-      </div>
-
-      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">WALLPAPER ENGINE</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button id="settWpScan" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">SCAN WALLPAPERS</button>
-          <button id="settWpClear" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-muted);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">DISABLE BG</button>
-        </div>
-        <div id="settWpStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);padding:4px 0;">No wallpapers scanned</div>
-        <div id="settWpGrid" style="display:flex;gap:6px;flex-wrap:wrap;max-height:200px;overflow-y:auto;"></div>
-      </div>
-
-      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">LAYOUT</div>
-      <div style="display:flex;gap:8px;margin-bottom:16px;">
-        <button id="settLayoutH" onclick="setOrientation('horizontal')" style="flex:1;background:var(--bg-raised);border:1px solid var(--cyan-bright);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.7rem;padding:8px 12px;cursor:pointer;transition:all 0.2s;">HORIZONTAL</button>
-        <button id="settLayoutV" onclick="setOrientation('vertical')" style="flex:1;background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.7rem;padding:8px 12px;cursor:pointer;transition:all 0.2s;">VERTICAL</button>
-      </div>
-
-      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">CONNECTION</div>
+    <!-- TAB: CONNECTION -->
+    <div class="settings-tab-content active" data-settings-panel="connection">
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">NAVIDROME SERVER</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
         <input type="text" id="settUrl" value="http://localhost:4533" placeholder="Navidrome URL" style="background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
         <div style="display:flex;gap:8px;">
@@ -3710,7 +3705,10 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
         </div>
         <button id="settTestConn" style="align-self:flex-start;background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.65rem;letter-spacing:0.1em;padding:8px 16px;cursor:pointer;transition:all 0.2s;">TEST CONNECTION</button>
       </div>
+    </div>
 
+    <!-- TAB: AUDIO -->
+    <div class="settings-tab-content" data-settings-panel="audio">
       <div class="hearing-profile-section">
         <div class="hearing-profile-title">HEARING PROFILE EQ</div>
         <div class="hearing-test-controls" id="hearingTestControls">
@@ -3737,8 +3735,72 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
         </div>
         <div id="settTagStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);padding:4px 0;">No tags generated</div>
       </div>
+    </div>
 
-      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">DISCORD RICH PRESENCE</div>
+    <!-- TAB: DJ -->
+    <div class="settings-tab-content" data-settings-panel="dj">
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">STEM ISOLATION</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="settStemsFolder" placeholder="Stems folder path (e.g. C:\Stems)" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.75rem;padding:8px 12px;outline:none;transition:border-color 0.2s;">
+          <button id="settStemsBrowse" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 12px;cursor:pointer;transition:all 0.2s;white-space:nowrap;">BROWSE</button>
+        </div>
+        <div id="settStemsStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);padding:4px 0;">No stems folder configured</div>
+      </div>
+    </div>
+
+    <!-- TAB: DISPLAY -->
+    <div class="settings-tab-content" data-settings-panel="display">
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">LAYOUT</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <button id="settLayoutH" onclick="setOrientation('horizontal')" style="flex:1;background:var(--bg-raised);border:1px solid var(--cyan-bright);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.7rem;padding:8px 12px;cursor:pointer;transition:all 0.2s;">HORIZONTAL</button>
+        <button id="settLayoutV" onclick="setOrientation('vertical')" style="flex:1;background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.7rem;padding:8px 12px;cursor:pointer;transition:all 0.2s;">VERTICAL</button>
+      </div>
+
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">VISUALIZER</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="sceneButtons"></div>
+      <label style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;">
+        <input type="checkbox" id="settAutoRotate" style="accent-color:var(--purple-bright);">
+        <span style="font-family:var(--font-body);font-size:0.9rem;color:var(--purple-hot);">Auto-rotate scenes</span>
+      </label>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);">Interval:</span>
+        <select id="settRotateInterval" style="background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.75rem;padding:4px 8px;outline:none;">
+          <option value="30000">30s</option>
+          <option value="60000" selected>60s</option>
+          <option value="120000">120s</option>
+          <option value="300000">5m</option>
+        </select>
+      </div>
+
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">WALLPAPER ENGINE</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button id="settWpScan" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">SCAN WALLPAPERS</button>
+          <button id="settWpClear" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-muted);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">DISABLE BG</button>
+        </div>
+        <div id="settWpStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);padding:4px 0;">No wallpapers scanned</div>
+        <div id="settWpGrid" style="display:flex;gap:6px;flex-wrap:wrap;max-height:200px;overflow-y:auto;"></div>
+      </div>
+
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">ELECTRIC SHEEP</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="settSheepFolder" placeholder="Video folder path (e.g. C:\Sheep)" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.75rem;padding:8px 12px;outline:none;transition:border-color 0.2s;">
+          <button id="settSheepBrowse" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 12px;cursor:pointer;transition:all 0.2s;white-space:nowrap;">BROWSE</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button id="settSheepScan" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">SCAN FOLDER</button>
+          <button id="settSheepAddFiles" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">ADD FILES</button>
+          <button id="settSheepClear" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-muted);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 14px;cursor:pointer;transition:all 0.2s;">CLEAR</button>
+        </div>
+        <div id="settSheepStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);padding:4px 0;">No videos loaded</div>
+      </div>
+    </div>
+
+    <!-- TAB: INTEGRATIONS -->
+    <div class="settings-tab-content" data-settings-panel="integrations">
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">DISCORD RICH PRESENCE</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
           <input type="checkbox" id="settDiscordEnabled" style="accent-color:var(--purple-bright);">
@@ -3751,17 +3813,11 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
         </div>
         <div id="settDiscordStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);padding:4px 0;">Not connected</div>
       </div>
+    </div>
 
-      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">STEM ISOLATION</div>
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" id="settStemsFolder" placeholder="Stems folder path (e.g. C:\Stems)" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.75rem;padding:8px 12px;outline:none;transition:border-color 0.2s;">
-          <button id="settStemsBrowse" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:8px 12px;cursor:pointer;transition:all 0.2s;white-space:nowrap;">BROWSE</button>
-        </div>
-        <div id="settStemsStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);padding:4px 0;">No stems folder configured</div>
-      </div>
-
-      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin:20px 0 12px;">ABOUT</div>
+    <!-- TAB: ABOUT -->
+    <div class="settings-tab-content" data-settings-panel="about">
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">ABOUT</div>
       <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);line-height:1.8;" id="settAbout">
         AETHER v1.0.0<br>
         Navidrome: checking...<br>
@@ -7961,6 +8017,20 @@ function playCurrentTrack() {
   // Discord Rich Presence: send track info on track change
   if (typeof sendDiscordPresence === 'function') sendDiscordPresence();
 
+  // Last.fm scrobbling: update now playing on track change
+  if (typeof lastfmOnTrackChange === 'function') lastfmOnTrackChange();
+
+  // Update Navigator MediaSession metadata for Windows media overlay
+  if ('mediaSession' in navigator) {
+    const artwork = t.coverArt ? [{ src: SUBSONIC.coverUrl(t.coverArt, 300), sizes: '300x300', type: 'image/jpeg' }] : [];
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: t.title || 'Unknown',
+      artist: t.artist || 'Unknown',
+      album: t.album || '',
+      artwork: artwork,
+    });
+  }
+
   // Stem Isolation: check for stems on track change
   if (typeof checkStemsForTrack === 'function') {
     if (stemsActive) deactivateStems();
@@ -8968,6 +9038,8 @@ document.querySelectorAll('.nav-item[data-view]').forEach(item => {
     item.classList.add('active');
     const view = item.dataset.view;
     currentView = view;
+    // PERF: Stop sonic map animation loop when navigating away
+    if (view !== 'sonicmap' && sonicMap.animFrame) cleanupSonicMap();
     // Show/hide view toggles and filter based on view
     if (view === 'library') loadLibraryView();
     else if (view === 'albums') loadAlbumsView();
@@ -9077,6 +9149,13 @@ document.getElementById('eqClose').addEventListener('click', () => {
 document.querySelector('[data-action="settings"]').addEventListener('click', () => {
   const overlay = document.getElementById('settingsOverlay');
   overlay.classList.add('open');
+  // Restore last active settings tab
+  document.querySelectorAll('.settings-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.settings-tab-content').forEach(p => p.classList.remove('active'));
+  const activeBtn = document.querySelector(`[data-settings-tab="${settingsActiveTab}"]`);
+  const activePanel = document.querySelector(`[data-settings-panel="${settingsActiveTab}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
+  if (activePanel) activePanel.classList.add('active');
   // Populate scene buttons
   const container = document.getElementById('sceneButtons');
   container.innerHTML = SCENES.map((s, i) =>
@@ -9092,6 +9171,20 @@ document.getElementById('settingsOverlay').addEventListener('click', (e) => {
   if (e.target === document.getElementById('settingsOverlay')) {
     document.getElementById('settingsOverlay').classList.remove('open');
   }
+});
+
+// ============ SETTINGS TABS ============
+let settingsActiveTab = 'connection';
+document.querySelectorAll('.settings-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.settingsTab;
+    settingsActiveTab = tab;
+    document.querySelectorAll('.settings-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.settings-tab-content').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = document.querySelector(`[data-settings-panel="${tab}"]`);
+    if (panel) panel.classList.add('active');
+  });
 });
 
 // Auto-rotate
@@ -9572,6 +9665,338 @@ setInterval(() => {
   if (discordEnabled && discordConnected && isPlaying) sendDiscordPresence();
 }, 15000);
 
+
+// ============ LAST.FM SCROBBLING ENGINE ============
+
+// --- Inline MD5 implementation ---
+const LastFmMD5 = (function() {
+  function safeAdd(x, y) { const lsw = (x & 0xffff) + (y & 0xffff); return (((x >> 16) + (y >> 16) + (lsw >> 16)) << 16) | (lsw & 0xffff); }
+  function bitRotateLeft(num, cnt) { return (num << cnt) | (num >>> (32 - cnt)); }
+  function md5cmn(q, a, b, x, s, t) { return safeAdd(bitRotateLeft(safeAdd(safeAdd(a, q), safeAdd(x, t)), s), b); }
+  function md5ff(a, b, c, d, x, s, t) { return md5cmn((b & c) | (~b & d), a, b, x, s, t); }
+  function md5gg(a, b, c, d, x, s, t) { return md5cmn((b & d) | (c & ~d), a, b, x, s, t); }
+  function md5hh(a, b, c, d, x, s, t) { return md5cmn(b ^ c ^ d, a, b, x, s, t); }
+  function md5ii(a, b, c, d, x, s, t) { return md5cmn(c ^ (b | ~d), a, b, x, s, t); }
+  function binlMD5(x, len) {
+    x[len >> 5] |= 0x80 << (len % 32);
+    x[((len + 64) >>> 9 << 4) + 14] = len;
+    let a = 1732584193, b = -271733879, c = -1732584194, d = 271733878;
+    for (let i = 0; i < x.length; i += 16) {
+      const oa = a, ob = b, oc = c, od = d;
+      a = md5ff(a, b, c, d, x[i],      7, -680876936);  d = md5ff(d, a, b, c, x[i+1],  12, -389564586);
+      c = md5ff(c, d, a, b, x[i+2],  17,  606105819);  b = md5ff(b, c, d, a, x[i+3],  22, -1044525330);
+      a = md5ff(a, b, c, d, x[i+4],   7, -176418897);  d = md5ff(d, a, b, c, x[i+5],  12,  1200080426);
+      c = md5ff(c, d, a, b, x[i+6],  17, -1473231341); b = md5ff(b, c, d, a, x[i+7],  22, -45705983);
+      a = md5ff(a, b, c, d, x[i+8],   7,  1770035416); d = md5ff(d, a, b, c, x[i+9],  12, -1958414417);
+      c = md5ff(c, d, a, b, x[i+10], 17, -42063);      b = md5ff(b, c, d, a, x[i+11], 22, -1990404162);
+      a = md5ff(a, b, c, d, x[i+12],  7,  1804603682); d = md5ff(d, a, b, c, x[i+13], 12, -40341101);
+      c = md5ff(c, d, a, b, x[i+14], 17, -1502002290); b = md5ff(b, c, d, a, x[i+15], 22,  1236535329);
+      a = md5gg(a, b, c, d, x[i+1],   5, -165796510);  d = md5gg(d, a, b, c, x[i+6],   9, -1069501632);
+      c = md5gg(c, d, a, b, x[i+11], 14,  643717713);  b = md5gg(b, c, d, a, x[i],    20, -373897302);
+      a = md5gg(a, b, c, d, x[i+5],   5, -701558691);  d = md5gg(d, a, b, c, x[i+10],  9,  38016083);
+      c = md5gg(c, d, a, b, x[i+15], 14, -660478335);  b = md5gg(b, c, d, a, x[i+4],  20, -405537848);
+      a = md5gg(a, b, c, d, x[i+9],   5,  568446438);  d = md5gg(d, a, b, c, x[i+14],  9, -1019803690);
+      c = md5gg(c, d, a, b, x[i+3],  14, -187363961);  b = md5gg(b, c, d, a, x[i+8],  20,  1163531501);
+      a = md5gg(a, b, c, d, x[i+13],  5, -1444681467); d = md5gg(d, a, b, c, x[i+2],   9, -51403784);
+      c = md5gg(c, d, a, b, x[i+7],  14,  1735328473); b = md5gg(b, c, d, a, x[i+12], 20, -1926607734);
+      a = md5hh(a, b, c, d, x[i+5],   4, -378558);     d = md5hh(d, a, b, c, x[i+8],  11, -2022574463);
+      c = md5hh(c, d, a, b, x[i+11], 16,  1839030562); b = md5hh(b, c, d, a, x[i+14], 23, -35309556);
+      a = md5hh(a, b, c, d, x[i+1],   4, -1530992060); d = md5hh(d, a, b, c, x[i+4],  11,  1272893353);
+      c = md5hh(c, d, a, b, x[i+7],  16, -155497632);  b = md5hh(b, c, d, a, x[i+10], 23, -1094730640);
+      a = md5hh(a, b, c, d, x[i+13],  4,  681279174);  d = md5hh(d, a, b, c, x[i],    11, -358537222);
+      c = md5hh(c, d, a, b, x[i+3],  16, -722521979);  b = md5hh(b, c, d, a, x[i+6],  23,  76029189);
+      a = md5hh(a, b, c, d, x[i+9],   4, -640364487);  d = md5hh(d, a, b, c, x[i+12], 11, -421815835);
+      c = md5hh(c, d, a, b, x[i+15], 16,  530742520);  b = md5hh(b, c, d, a, x[i+2],  23, -995338651);
+      a = md5ii(a, b, c, d, x[i],     6, -198630844);  d = md5ii(d, a, b, c, x[i+7],  10,  1126891415);
+      c = md5ii(c, d, a, b, x[i+14], 15, -1416354905); b = md5ii(b, c, d, a, x[i+5],  21, -57434055);
+      a = md5ii(a, b, c, d, x[i+12],  6,  1700485571); d = md5ii(d, a, b, c, x[i+3],  10, -1894986606);
+      c = md5ii(c, d, a, b, x[i+10], 15, -1051523);    b = md5ii(b, c, d, a, x[i+1],  21, -2054922799);
+      a = md5ii(a, b, c, d, x[i+8],   6,  1873313359); d = md5ii(d, a, b, c, x[i+15], 10, -30611744);
+      c = md5ii(c, d, a, b, x[i+6],  15, -1560198380); b = md5ii(b, c, d, a, x[i+13], 21,  1309151649);
+      a = md5ii(a, b, c, d, x[i+4],   6, -145523070);  d = md5ii(d, a, b, c, x[i+11], 10, -1120210379);
+      c = md5ii(c, d, a, b, x[i+2],  15,  718787259);  b = md5ii(b, c, d, a, x[i+9],  21, -343485551);
+      a = safeAdd(a, oa); b = safeAdd(b, ob); c = safeAdd(c, oc); d = safeAdd(d, od);
+    }
+    return [a, b, c, d];
+  }
+  function rstrMD5(s) {
+    const bin = binlMD5(str2binl(s), s.length * 8);
+    let r = '';
+    for (let i = 0; i < bin.length * 32; i += 8)
+      r += String.fromCharCode((bin[i >> 5] >>> (i % 32)) & 0xff);
+    return r;
+  }
+  function str2binl(str) {
+    const bin = [];
+    for (let i = 0; i < str.length * 8; i += 8)
+      bin[i >> 5] |= (str.charCodeAt(i / 8) & 0xff) << (i % 32);
+    return bin;
+  }
+  function rstr2hex(input) {
+    const hexTab = '0123456789abcdef';
+    let output = '';
+    for (let i = 0; i < input.length; i++) {
+      const x = input.charCodeAt(i);
+      output += hexTab.charAt((x >>> 4) & 0x0f) + hexTab.charAt(x & 0x0f);
+    }
+    return output;
+  }
+  function utf8Encode(str) {
+    return unescape(encodeURIComponent(str));
+  }
+  return function(str) { return rstr2hex(rstrMD5(utf8Encode(str))); };
+})();
+
+// --- Last.fm state ---
+let lastfmEnabled = false;
+let lastfmApiKey = '';
+let lastfmApiSecret = '';
+let lastfmUsername = '';
+let lastfmSessionKey = '';
+let lastfmAuthToken = '';
+let lastfmCurrentTrackId = null;
+let lastfmScrobbled = false;
+let lastfmTrackStartTime = 0;
+
+function lastfmApiSign(params) {
+  const keys = Object.keys(params).filter(k => k !== 'format').sort();
+  let sig = '';
+  for (const k of keys) sig += k + params[k];
+  sig += lastfmApiSecret;
+  return LastFmMD5(sig);
+}
+
+async function lastfmApiCall(params) {
+  params.api_key = lastfmApiKey;
+  params.format = 'json';
+  params.api_sig = lastfmApiSign(params);
+  const body = new URLSearchParams(params);
+  try {
+    const resp = await fetch('https://ws.audioscrobbler.com/2.0/', {
+      method: 'POST',
+      body: body,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+    const data = await resp.json();
+    if (data.error) {
+      console.warn('Last.fm API error:', data.message);
+      return { error: true, message: data.message };
+    }
+    return data;
+  } catch (e) {
+    console.warn('Last.fm API call failed:', e);
+    return { error: true, message: e.message };
+  }
+}
+
+function lastfmUpdateNowPlaying(track) {
+  if (!lastfmEnabled || !lastfmSessionKey || !lastfmApiKey || !lastfmApiSecret) return;
+  const params = {
+    method: 'track.updateNowPlaying',
+    sk: lastfmSessionKey,
+    artist: track.artist || 'Unknown',
+    track: track.title || 'Unknown',
+    album: track.album || '',
+  };
+  if (track.duration) params.duration = String(Math.round(track.duration));
+  lastfmApiCall(params).then(r => {
+    if (r.error) console.warn('Last.fm now playing failed:', r.message);
+    else console.log('Last.fm now playing:', track.title);
+  });
+}
+
+function lastfmScrobble(track) {
+  if (!lastfmEnabled || !lastfmSessionKey || !lastfmApiKey || !lastfmApiSecret) return;
+  if (lastfmScrobbled) return;
+  if (track.duration && track.duration < 30) return;
+  lastfmScrobbled = true;
+  const params = {
+    method: 'track.scrobble',
+    sk: lastfmSessionKey,
+    'artist[0]': track.artist || 'Unknown',
+    'track[0]': track.title || 'Unknown',
+    'album[0]': track.album || '',
+    'timestamp[0]': String(lastfmTrackStartTime),
+  };
+  if (track.duration) params['duration[0]'] = String(Math.round(track.duration));
+  lastfmApiCall(params).then(r => {
+    if (r.error) {
+      showToast('Last.fm scrobble failed: ' + r.message);
+      lastfmScrobbled = false;
+    } else {
+      console.log('Last.fm scrobbled:', track.title);
+    }
+  });
+}
+
+function lastfmOnTrackChange() {
+  const t = currentQueue[currentQueueIndex];
+  if (!t) return;
+  lastfmCurrentTrackId = t.id;
+  lastfmScrobbled = false;
+  lastfmTrackStartTime = Math.floor(Date.now() / 1000);
+  lastfmUpdateNowPlaying(t);
+}
+
+function lastfmCheckScrobbleThreshold() {
+  if (!lastfmEnabled || lastfmScrobbled || !lastfmSessionKey) return;
+  const t = currentQueue[currentQueueIndex];
+  if (!t || t.id !== lastfmCurrentTrackId) return;
+  if (!audio.duration || audio.duration < 30) return;
+  const halfDuration = audio.duration / 2;
+  const threshold = Math.min(halfDuration, 240);
+  if (audio.currentTime >= threshold) {
+    lastfmScrobble(t);
+  }
+}
+
+function lastfmUpdateStatusUI() {
+  const dot = document.getElementById('lastfmStatusDot');
+  const status = document.getElementById('settLastfmStatus');
+  if (!dot || !status) return;
+  if (lastfmEnabled && lastfmSessionKey && lastfmApiKey) {
+    dot.className = 'discord-status-dot green';
+    status.textContent = 'Connected as ' + (lastfmUsername || 'authenticated user');
+  } else if (lastfmEnabled && lastfmApiKey && !lastfmSessionKey) {
+    dot.className = 'discord-status-dot red';
+    status.textContent = 'API key set \u2014 session key needed. Click AUTHENTICATE.';
+  } else if (lastfmEnabled) {
+    dot.className = 'discord-status-dot red';
+    status.textContent = 'Enabled but not configured';
+  } else {
+    dot.className = 'discord-status-dot grey';
+    status.textContent = 'Disabled';
+  }
+}
+
+function saveLastfmSettings() {
+  localStorage.setItem('aether_lastfm', JSON.stringify({
+    enabled: lastfmEnabled,
+    apiKey: lastfmApiKey,
+    apiSecret: lastfmApiSecret,
+    username: lastfmUsername,
+    sessionKey: lastfmSessionKey
+  }));
+  lastfmUpdateStatusUI();
+}
+
+(function loadLastfmSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('aether_lastfm'));
+    if (saved) {
+      lastfmEnabled = saved.enabled || false;
+      lastfmApiKey = saved.apiKey || '';
+      lastfmApiSecret = saved.apiSecret || '';
+      lastfmUsername = saved.username || '';
+      lastfmSessionKey = saved.sessionKey || '';
+      const chk = document.getElementById('settLastfmEnabled');
+      if (chk) chk.checked = lastfmEnabled;
+      const keyInp = document.getElementById('settLastfmApiKey');
+      if (keyInp) keyInp.value = lastfmApiKey;
+      const secInp = document.getElementById('settLastfmApiSecret');
+      if (secInp) secInp.value = lastfmApiSecret;
+      const usrInp = document.getElementById('settLastfmUsername');
+      if (usrInp) usrInp.value = lastfmUsername;
+      const skInp = document.getElementById('settLastfmSessionKey');
+      if (skInp) skInp.value = lastfmSessionKey;
+    }
+    setTimeout(lastfmUpdateStatusUI, 100);
+  } catch(e) { console.warn('Last.fm settings load failed:', e); }
+})();
+
+// --- Last.fm settings UI event listeners (deferred — settings HTML is below) ---
+window.addEventListener('DOMContentLoaded', () => {
+document.getElementById('settLastfmEnabled')?.addEventListener('change', (e) => {
+  lastfmEnabled = e.target.checked;
+  saveLastfmSettings();
+});
+
+document.getElementById('settLastfmApiKey')?.addEventListener('change', () => {
+  lastfmApiKey = document.getElementById('settLastfmApiKey').value.trim();
+  saveLastfmSettings();
+});
+
+document.getElementById('settLastfmApiSecret')?.addEventListener('change', () => {
+  lastfmApiSecret = document.getElementById('settLastfmApiSecret').value.trim();
+  saveLastfmSettings();
+});
+
+document.getElementById('settLastfmUsername')?.addEventListener('change', () => {
+  lastfmUsername = document.getElementById('settLastfmUsername').value.trim();
+  saveLastfmSettings();
+});
+
+document.getElementById('settLastfmSessionKey')?.addEventListener('change', () => {
+  lastfmSessionKey = document.getElementById('settLastfmSessionKey').value.trim();
+  saveLastfmSettings();
+});
+
+document.getElementById('settLastfmAuth')?.addEventListener('click', () => {
+  lastfmApiKey = document.getElementById('settLastfmApiKey').value.trim();
+  lastfmApiSecret = document.getElementById('settLastfmApiSecret').value.trim();
+  if (!lastfmApiKey) { showToast('Enter your Last.fm API Key first'); return; }
+  if (!lastfmApiSecret) { showToast('Enter your Last.fm API Secret first'); return; }
+  // Get a request token, then open auth page
+  const tokenParams = { method: 'auth.getToken' };
+  tokenParams.api_key = lastfmApiKey;
+  tokenParams.format = 'json';
+  tokenParams.api_sig = lastfmApiSign(tokenParams);
+  fetch('https://ws.audioscrobbler.com/2.0/', {
+    method: 'POST',
+    body: new URLSearchParams(tokenParams),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  }).then(r => r.json()).then(data => {
+    if (data.token) {
+      lastfmAuthToken = data.token;
+      window.open('https://www.last.fm/api/auth/?api_key=' + encodeURIComponent(lastfmApiKey) + '&token=' + encodeURIComponent(lastfmAuthToken), '_blank', 'width=800,height=600');
+      showToast('Authorize in the browser, then click GET SESSION');
+    } else {
+      showToast('Failed to get Last.fm auth token');
+    }
+  }).catch(e => {
+    showToast('Last.fm auth error: ' + e.message);
+  });
+});
+
+document.getElementById('settLastfmGetSession')?.addEventListener('click', async () => {
+  lastfmApiKey = document.getElementById('settLastfmApiKey').value.trim();
+  lastfmApiSecret = document.getElementById('settLastfmApiSecret').value.trim();
+  if (!lastfmApiKey || !lastfmApiSecret) {
+    showToast('Enter API Key and API Secret first');
+    return;
+  }
+  // Check URL for token parameter (Last.fm callback)
+  const urlParams = new URLSearchParams(window.location.search);
+  const tokenFromUrl = urlParams.get('token');
+  if (tokenFromUrl) lastfmAuthToken = tokenFromUrl;
+
+  if (!lastfmAuthToken) {
+    showToast('Click AUTHENTICATE first to get a token');
+    return;
+  }
+
+  showToast('Getting Last.fm session...');
+  const result = await lastfmApiCall({
+    method: 'auth.getSession',
+    token: lastfmAuthToken
+  });
+  if (result.error) {
+    showToast('Last.fm auth failed: ' + (result.message || 'Unknown error') + '. Try authenticating again.');
+    lastfmAuthToken = '';
+  } else if (result.session) {
+    lastfmSessionKey = result.session.key;
+    lastfmUsername = result.session.name || lastfmUsername;
+    document.getElementById('settLastfmSessionKey').value = lastfmSessionKey;
+    document.getElementById('settLastfmUsername').value = lastfmUsername;
+    lastfmAuthToken = '';
+    saveLastfmSettings();
+    showToast('Last.fm authenticated as ' + lastfmUsername);
+  }
+});
+}); // end DOMContentLoaded for Last.fm settings
+
+// Hook into audio timeupdate for scrobble threshold checking
+audio.addEventListener('timeupdate', lastfmCheckScrobbleThreshold);
 // ============ STEM ISOLATION ENGINE ============
 let stemsFolder = '';
 let stemsAvailable = false;
@@ -15167,6 +15592,25 @@ const sonicMap = {
   pulsePhase: 0,
   nowPlayingId: null,
   connectionLines: true,  // Draw lines between similar tracks
+  // PERF: dirty flag - only redraw when something actually changed
+  _dirty: true,
+  // PERF: cached star screen positions (invalidated when camera moves)
+  _starCache: null,
+  _starCacheRotY: null,
+  _starCacheRotX: null,
+  _starCacheZoom: null,
+  _starCacheCw: null,
+  _starCacheCh: null,
+  // PERF: tracks pre-grouped by Camelot key for O(n) constellation lines
+  _camelotGroups: null,
+  // PERF: previous frame state for dirty detection
+  _prevRotY: null,
+  _prevRotX: null,
+  _prevZoom: null,
+  _prevHovered: undefined,
+  _prevNowPlayingId: undefined,
+  _prevTrackCount: 0,
+  _resizeObserver: null,
 };
 
 function camelotToHue(camelot) {
@@ -15199,6 +15643,18 @@ function buildSonicMapData() {
       y3d: ((cached.bpm || 120) - 60) / 140 * 2 - 1,                                  // BPM: bottom-top
       z3d: (cached.danceability || 0.5) * 2 - 1,                                       // Danceability: front-back
     });
+  }
+}
+
+// PERF: Pre-group tracks by Camelot key so constellation lines are O(n) per group
+function buildCamelotGroups() {
+  sonicMap._camelotGroups = {};
+  for (var i = 0; i < sonicMap.tracks.length; i++) {
+    var t = sonicMap.tracks[i];
+    if (t.camelot && t.camelot !== '?') {
+      if (!sonicMap._camelotGroups[t.camelot]) sonicMap._camelotGroups[t.camelot] = [];
+      sonicMap._camelotGroups[t.camelot].push(i);
+    }
   }
 }
 
@@ -15292,16 +15748,36 @@ function drawSonicMap() {
   ctx.fillRect(0, 0, cw, ch);
 
   // ===== STARFIELD: twinkling background stars =====
+  // PERF: Cache star 3D->2D projections; only recompute when camera/zoom/size changes
   if (sonicMap.stars.length === 0) initStarfield(200);
+  var starRotChanged = sonicMap._starCacheRotY !== sonicMap.rotY ||
+                       sonicMap._starCacheRotX !== sonicMap.rotX ||
+                       sonicMap._starCacheZoom !== sonicMap.zoom ||
+                       sonicMap._starCacheCw !== cw ||
+                       sonicMap._starCacheCh !== ch;
+  if (!sonicMap._starCache || starRotChanged) {
+    sonicMap._starCache = [];
+    for (var si = 0; si < sonicMap.stars.length; si++) {
+      var star = sonicMap.stars[si];
+      var sp = project3D(star.x * 3, star.y * 3, star.z * 3, cw, ch);
+      if (sp.scale < 0.05) { sonicMap._starCache.push(null); continue; }
+      var starSize = star.size * sp.scale * 0.8;
+      if (starSize < 0.3) { sonicMap._starCache.push(null); continue; }
+      sonicMap._starCache.push({ sx: sp.sx, sy: sp.sy, size: starSize });
+    }
+    sonicMap._starCacheRotY = sonicMap.rotY;
+    sonicMap._starCacheRotX = sonicMap.rotX;
+    sonicMap._starCacheZoom = sonicMap.zoom;
+    sonicMap._starCacheCw = cw;
+    sonicMap._starCacheCh = ch;
+  }
   for (var si = 0; si < sonicMap.stars.length; si++) {
+    var sc = sonicMap._starCache[si];
+    if (!sc) continue;
     var star = sonicMap.stars[si];
-    var sp = project3D(star.x * 3, star.y * 3, star.z * 3, cw, ch);
-    if (sp.scale < 0.05) continue;
     var twinkle = star.brightness * (0.6 + 0.4 * Math.sin(sonicMap.time * star.twinkleSpeed + si));
-    var starSize = star.size * sp.scale * 0.8;
-    if (starSize < 0.3) continue;
     ctx.beginPath();
-    ctx.arc(sp.sx, sp.sy, starSize, 0, Math.PI * 2);
+    ctx.arc(sc.sx, sc.sy, sc.size, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(200, 180, 255, ' + (twinkle * 0.5) + ')';
     ctx.fill();
   }
@@ -15399,17 +15875,29 @@ function drawSonicMap() {
   sonicMap._projected = projected;
 
   // ===== CONSTELLATION LINES: connect nearby tracks with similar keys =====
-  if (sonicMap.connectionLines && projected.length < 300) {
+  // PERF: Use pre-grouped Camelot key buckets instead of O(n^2) all-pairs check.
+  // Only compare tracks within the same key group. Skip groups with too many tracks.
+  if (sonicMap.connectionLines && sonicMap._camelotGroups) {
     ctx.globalAlpha = 0.08;
-    for (var ci = 0; ci < projected.length; ci++) {
-      var ca = projected[ci];
-      for (var cj = ci + 1; cj < projected.length; cj++) {
-        var cb = projected[cj];
-        if (ca.track.camelot === cb.track.camelot && ca.track.camelot !== '?') {
-          var cdist = Math.hypot(ca.sx - cb.sx, ca.sy - cb.sy);
-          if (cdist < 120) {
+    ctx.lineWidth = 0.5;
+    // Build a fast index from track array index -> projected entry
+    var projByIdx = {};
+    for (var pi2 = 0; pi2 < projected.length; pi2++) projByIdx[projected[pi2].idx] = projected[pi2];
+    var groupKeys = Object.keys(sonicMap._camelotGroups);
+    for (var gki = 0; gki < groupKeys.length; gki++) {
+      var group = sonicMap._camelotGroups[groupKeys[gki]];
+      // PERF: Skip groups larger than 80 tracks to avoid quadratic blowup within a key
+      if (group.length > 80) continue;
+      for (var ci = 0; ci < group.length; ci++) {
+        var ca = projByIdx[group[ci]];
+        if (!ca) continue;
+        for (var cj = ci + 1; cj < group.length; cj++) {
+          var cb = projByIdx[group[cj]];
+          if (!cb) continue;
+          var cdx = ca.sx - cb.sx, cdy = ca.sy - cb.sy;
+          // PERF: Avoid Math.hypot; compare squared distance instead
+          if (cdx * cdx + cdy * cdy < 14400) { // 120^2
             ctx.strokeStyle = 'hsla(' + ca.track.hue + ', 60%, 60%, 1)';
-            ctx.lineWidth = 0.5;
             ctx.beginPath(); ctx.moveTo(ca.sx, ca.sy); ctx.lineTo(cb.sx, cb.sy); ctx.stroke();
           }
         }
@@ -15496,8 +15984,8 @@ function drawSonicMap() {
       ctx.fill();
     }
 
-    // Soft outer glow for all visible tracks
-    if (depthAlpha > 0.3) {
+    // PERF: shadowBlur is GPU-expensive. Only apply to hovered/playing tracks, not all dots.
+    if (isHov || isPlaying) {
       ctx.shadowColor = 'hsla(' + t2.hue + ', 80%, 55%, ' + (depthAlpha * 0.4) + ')';
       ctx.shadowBlur = radius * 2;
     }
@@ -15525,7 +16013,8 @@ function drawSonicMap() {
       ctx.fill();
     }
 
-    ctx.shadowBlur = 0;
+    // PERF: Reset shadow only if we set it (avoid unnecessary state changes)
+    if (isHov || isPlaying) ctx.shadowBlur = 0;
   }
 
   // ===== CURRENTLY PLAYING LABEL =====
@@ -15547,13 +16036,57 @@ function drawSonicMap() {
 }
 
 function sonicMapAnimate() {
-  if (!sonicMap.canvas) return;
+  // PERF: Stop animation loop when canvas is no longer in DOM (user navigated away)
+  if (!sonicMap.canvas || !sonicMap.canvas.isConnected) {
+    sonicMap.animFrame = null;
+    sonicMap.canvas = null;
+    sonicMap.ctx = null;
+    return; // Do NOT request another frame - animation stops here
+  }
   if (sonicMap.autoRotate && !sonicMap.dragging) {
     sonicMap.rotY += sonicMap.autoRotateSpeed;
+    sonicMap._dirty = true; // Rotation changed, need redraw
   }
-  // Always redraw — stars twinkle, playing track pulses, nebulae shift
-  drawSonicMap();
+
+  // PERF: Detect if anything changed since last frame; skip redraw if clean.
+  var nowId = currentQueue[currentQueueIndex] ? currentQueue[currentQueueIndex].id : null;
+  var hasPlayingTrack = !!nowId;
+  if (sonicMap.rotY !== sonicMap._prevRotY ||
+      sonicMap.rotX !== sonicMap._prevRotX ||
+      sonicMap.zoom !== sonicMap._prevZoom ||
+      sonicMap.hoveredTrack !== sonicMap._prevHovered ||
+      nowId !== sonicMap._prevNowPlayingId ||
+      sonicMap.tracks.length !== sonicMap._prevTrackCount) {
+    sonicMap._dirty = true;
+  }
+  // Playing track has animated pulse, so keep redrawing while something is playing
+  if (hasPlayingTrack) sonicMap._dirty = true;
+
+  if (sonicMap._dirty) {
+    drawSonicMap();
+    sonicMap._dirty = false;
+    sonicMap._prevRotY = sonicMap.rotY;
+    sonicMap._prevRotX = sonicMap.rotX;
+    sonicMap._prevZoom = sonicMap.zoom;
+    sonicMap._prevHovered = sonicMap.hoveredTrack;
+    sonicMap._prevNowPlayingId = nowId;
+    sonicMap._prevTrackCount = sonicMap.tracks.length;
+  }
   sonicMap.animFrame = requestAnimationFrame(sonicMapAnimate);
+}
+
+// PERF: Cleanup function to stop animation when leaving the sonic map view
+function cleanupSonicMap() {
+  if (sonicMap.animFrame) {
+    cancelAnimationFrame(sonicMap.animFrame);
+    sonicMap.animFrame = null;
+  }
+  if (sonicMap._resizeObserver) {
+    sonicMap._resizeObserver.disconnect();
+    sonicMap._resizeObserver = null;
+  }
+  sonicMap.canvas = null;
+  sonicMap.ctx = null;
 }
 
 function sonicMapMouseMove(e) {
@@ -15568,7 +16101,7 @@ function sonicMapMouseMove(e) {
     sonicMap.dragStartX = e.clientX;
     sonicMap.dragStartY = e.clientY;
     sonicMap.autoRotate = false; // Stop auto-rotate when user interacts
-    drawSonicMap();
+    sonicMap._dirty = true; // PERF: mark dirty instead of immediate redraw (animation loop handles it)
     return;
   }
   var gx = Math.floor(mx / sonicMap.gridSize), gy = Math.floor(my / sonicMap.gridSize);
@@ -15585,7 +16118,7 @@ function sonicMapMouseMove(e) {
   }
   if (closest !== sonicMap.hoveredTrack) {
     sonicMap.hoveredTrack = closest;
-    drawSonicMap();
+    sonicMap._dirty = true; // PERF: mark dirty instead of immediate redraw
     var tooltip = document.getElementById('sonicMapTooltip');
     if (closest !== null && tooltip) {
       var t = sonicMap.tracks[closest];
@@ -15620,7 +16153,7 @@ function sonicMapMouseUp(e) {
 function sonicMapWheel(e) {
   e.preventDefault();
   sonicMap.zoom = Math.max(0.3, Math.min(5, sonicMap.zoom * (e.deltaY > 0 ? 0.92 : 1.08)));
-  drawSonicMap();
+  sonicMap._dirty = true; // PERF: mark dirty instead of immediate redraw
 }
 
 async function loadSonicMapView() {
@@ -15669,13 +16202,17 @@ async function loadSonicMapView() {
     sonicMap.dragging = false; sonicMap.hoveredTrack = null;
     var tip = document.getElementById('sonicMapTooltip');
     if (tip) tip.style.display = 'none';
-    drawSonicMap();
+    sonicMap._dirty = true; // PERF: mark dirty instead of immediate redraw
   });
   sonicMap.canvas.addEventListener('wheel', sonicMapWheel, { passive: false });
   buildSonicMapData();
+  buildCamelotGroups(); // PERF: pre-group tracks by key for fast constellation lines
+  sonicMap._dirty = true;
   drawSonicMap();
   sonicMapAnimate(); // Start auto-rotation loop
-  new ResizeObserver(function() { drawSonicMap(); }).observe(sonicMap.canvas);
+  // PERF: Store resize observer reference so we can disconnect on cleanup
+  sonicMap._resizeObserver = new ResizeObserver(function() { sonicMap._dirty = true; });
+  sonicMap._resizeObserver.observe(sonicMap.canvas);
 }
 
 // ============================================================================
@@ -16051,6 +16588,42 @@ async function loadInsightsView() {
   wxRB.addEventListener('click',wxFetch);
   wxFetch();
 })();
+
+// ============ MEDIA KEY SUPPORT (Electron globalShortcut → IPC) ============
+if (window.electronAPI && window.electronAPI.onMediaKey) {
+  window.electronAPI.onMediaKey((action) => {
+    switch (action) {
+      case 'play-pause':
+        document.getElementById('btnPlay').click();
+        break;
+      case 'next':
+        document.getElementById('btnNext').click();
+        break;
+      case 'previous':
+        document.getElementById('btnPrev').click();
+        break;
+      case 'stop':
+        if (isPlaying) document.getElementById('btnPlay').click();
+        break;
+    }
+  });
+}
+
+// ============ NAVIGATOR MEDIASESSION ACTION HANDLERS ============
+if ('mediaSession' in navigator) {
+  navigator.mediaSession.setActionHandler('play', () => {
+    if (!isPlaying) document.getElementById('btnPlay').click();
+  });
+  navigator.mediaSession.setActionHandler('pause', () => {
+    if (isPlaying) document.getElementById('btnPlay').click();
+  });
+  navigator.mediaSession.setActionHandler('nexttrack', () => {
+    document.getElementById('btnNext').click();
+  });
+  navigator.mediaSession.setActionHandler('previoustrack', () => {
+    document.getElementById('btnPrev').click();
+  });
+}
 </script>
 
 <!-- DNA FINGERPRINT OVERLAY -->

@@ -14,11 +14,11 @@
  * - Tray icon is generated programmatically (16x16 purple square)
  * - Window state (maximized/normal) is broadcast to renderer via IPC
  * - TODO: Add auto-updater support
- * - TODO: Add media key support (play/pause/next/prev)
- * - TODO: Add MPRIS/Windows media session integration
+ * - Media keys (play/pause/next/prev) registered via globalShortcut
+ * - Windows media overlay via Navigator MediaSession API in renderer
  */
 
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, session, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, session, dialog, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const net = require('net');
@@ -148,6 +148,23 @@ app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 app.whenReady().then(() => {
   createWindow();
   createTray();
+
+  // Register global media key shortcuts
+  const mediaKeys = {
+    'MediaPlayPause': 'play-pause',
+    'MediaNextTrack': 'next',
+    'MediaPreviousTrack': 'previous',
+    'MediaStop': 'stop',
+  };
+  for (const [key, action] of Object.entries(mediaKeys)) {
+    globalShortcut.register(key, () => {
+      if (mainWindow) mainWindow.webContents.send('media-key', action);
+    });
+  }
+});
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
 });
 
 app.on('window-all-closed', () => {

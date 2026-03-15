@@ -38,4 +38,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Stem Isolation: check for pre-computed stems
   checkStems: (opts) => ipcRenderer.invoke('check-stems', opts),
   getStemPath: (opts) => ipcRenderer.invoke('get-stem-path', opts),
+  // Media key events from main process
+  onMediaKey: (callback) => ipcRenderer.on('media-key', (_event, action) => callback(action)),
 });
