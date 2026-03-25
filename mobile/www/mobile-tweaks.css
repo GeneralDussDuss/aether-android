@@ -1,0 +1,1317 @@
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║  AETHER Mobile — Ultra-Premium Touch & Layout Overrides         ║
+   ║  Target: Galaxy S26 Ultra (6.8" AMOLED, 496 DPI)               ║
+   ║  Design: OLED-black luxury with cyberpunk purple/cyan accents   ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+
+/* ============ SAFE AREA INSETS ============ */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+/* ============ GLOBAL PREMIUM TRANSITIONS ============ */
+/* Smooth everything — luxury apps never jank */
+*, *::before, *::after {
+  -webkit-tap-highlight-color: rgba(157, 78, 221, 0.15);
+}
+
+/* ============ OLED BLACK FOUNDATION ============ */
+html, body {
+  background: #000 !important;
+}
+
+.main-content {
+  background: #000 !important;
+}
+
+/* ============ HIDE ELECTRON-ONLY TITLEBAR ============ */
+.titlebar { display: none !important; }
+.app-shell { top: var(--safe-top) !important; }
+
+/* ============ HIDE DESKTOP-ONLY FEATURES ON MOBILE ============ */
+
+/* DJ Mode */
+.dj-mode, .dj-panel, .dj-deck, .dj-controls, .dj-crossfader,
+[data-view="dj"], #djPanel, .dj-container { display: none !important; }
+
+/* Binaural brainwave engine */
+.binaural-panel, .binaural-controls, [data-view="binaural"],
+.brainwave-panel { display: none !important; }
+
+/* Stem isolation */
+.stem-panel, .stem-controls, [data-view="stems"],
+.stems-panel { display: none !important; }
+
+/* Weather ambient */
+.weather-panel, .weather-ambient, [data-view="weather"] { display: none !important; }
+
+/* Pomodoro focus mode */
+.pomodoro-panel, .pomodoro-timer, #pomodoroPanel { display: none !important; }
+
+/* Sleep timer */
+.sleep-panel, #sleepPanel { display: none !important; }
+
+/* 3D Sonic map */
+.sonic-map-panel, .sonic-map, [data-view="sonicmap"] { display: none !important; }
+
+/* Taste evolution timeline */
+.taste-panel, .taste-timeline, [data-view="taste"] { display: none !important; }
+
+/* Music DNA fingerprint */
+.dna-panel, [data-view="dna"] { display: none !important; }
+
+/* Hearing compensation */
+.hearing-panel, .hearing-test { display: none !important; }
+
+/* Vinyl warmth engine toggle */
+.warmth-controls, .warmth-panel, #warmthPanel { display: none !important; }
+
+/* Wallpaper Engine / Electric Sheep */
+.wallpaper-panel, .sheep-panel, #sheepVideo { display: none !important; }
+
+/* Discord RPC status */
+.discord-status, .discord-panel { display: none !important; }
+
+/* Signal path panel — desktop only */
+.signal-path-panel, #signalPathPanel { display: none !important; }
+
+/* Keyboard shortcuts overlay — no keyboard on mobile */
+.shortcuts-overlay { display: none !important; }
+
+/* Sidebar nav items for hidden features */
+.nav-item[data-view="dj"],
+.nav-item[data-view="binaural"],
+.nav-item[data-view="stems"],
+.nav-item[data-view="weather"],
+.nav-item[data-view="sonicmap"],
+.nav-item[data-view="taste"],
+.nav-item[data-view="dna"],
+.nav-item[data-view="hearing"],
+.nav-item[data-view="sleep"],
+.nav-item[data-view="pomodoro"],
+.nav-item[data-view="daylist"],
+.nav-item[data-view="rediscover"],
+.nav-item[data-view="magic"],
+.nav-item[data-view="autotag"],
+.nav-item[data-view="wallpaper"],
+.nav-item[data-view="sheep"],
+.nav-item[data-action="dj"],
+.nav-item[data-action="pomodoro"],
+.nav-item[data-action="dna"],
+.nav-item[data-view="insights"],
+.nav-item[data-action="magic"] { display: none !important; }
+
+/* Hide quick actions that reference hidden features */
+.quick-actions { display: none !important; }
+
+/* Hide NP bar toggles that reference hidden features (EQ stays accessible) */
+.warmth-toggle-btn,
+.signal-path-btn,
+.stems-toggle-btn { display: none !important; }
+
+/* ============ KILL HEAVY VISUALS ============ */
+
+/* Kill ambient particles */
+#ambientParticles {
+  display: none !important;
+}
+
+/* Kill film grain overlay — saves GPU on mobile */
+body::after {
+  display: none !important;
+}
+
+/* Kill beat-reactive ::before gradient on main-content */
+.main-content::before {
+  display: none !important;
+}
+
+/* ============ LARGER TOUCH TARGETS (48dp minimum) ============ */
+.transport-btn,
+.play-btn,
+.sidebar-toggle,
+.nav-item,
+.tb-btn,
+.eq-toggle-btn,
+.queue-close,
+.eq-close,
+.volume-btn,
+.eq-preset-btn,
+.eq-reset-btn,
+.create-playlist-btn,
+.viz-expand,
+.context-menu-item,
+.view-btn {
+  min-width: 48px;
+  min-height: 48px;
+}
+
+/* Play button — hero element, bigger on mobile */
+.play-btn {
+  width: 56px !important;
+  height: 56px !important;
+}
+
+/* Sidebar nav items — generous touch room */
+.nav-item {
+  padding: 14px 16px !important;
+  border-radius: 12px !important;
+  margin: 2px 0 !important;
+}
+
+/* Hide volume slider (use hardware volume on mobile) */
+.volume-group { display: none !important; }
+
+/* Hide drag handle */
+[style*="-webkit-app-region: drag"],
+[style*="-webkit-app-region:drag"] {
+  -webkit-app-region: no-drag !important;
+}
+
+/* Disable hover effects on touch devices */
+@media (hover: none) {
+  .transport-btn:hover,
+  .nav-item:hover,
+  .eq-preset-btn:hover,
+  .eq-reset-btn:hover,
+  .album-card:hover,
+  .album-card:hover .album-art,
+  .album-card:hover .album-play-overlay,
+  .album-card:hover .album-play-btn,
+  .album-card:hover::after,
+  .track-row:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  /* But keep active states for tactile feedback */
+  .album-card:active {
+    transform: scale(0.97) !important;
+    transition-duration: 0.1s !important;
+  }
+  .track-row:active {
+    background: rgba(123, 47, 190, 0.12) !important;
+    transition-duration: 0.05s !important;
+  }
+  .nav-item:active {
+    background: rgba(123, 47, 190, 0.15) !important;
+  }
+  .transport-btn:active {
+    background: rgba(123, 47, 190, 0.2) !important;
+    transform: scale(0.9) !important;
+  }
+}
+
+/* ============ FORCE MOBILE GRID LAYOUT ============ */
+:root {
+  --sidebar-collapsed: 0px !important;
+  --sidebar-width: 0px !important;
+  --titlebar-h: 0px !important;
+  --nowplaying-h: 148px !important;
+}
+
+.app-shell {
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 1fr var(--nowplaying-h) !important;
+  top: var(--safe-top) !important;
+}
+
+.app-shell.sidebar-expanded {
+  grid-template-columns: 1fr !important;
+}
+
+/* ============ SIDEBAR — Premium Slide-Out Overlay ============ */
+.sidebar {
+  position: fixed !important;
+  left: 0 !important;
+  top: var(--safe-top) !important;
+  bottom: 0 !important;
+  width: 300px !important;
+  z-index: 1000 !important;
+  transform: translateX(-100%) !important;
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  background: rgba(5, 5, 10, 0.97) !important;
+  backdrop-filter: blur(30px) saturate(1.4) !important;
+  border-right: 1px solid rgba(157, 78, 221, 0.12) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  grid-row: auto !important;
+  box-shadow: none !important;
+  padding-bottom: calc(var(--safe-bottom) + 20px) !important;
+}
+
+/* Show all labels when sidebar is visible on mobile */
+.sidebar .nav-item-label,
+.sidebar .sidebar-section-label,
+.sidebar .playlist-name,
+.sidebar .playlist-count,
+.sidebar .create-playlist-label {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Sidebar open state */
+.app-shell.sidebar-expanded .sidebar {
+  transform: translateX(0) !important;
+  box-shadow: 20px 0 60px rgba(0, 0, 0, 0.8),
+              4px 0 20px rgba(123, 47, 190, 0.08) !important;
+}
+
+/* Sidebar backdrop — dim + blur content when sidebar is open */
+.app-shell.sidebar-expanded::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  pointer-events: auto;
+  animation: backdrop-fade-in 0.3s ease forwards;
+}
+
+@keyframes backdrop-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Sidebar section labels — premium styling */
+.sidebar-section-label {
+  font-size: 0.6rem !important;
+  padding: 16px 16px 6px !important;
+  color: var(--purple-muted) !important;
+}
+
+/* Sidebar divider — subtler */
+.sidebar-divider {
+  margin: 4px 16px !important;
+  background: rgba(157, 78, 221, 0.08) !important;
+}
+
+/* Sidebar header area for connection indicator */
+#aether-conn-status {
+  border-bottom: 1px solid rgba(157, 78, 221, 0.08);
+  padding: 10px 16px !important;
+}
+
+/* ============ SIDEBAR TOGGLE — Floating Hamburger ============ */
+.sidebar-toggle {
+  position: fixed !important;
+  top: calc(var(--safe-top) + 12px) !important;
+  left: 12px !important;
+  width: 44px !important;
+  height: 44px !important;
+  z-index: 1001 !important;
+  background: rgba(5, 5, 10, 0.85) !important;
+  border: 1px solid rgba(157, 78, 221, 0.25) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(20px) saturate(1.3) !important;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4),
+              0 0 1px rgba(157, 78, 221, 0.3) !important;
+}
+
+.sidebar-toggle:active {
+  transform: scale(0.92) !important;
+  background: rgba(123, 47, 190, 0.2) !important;
+}
+
+/* ============ CONTENT — Full Width ============ */
+.content, .main-content {
+  width: 100% !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  grid-column: 1 !important;
+  /* Bottom padding for fixed now-playing bar */
+  padding-bottom: calc(var(--nowplaying-h) + var(--safe-bottom) + 12px) !important;
+}
+
+/* ============ CONTENT HEADER — Mobile Optimized ============ */
+.content-header {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  padding: 16px 16px 10px !important;
+  gap: 10px !important;
+  /* Push below the floating hamburger button */
+  padding-top: calc(var(--safe-top) + 56px) !important;
+}
+
+.content-header-right {
+  position: static !important;
+  transform: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.content-title {
+  text-align: center !important;
+  font-size: 1.2rem !important;
+  letter-spacing: 0.12em !important;
+}
+
+/* Content title underline glow — wider on mobile */
+.content-title::after {
+  width: 60px !important;
+}
+
+/* Search bar — full width, prominent */
+.search-bar {
+  max-width: none !important;
+  flex: 1 !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  background: rgba(12, 12, 20, 0.8) !important;
+  border: 1px solid rgba(157, 78, 221, 0.15) !important;
+}
+
+.search-bar input {
+  font-size: 0.95rem !important;
+}
+
+/* View toggles — slightly larger on mobile */
+.view-toggles {
+  border-radius: 10px !important;
+}
+
+/* Back button — mobile friendly position */
+#btnBack {
+  left: 16px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  border-radius: 10px !important;
+}
+
+/* ============ VISUALIZER PANEL — Premium & Immersive ============ */
+.visualizer-panel {
+  height: 320px !important;
+  margin: 4px 0 8px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  width: 100% !important;
+}
+
+/* Kill the animated border — too GPU-heavy on mobile */
+.visualizer-panel::before {
+  display: none !important;
+}
+
+/* Subtle glow border */
+.visualizer-panel {
+  box-shadow: 0 4px 30px rgba(157, 78, 221, 0.15),
+              0 0 60px rgba(123, 47, 190, 0.08) !important;
+}
+
+.visualizer-panel canvas {
+  border-radius: 0 !important;
+  image-rendering: auto;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Viz labels — better positioned for mobile */
+.viz-label {
+  font-size: 0.5rem !important;
+  top: 8px !important;
+  left: 12px !important;
+}
+
+.viz-scene-name {
+  font-size: 0.55rem !important;
+  top: 8px !important;
+  right: 12px !important;
+}
+
+/* Viz expand button — larger touch target */
+.viz-expand {
+  bottom: 8px !important;
+  right: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+}
+
+/* Fullscreen visualizer */
+.viz-fullscreen {
+  top: 0 !important;
+  bottom: 0 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+}
+
+/* ============ ALBUM GRID — Premium Gallery ============ */
+.album-grid {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+  gap: 16px !important;
+  padding: 8px 16px 20px !important;
+}
+
+/* Album cards — clean, no desktop hover junk */
+.album-card {
+  position: relative;
+  transition: transform 0.2s var(--ease-smooth), opacity 0.3s !important;
+}
+
+/* Kill the glow bleed pseudo-element on mobile */
+.album-card::after {
+  display: none !important;
+}
+
+/* Album art — generous rounded corners, subtle border */
+.album-art {
+  border-radius: 14px !important;
+  border: 1px solid rgba(157, 78, 221, 0.1) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4) !important;
+  transition: border-color 0.2s !important;
+}
+
+/* Album info — better typography */
+.album-info {
+  padding: 8px 2px !important;
+}
+
+.album-name {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 3px !important;
+}
+
+.album-artist {
+  font-size: 0.78rem !important;
+  opacity: 0.85 !important;
+}
+
+/* Album play overlay — visible on mobile since no hover */
+.album-play-overlay {
+  opacity: 0 !important;
+}
+
+/* Genre cards — mobile friendly */
+.genre-card {
+  min-height: 80px !important;
+}
+
+/* ============ TRACK LIST — Rich & Readable ============ */
+.track-list-container {
+  padding: 0 8px 20px !important;
+}
+
+/* Track list header — simplified for mobile */
+.track-list-header {
+  grid-template-columns: 30px 1fr 60px !important;
+  padding: 8px 12px !important;
+  gap: 8px !important;
+}
+
+/* Track rows — premium feel with generous spacing */
+.track-row {
+  grid-template-columns: 30px 1fr 60px !important;
+  padding: 10px 12px !important;
+  min-height: 60px !important;
+  border-radius: 12px !important;
+  gap: 8px !important;
+  transition: background 0.15s ease, transform 0.1s ease !important;
+  border-bottom: 1px solid rgba(157, 78, 221, 0.04) !important;
+}
+
+/* Hide album & format columns on mobile */
+.track-album,
+.track-format {
+  display: none !important;
+}
+
+/* Track art — slightly larger for readability */
+.track-art-small {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 8px !important;
+}
+
+/* Track title — readable at arm's length */
+.track-title {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+}
+
+.track-artist-sub {
+  font-size: 0.8rem !important;
+  margin-top: 2px !important;
+}
+
+/* Track number — subtle */
+.track-num {
+  font-size: 0.7rem !important;
+}
+
+/* Track duration — clear */
+.track-duration {
+  font-size: 0.75rem !important;
+}
+
+/* Playing track — premium glowing state */
+.track-row.playing {
+  background: linear-gradient(90deg,
+    rgba(123, 47, 190, 0.12) 0%,
+    rgba(0, 220, 245, 0.03) 50%,
+    transparent 100%) !important;
+  border-left: 3px solid var(--purple-bright) !important;
+  border-bottom-color: transparent !important;
+}
+
+.track-row.playing .track-title {
+  color: var(--purple-vivid) !important;
+  text-shadow: 0 0 8px rgba(183, 110, 255, 0.4) !important;
+}
+
+/* ============ NOW PLAYING BAR — The Hero Element ============ */
+.now-playing {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 500 !important;
+  grid-column: 1 !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: auto auto auto !important;
+  gap: 4px !important;
+  padding: 10px 16px calc(var(--safe-bottom) + 8px) !important;
+  background: linear-gradient(180deg,
+    rgba(8, 8, 14, 0.95) 0%,
+    rgba(5, 5, 10, 0.98) 100%) !important;
+  backdrop-filter: blur(30px) saturate(1.4) !important;
+  border-top: 1px solid rgba(157, 78, 221, 0.15) !important;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6),
+              0 -1px 0 rgba(157, 78, 221, 0.08) !important;
+  transition: box-shadow 0.3s !important;
+}
+
+/* NP Left — track info with prominent art */
+.np-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* Album art in NP bar — larger & more prominent */
+.np-art {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 0 16px rgba(157, 78, 221, 0.25),
+              0 2px 8px rgba(0, 0, 0, 0.4) !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.3s !important;
+}
+
+.np-art img {
+  border-radius: 10px !important;
+}
+
+/* Subtle ambient glow behind art */
+.np-art::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: -16px !important;
+  background: radial-gradient(ellipse at center,
+    rgba(157, 78, 221, 0.12),
+    transparent 70%) !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+.np-left {
+  overflow: visible !important;
+}
+
+/* Track info — clear hierarchy */
+.np-info {
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+.np-title, #npTitle {
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: none !important;
+  color: var(--purple-white) !important;
+  letter-spacing: 0.03em !important;
+}
+
+.np-artist {
+  font-size: 0.8rem !important;
+  color: var(--purple-vivid) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.np-album {
+  font-size: 0.7rem !important;
+  color: var(--purple-bright) !important;
+  opacity: 0.6 !important;
+}
+
+/* NP Center — transport controls */
+.np-center {
+  width: 100% !important;
+  gap: 6px !important;
+}
+
+/* Transport — well-spaced controls */
+.transport {
+  gap: 12px !important;
+  justify-content: center !important;
+}
+
+.transport-btn {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  transition: background 0.15s, transform 0.1s !important;
+}
+
+.transport-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Play button — the jewel of the UI */
+.play-btn {
+  background: linear-gradient(135deg, var(--purple-bright), #8B3FD9) !important;
+  box-shadow: 0 0 24px rgba(157, 78, 221, 0.5),
+              0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s !important;
+}
+
+.play-btn:active {
+  transform: scale(0.9) !important;
+  box-shadow: 0 0 16px rgba(157, 78, 221, 0.4) !important;
+}
+
+.play-btn svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Breathing glow when playing */
+.play-btn.playing {
+  animation: mobile-play-breathe 2.5s ease-in-out infinite !important;
+}
+
+@keyframes mobile-play-breathe {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.5),
+                0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 220, 245, 0.35),
+                0 0 50px rgba(157, 78, 221, 0.25),
+                0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Seek bar — larger touch target */
+.seek-container {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 4px !important;
+}
+
+.waveform-container {
+  height: 32px !important;
+  cursor: pointer !important;
+}
+
+.seek-time {
+  font-size: 0.65rem !important;
+  min-width: 34px !important;
+  color: var(--purple-bright) !important;
+}
+
+/* Hide np-right on mobile (badges, warmth toggle, etc.) */
+.np-right {
+  display: none !important;
+}
+
+/* ============ QUEUE PANEL — Full-Screen Overlay ============ */
+.queue-panel {
+  position: fixed !important;
+  top: 0 !important;
+  right: -100% !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  z-index: 600 !important;
+  background: rgba(5, 5, 10, 0.97) !important;
+  backdrop-filter: blur(30px) saturate(1.4) !important;
+  border-left: none !important;
+  transition: right 0.35s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  box-shadow: none !important;
+  padding-bottom: calc(var(--nowplaying-h) + var(--safe-bottom)) !important;
+}
+
+.queue-panel.open {
+  right: 0 !important;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.8) !important;
+}
+
+.queue-header {
+  padding: calc(var(--safe-top) + 16px) 20px 16px !important;
+}
+
+.queue-title {
+  font-size: 1rem !important;
+  letter-spacing: 0.12em !important;
+}
+
+.queue-close {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+}
+
+.queue-item {
+  padding: 10px 12px !important;
+  border-radius: 10px !important;
+  min-height: 56px !important;
+}
+
+.queue-item-art {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 8px !important;
+}
+
+.queue-item-title {
+  font-size: 0.88rem !important;
+}
+
+.queue-item-artist {
+  font-size: 0.75rem !important;
+}
+
+/* ============ EQ PANEL — Bottom Sheet ============ */
+.eq-panel {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  border-radius: 20px 20px 0 0 !important;
+  z-index: 700 !important;
+  background: rgba(5, 5, 10, 0.97) !important;
+  backdrop-filter: blur(30px) saturate(1.4) !important;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.7),
+              0 -1px 0 rgba(157, 78, 221, 0.15) !important;
+  padding-bottom: calc(var(--safe-bottom) + 8px) !important;
+}
+
+/* EQ drag handle indicator */
+.eq-header::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(157, 78, 221, 0.3);
+}
+
+.eq-header {
+  position: relative !important;
+  padding: 20px 20px 12px !important;
+}
+
+.eq-presets {
+  padding: 8px 16px !important;
+  gap: 8px !important;
+}
+
+.eq-preset-btn {
+  padding: 8px 14px !important;
+  font-size: 0.6rem !important;
+  border-radius: 8px !important;
+}
+
+.eq-slider-wrap {
+  height: 100px !important;
+}
+
+.eq-slider-wrap input[type="range"] {
+  width: 100px !important;
+}
+
+.eq-bands {
+  padding: 10px 8px 4px !important;
+}
+
+.eq-band-freq {
+  font-size: 0.42rem !important;
+}
+
+.eq-close {
+  width: 44px !important;
+  height: 44px !important;
+}
+
+/* ============ SETTINGS PANEL — Full Width Bottom Sheet ============ */
+#settingsOverlay .search-modal {
+  width: 100% !important;
+  max-width: 100vw !important;
+  max-height: 85vh !important;
+  border-radius: 20px 20px 0 0 !important;
+  margin-top: auto !important;
+}
+
+#settingsOverlay {
+  align-items: flex-end !important;
+  padding-top: 0 !important;
+}
+
+.settings-tab-bar {
+  padding: 8px 12px !important;
+}
+
+.settings-tab-btn {
+  padding: 8px 14px !important;
+  font-size: 0.6rem !important;
+}
+
+.settings-tab-content {
+  padding: 16px !important;
+}
+
+/* Settings inputs — larger on mobile */
+#settingsOverlay input[type="text"],
+#settingsOverlay input[type="password"] {
+  font-size: 0.9rem !important;
+  padding: 12px 14px !important;
+  border-radius: 10px !important;
+}
+
+/* ============ SEARCH OVERLAY — Premium Full-Screen ============ */
+.search-overlay {
+  padding-top: calc(var(--safe-top) + 40px) !important;
+  background: rgba(0, 0, 0, 0.92) !important;
+  backdrop-filter: blur(40px) saturate(1.4) !important;
+}
+
+.search-modal {
+  width: 92% !important;
+}
+
+.search-modal-input {
+  padding: 16px 20px !important;
+  font-size: 1.1rem !important;
+  border-radius: 14px !important;
+  background: rgba(12, 12, 20, 0.9) !important;
+}
+
+.search-results {
+  border-radius: 14px !important;
+  max-height: 50vh !important;
+}
+
+.search-result-item {
+  padding: 12px 16px !important;
+  min-height: 56px !important;
+}
+
+.search-result-art {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 8px !important;
+}
+
+.search-result-title {
+  font-size: 0.95rem !important;
+}
+
+.search-hint {
+  display: none !important; /* No keyboard shortcuts on mobile */
+}
+
+/* ============ CONTEXT MENU — Mobile Optimized ============ */
+.context-menu {
+  min-width: 220px !important;
+  border-radius: 14px !important;
+  padding: 6px !important;
+  background: rgba(5, 5, 10, 0.95) !important;
+  backdrop-filter: blur(30px) saturate(1.4) !important;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7),
+              0 0 1px rgba(157, 78, 221, 0.3) !important;
+}
+
+.context-menu-item {
+  min-height: 48px !important;
+  padding: 12px 16px !important;
+  border-radius: 10px !important;
+  font-size: 0.9rem !important;
+}
+
+/* Context submenus — below, not to the side */
+.context-submenu {
+  position: static !important;
+  left: auto !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 0 0 16px !important;
+  background: transparent !important;
+}
+
+/* ============ TOAST — Mobile Positioned ============ */
+.toast-container {
+  top: calc(var(--safe-top) + 12px) !important;
+  right: 12px !important;
+  left: 12px !important;
+}
+
+.toast {
+  min-width: auto !important;
+  max-width: none !important;
+  border-radius: 14px !important;
+  background: rgba(5, 5, 10, 0.95) !important;
+  backdrop-filter: blur(20px) saturate(1.3) !important;
+}
+
+/* ============ NOW PLAYING FULL-SCREEN — Mobile Layout ============ */
+.np-fullscreen-content {
+  flex-direction: column !important;
+  gap: 24px !important;
+  text-align: center !important;
+  padding: 20px !important;
+  width: 95% !important;
+}
+
+.np-fullscreen-art-wrap {
+  width: min(280px, 70vw) !important;
+  height: min(280px, 70vw) !important;
+  border-radius: 24px !important;
+  margin: 0 auto !important;
+}
+
+.npfs-title {
+  font-size: 1.4rem !important;
+}
+
+.npfs-artist {
+  font-size: 1.1rem !important;
+}
+
+.npfs-lyrics-container {
+  max-height: 200px !important;
+}
+
+.npfs-lyrics-line {
+  font-size: 1rem !important;
+}
+
+.npfs-lyrics-line.active {
+  font-size: 1.1rem !important;
+  transform-origin: center center !important;
+}
+
+.npfs-close {
+  top: calc(var(--safe-top) + 16px) !important;
+  right: 16px !important;
+  width: 44px !important;
+  height: 44px !important;
+}
+
+.npfs-transport-btn {
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.npfs-play-btn {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+/* ============ SKELETON LOADING ANIMATION ============ */
+@keyframes skeleton-pulse {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-loading {
+  background: linear-gradient(90deg,
+    rgba(15, 15, 26, 0.8) 25%,
+    rgba(54, 32, 80, 0.3) 50%,
+    rgba(15, 15, 26, 0.8) 75%) !important;
+  background-size: 200% 100% !important;
+  animation: skeleton-pulse 1.5s ease-in-out infinite !important;
+  border-radius: 8px !important;
+}
+
+/* ============ SCROLL BEHAVIOR ============ */
+.content, .main-content, .queue-list, .sidebar-nav {
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+  scroll-behavior: smooth !important;
+}
+
+/* Scrollbar — minimal on mobile */
+.main-content::-webkit-scrollbar,
+.queue-list::-webkit-scrollbar {
+  width: 2px !important;
+}
+
+.main-content::-webkit-scrollbar-thumb,
+.queue-list::-webkit-scrollbar-thumb {
+  background: rgba(157, 78, 221, 0.2) !important;
+  border-radius: 1px !important;
+}
+
+/* ============ PREVENT TEXT SELECTION ON UI ============ */
+.transport, .sidebar, .np-left, .np-right, .np-center,
+.nav-item, .queue-header, .content-header {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+/* ============ SPLASH SCREEN ============ */
+#splashScreen {
+  padding-top: var(--safe-top) !important;
+}
+
+/* ============ DNA OVERLAY — Mobile Scaled ============ */
+.dna-overlay .dna-panel {
+  width: 95% !important;
+  max-width: 95vw !important;
+}
+
+.dna-canvas-wrap {
+  width: min(300px, 80vw) !important;
+  height: min(300px, 80vw) !important;
+}
+
+/* ============ ALBUM DETAIL VIEW — Mobile Hero Layout ============ */
+/* Album detail header — stacked layout with hero art */
+.album-detail-header,
+.detail-header {
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding: 16px !important;
+  gap: 16px !important;
+}
+
+.album-detail-art,
+.detail-art {
+  width: min(240px, 60vw) !important;
+  height: min(240px, 60vw) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5),
+              0 0 20px rgba(157, 78, 221, 0.15) !important;
+}
+
+.album-detail-info,
+.detail-info {
+  text-align: center !important;
+}
+
+/* ============ ARTIST VIEW — Mobile Friendly ============ */
+.artist-header,
+.artist-detail-header {
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding: 16px !important;
+  gap: 12px !important;
+}
+
+.artist-art,
+.artist-avatar {
+  width: 120px !important;
+  height: 120px !important;
+  border-radius: 50% !important;
+}
+
+/* Artist albums grid — 2 columns on mobile */
+.artist-albums .album-grid {
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px !important;
+  padding: 8px 16px !important;
+}
+
+/* ============ SECTION HEADERS — Mobile ============ */
+.section-header {
+  padding: 16px 16px 8px !important;
+}
+
+.section-title {
+  font-size: 0.85rem !important;
+}
+
+.section-see-all {
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* ============ LANDSCAPE MODE ============ */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --nowplaying-h: 100px !important;
+  }
+
+  .sidebar {
+    width: 56px !important;
+    min-width: 56px !important;
+    transform: translateX(0) !important;
+    position: relative !important;
+    backdrop-filter: none !important;
+  }
+
+  .sidebar .nav-item-label,
+  .sidebar .sidebar-header span,
+  .sidebar .playlist-list,
+  .sidebar .sidebar-section-label,
+  .sidebar .playlist-name,
+  .sidebar .playlist-count,
+  .sidebar .create-playlist-label,
+  #aether-conn-status span#conn-label {
+    display: none !important;
+  }
+
+  .sidebar .nav-item {
+    justify-content: center !important;
+    padding: 12px 0 !important;
+  }
+
+  .sidebar .nav-item svg {
+    margin: 0 !important;
+  }
+
+  #aether-conn-status {
+    justify-content: center !important;
+    padding: 8px 0 !important;
+  }
+
+  .visualizer-panel {
+    height: 140px !important;
+  }
+
+  .now-playing {
+    padding: 6px 16px calc(var(--safe-bottom) + 4px) !important;
+  }
+
+  .np-art {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .content-header {
+    padding-top: 12px !important;
+  }
+
+  .sidebar-toggle {
+    display: none !important;
+  }
+}
+
+/* ============ VERY SMALL SCREENS (< 360px) ============ */
+@media (max-width: 360px) {
+  .album-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+    gap: 10px !important;
+    padding: 6px 10px !important;
+  }
+
+  .np-art {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .transport {
+    gap: 8px !important;
+  }
+
+  .play-btn {
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
+
+/* ============ LARGE PHONES (> 400px, Galaxy S Ultra) ============ */
+@media (min-width: 400px) {
+  .album-grid {
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)) !important;
+    gap: 18px !important;
+  }
+
+  .track-row {
+    padding: 12px 16px !important;
+    min-height: 64px !important;
+  }
+
+  .track-art-small {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .track-title {
+    font-size: 1rem !important;
+  }
+
+  .np-art {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .np-title, #npTitle {
+    font-size: 0.9rem !important;
+  }
+}
+
+/* ============ HIGH DPI REFINEMENTS ============ */
+@media (min-resolution: 400dpi) {
+  /* Ultra-thin borders look better on high DPI */
+  .album-art {
+    border-width: 0.5px !important;
+  }
+
+  .track-row {
+    border-bottom-width: 0.5px !important;
+  }
+
+  .sidebar {
+    border-right-width: 0.5px !important;
+  }
+}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============ DARK MODE FORCE (OLED optimization) ============ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-void: #000000 !important;
+    --bg-surface: #050510 !important;
+  }
+}

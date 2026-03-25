@@ -57,7 +57,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>AETHER</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3214,6 +3214,10 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
 .skeleton-rediscover-artist { height:11px; width:45%; border-radius:4px; }
 .skeleton-rediscover-meta { height:10px; width:60%; border-radius:4px; }
 </style>
+<link rel="stylesheet" href="mobile-tweaks.css">
+<script>
+(function(){var r=window.requestAnimationFrame.bind(window);var dead=false;window.__killAnimations=function(){dead=true;};window.__reviveAnimations=function(){dead=false;};window.requestAnimationFrame=function(cb){if(dead)return 0;return r(cb);}})();
+</script>
 </head>
 <body>
 
@@ -17649,5 +17653,6 @@ if ('mediaSession' in navigator) {
   </div>
 </div>
 
+<script src="mobile-bridge.js"></script>
 </body>
 </html>

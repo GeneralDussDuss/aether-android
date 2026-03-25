@@ -1,385 +1,246 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/AETHER-v2.0.0-7B2FBE?style=for-the-badge&labelColor=000000" alt="Version"/>
-  <img src="https://img.shields.io/badge/Electron-33-9D4EDD?style=for-the-badge&logo=electron&logoColor=EED4FF&labelColor=000000" alt="Electron"/>
-  <img src="https://img.shields.io/badge/Platform-Windows-B76EFF?style=for-the-badge&logo=windows&logoColor=EED4FF&labelColor=000000" alt="Platform"/>
-  <img src="https://img.shields.io/badge/License-MIT-D4A0FF?style=for-the-badge&labelColor=000000" alt="License"/>
-</p>
-
-<h1 align="center">
-  <br/>
-  <code>[ AETHER ]</code>
-  <br/>
-  <sub>Audio Engine for Total Harmonic Experience & Rendering</sub>
-  <br/>
-</h1>
+```
+    ___    ________________  __________
+   /   |  / ____/_  __/ / / / ____/ __ \
+  / /| | / __/   / / / /_/ / __/ / /_/ /
+ / ___ |/ /___  / / / __  / /___/ _, _/
+/_/  |_/_____/ /_/ /_/ /_/_____/_/ |_|
+                        for Android
+```
 
 <p align="center">
-  <em>Not a music player — an experience.</em>
-</p>
-
-<p align="center">
-  <strong>OLED-black. Tron-purple. 17 generative visualizers. AI DJ engine with 9 transitions. Stem isolation. 3D sonic map. Binaural brainwave engine. 140+ features in a single-file Electron app.</strong>
+  <img src="https://img.shields.io/badge/v1.0.0-ANDROID-9D4EDD?style=for-the-badge&labelColor=000000" alt="v1.0.0" />
+  <img src="https://img.shields.io/badge/Capacitor-8-119EFF?style=for-the-badge&logo=capacitor&logoColor=white" alt="Capacitor 8" />
+  <img src="https://img.shields.io/badge/Kotlin-Media3-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin" />
+  <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android" />
+  <img src="https://img.shields.io/badge/Subsonic-API-FF6B00?style=for-the-badge" alt="Subsonic" />
+  <img src="https://img.shields.io/badge/License-MIT-00FF41?style=for-the-badge" alt="MIT" />
 </p>
 
 <p align="center">
-  <a href="https://github.com/EmperorBadussy/charon">
-    <img src="https://img.shields.io/badge/Companion-CHARON-06B6D4?style=flat-square&labelColor=000000" alt="CHARON"/>
-  </a>
-  <a href="https://emperorbadussy.github.io/aether/">
-    <img src="https://img.shields.io/badge/Website-Live-9D4EDD?style=flat-square&labelColor=000000" alt="Website"/>
-  </a>
+  <strong>Your music. Your server. Your visualizers. In your pocket.</strong><br/>
+  A premium music player for Android that streams from Navidrome/Subsonic with beat-reactive OLED visualizers, 10-band EQ, and Android Auto support.
+</p>
+
+<p align="center">
+  <em>OLED-optimized. Beat-reactive. Zero compromise.</em>
 </p>
 
 ---
 
-<p align="center">
-  <video src="demo.mp4" autoplay loop muted playsinline controls width="100%"></video>
-</p>
+## Features
+
+### Music Streaming
+- **Navidrome / Subsonic API** — stream your entire library from your own server
+- **Tailscale / VPN support** — access your home library from anywhere
+- **Offline fallback** — local device library via Android MediaStore when server unreachable
+- **FLAC, MP3, OGG, AAC, WAV, OPUS** format support
+- **Gapless playback** with crossfade
+
+### 14 Beat-Reactive OLED Visualizers
+Every visualizer is designed for AMOLED — true blacks, vivid neon, maximum contrast.
+
+| Visualizer | Description |
+|-----------|-------------|
+| **Fractal Flame** | IFS fractal algorithm with 30K+ iterations per frame |
+| **Void Pulse** | Pulsing core with spiral arms and expanding rings |
+| **Tron Grid** | Outrun landscape with planet and perspective grid |
+| **Particle Field** | 400 particles in orbital spiral galaxy |
+| **Waveform Bars** | Circular frequency EQ with mirror bars |
+| **Aurora Borealis** | 5-layer curtains with 200 twinkling stars |
+| **Cosmic Mandala** | Sacred geometry — nested rings of polygons |
+| **Electric Sheep** | Audio-reactive video overlay (load your own fractals) |
+| **Bio-Genesis** | Bioluminescent organisms with mitochondria and flagella |
+| **Command Deck** | HUD dashboard with frequency gauges and oscilloscope |
+| **Neural Web II** | 80 interconnected nodes with nebula depth background |
+| **DNA Helix II** | Double helix with ambient particles and depth sorting |
+| **Lyric Rain** | Matrix rain that reveals actual song lyrics (LRCLIB API) |
+| **Frequency Mountain** | Synthwave terrain from live FFT — sun, grid, particles |
+
+### Audio Engine
+- **10-band parametric EQ** with 10 presets
+- **Web Audio API** pipeline: MediaElement → EQ → Compressor → Destination
+- **Beat detection** via FFT frequency analysis
+- **Master limiter** (DynamicsCompressor prevents clipping)
+
+### Android Auto
+- **Media3 MediaLibraryService** — browse Albums, Artists, Playlists, Genres, Recently Added, Random
+- **ExoPlayer** native playback for car head unit
+- **Tron GPS Map** — cyberpunk navigation HUD with perspective grid, speed display, now-playing overlay
+- **Album art** in media notifications
+
+### Mobile Optimizations
+- **Adaptive FPS** — 60fps charging, 30fps battery, 15fps low battery, stops when screen off
+- **OLED black** backgrounds everywhere (black pixels = off = battery saved)
+- **Connection monitor** — Navidrome status indicator, auto-recovery on reconnect
+- **Background audio** — keeps playing when screen off or app backgrounded
+- **Lock screen controls** — MediaSession API with album art, play/pause/next/prev
+- **Swipe gestures** — left/right on now-playing bar for next/prev
+- **Touch-optimized** — 48dp minimum touch targets, no hover states
+
+### Interface
+- **OLED-optimized** — true #000000 black, AMOLED sweet spot
+- **Monochromatic purple palette** — neon purple (#9D4EDD) + cyan (#00DCFF) accents
+- **Glassmorphism** — frosted glass panels with backdrop-filter blur
+- **Slide-out sidebar** — overlay navigation, not permanent column
+- **Bottom-sheet panels** — EQ, queue, settings as mobile-friendly bottom sheets
+- **Floating hamburger** — quick access to library navigation
 
 ---
 
-<br/>
-
-## `> WHAT IS THIS`
-
-AETHER is a desktop music player built from scratch for people who think Spotify's UI peaked in 2014 and everything since has been a lateral move into beige. It connects to your self-hosted **Navidrome/Subsonic** server, streams your own library, and wraps it in an interface designed for OLED screens with a strict monochromatic purple palette on true black.
-
-Every pixel is intentional. Every animation is buttery. Every visualizer is a canvas-rendered generative art piece that reacts to your music in real time.
-
-**16,000+ lines. Single file. Zero frameworks.**
-
-<br/>
-
-## `> FEATURE MAP`
+## Architecture
 
 ```
- AI DJ ENGINE
-  ├─ Dual-deck mixing with 9 transition patterns
-  ├─ Essentia.js WASM: float-precision BPM, key detection, danceability
-  ├─ Beat-phase alignment with micro-drift correction
-  ├─ Camelot wheel harmonic mixing
-  ├─ Spectral compatibility scoring (real DFT, 16-band)
-  ├─ Vocal clash detection via structure mapping
-  ├─ Set journey planning (warmup → building → peak → cooldown → finale)
-  ├─ Context-aware transition selection (energy, key, phrase, history)
-  ├─ Smart track selection with user behavior learning
-  ├─ Master limiter (DynamicsCompressor prevents clipping)
-  ├─ Background queue pre-analysis
-  └─ 9 transitions: blend, cut, bass swap, echo out, loop tease,
-     double drop, backspin, filter sweep, power down
-
- AUDIO PROCESSING
-  ├─ 10-band parametric EQ with 10 presets
-  ├─ Vinyl/Lo-Fi warmth engine (noise, hiss, flutter, saturation, rolloff)
-  │   └─ 6 presets: Clean, Warm Vinyl, Dusty Record, Cassette, AM Radio, Lo-Fi
-  ├─ Stem isolation (vocals/drums/bass/other with solo/mute/volume)
-  │   └─ Presets: Full Mix, Karaoke, Instrumental, A Capella, Drums Only
-  ├─ Signal path transparency display (real-time processing chain)
-  ├─ Hearing profile EQ (built-in audiometric test + compensation)
-  ├─ Binaural brainwave engine (see below)
-  ├─ Gapless playback with crossfade
-  ├─ Beat detection (FFT analysis, band extraction)
-  └─ Format support: FLAC, MP3, OGG, AAC, WAV, OPUS
-
- DISCOVERY & INTELLIGENCE
-  ├─ Magic Playlist — type a vibe, get a playlist (NLP keyword matching)
-  ├─ AI Auto-Tagger — energy/mood/tempo/danceability/vocal tags from analysis
-  ├─ Rediscover Mode — surfaces forgotten favorites (high plays, months ago)
-  ├─ Daylist — time-of-day adaptive playlists (7 periods, auto-curated)
-  ├─ 3D Sonic Similarity Map — interactive nebula visualization of your library
-  │   └─ Energy × BPM × Danceability axes, Camelot key → color
-  │   └─ Starfield, nebula clouds, constellation lines, orbit/zoom
-  │   └─ Currently playing track pulses, DJ mix path traced in 3D
-  ├─ Music DNA Fingerprint — unique circular artwork per track, exportable PNG
-  └─ Taste Evolution Timeline — session history with sparklines and vibe classification
-
- WELLNESS & PRODUCTIVITY
-  ├─ Sleep Timer — intelligent fade with Delta binaural crossfade
-  ├─ Pomodoro Focus Mode — work/break cycles with Alpha waves + UI dimming
-  └─ Weather Ambient — rain/wind/thunder/birds/crickets synthesized from wttr.in
-
- VISUALIZERS (17 scenes)
-  ├─ All Canvas 2D, all 60fps, all beat-reactive
-  ├─ Fractal Flame, Void Pulse, Tron Grid, Particle Field, Waveform Bars
-  ├─ Plasma Warp, Neural Web, Aurora Borealis, DNA Helix, Cosmic Mandala
-  ├─ Electric Sheep (video), Bio-Genesis, Command Deck, Void Pulse II
-  ├─ Neural Web II, DNA Helix II, Lyric Rain (LRCLIB lyrics on beats)
-  └─ Auto-rotate or pin your favorite
-
- INTEGRATION
-  ├─ Navidrome/Subsonic API (full library streaming)
-  ├─ Discord Rich Presence (local IPC pipe, zero dependencies)
-  ├─ LRCLIB lyrics (auto-fetch with search fallback)
-  ├─ Wallpaper Engine backgrounds (Steam workshop scanner)
-  ├─ Electric Sheep video mode
-  └─ Essentia.js WASM audio analysis
-
- LIBRARY
-  ├─ Albums, Artists, Genres, Playlists, Search
-  ├─ 100k+ track support (paginated loading)
-  ├─ Queue panel with track management
-  ├─ Shuffle (no-repeat algorithm)
-  ├─ Repeat modes (off / all / one)
-  ├─ Waveform seek bar (SoundCloud-style)
-  └─ Context menus on tracks
-
- INTERFACE
-  ├─ OLED-optimized (true #000000 black)
-  ├─ Monochromatic purple palette (12 shades)
-  ├─ Glassmorphism overlays
-  ├─ Collapsible sidebar
-  ├─ Horizontal / Vertical layout modes
-  ├─ Full keyboard shortcut system (30+ shortcuts)
-  ├─ Toast notifications
-  └─ Custom ultra-thin scrollbars
+┌─────────────────────────────────────┐
+│  Android (Capacitor 8 WebView)      │
+│  ┌───────────────────────────────┐  │
+│  │ player.html (17K lines)       │  │  ← The App
+│  │ + mobile-bridge.js            │  │  ← Mobile adaptations
+│  │ + mobile-tweaks.css (1.3K)    │  │  ← Premium mobile UI
+│  └───────────────────────────────┘  │
+│  ┌───────────────────────────────┐  │
+│  │ Kotlin Native Layer           │  │
+│  │ • AetherMediaService (Media3) │  │  ← Android Auto
+│  │ • SubsonicClient              │  │  ← REST API
+│  │ • AetherMapScreen             │  │  ← Tron GPS HUD
+│  │ • AetherLocalLibraryPlugin    │  │  ← Offline fallback
+│  │ • AetherFileServer            │  │  ← Local audio serving
+│  │ • AetherCredentialPlugin      │  │  ← WebView ↔ Native bridge
+│  └───────────────────────────────┘  │
+└──────────────┬──────────────────────┘
+               │ Subsonic API (REST)
+┌──────────────▼──────────────────────┐
+│  Navidrome Server                   │
+│  (your music, your server)          │
+└─────────────────────────────────────┘
 ```
 
-<br/>
+---
 
-## `> RHYTHMIC BINAURAL BRAINWAVE LAYERING ENGINE`
+## Getting Started
 
-**AETHER isn't just a music player — it's a neural entrainment system.**
+### Prerequisites
+- **Android device** (API 26+ / Android 8.0+, optimized for Galaxy S-series AMOLED)
+- **Navidrome server** running on your network ([navidrome.org](https://www.navidrome.org/))
+- **Node.js** 18+ and npm (for building)
+- **Android Studio** with SDK 35+ (for APK builds)
+- **JDK 17** for Gradle
 
-Built-in binaural beats generator using Web Audio API oscillators. Two sine waves play at slightly different frequencies in each ear — your brain perceives the difference as a "beat" that entrains neural oscillations to specific brainwave states.
+### Quick Start
 
-### Single Tone Mode
+```bash
+# Clone
+git clone https://github.com/EmperorBadussy/aether-android.git
+cd aether-android
 
-| Preset | Beat Frequency | Base Frequency | Brain State |
-|--------|---------------|----------------|-------------|
-| **Delta** | 2 Hz | 150 Hz | Deep sleep |
-| **Theta** | 6 Hz | 200 Hz | Meditation |
-| **Alpha** | 10 Hz | 200 Hz | Relaxation / Focus |
-| **Beta** | 20 Hz | 250 Hz | Alertness |
-| **Gamma** | 40 Hz | 300 Hz | Peak cognition |
+# Configure your Navidrome server
+# Edit player.html line ~4387:
+#   baseUrl: 'http://your-server-ip:4533'
+#   user: 'your_username'
+#   password: 'your_password'
 
-### Rhythm Layer Mode
+# Build mobile web assets
+cd mobile
+bash build-www.sh
 
-**Stack multiple binaural brainwave frequencies, each pulsing at a different rhythmic division.**
+# Sync to Android
+npx cap sync android
 
-Delta droning on whole notes. Theta pulsing quarter notes. Gamma flickering on sixteenths. All synchronized to a master BPM clock with sample-accurate scheduling.
+# Build APK
+cd android
+./gradlew assembleDebug
 
-```
- RHYTHM ENGINE
-  ├─ Lookahead scheduler (sample-accurate Web Audio timing)
-  ├─ Per-layer gain envelope (attack → sustain → release)
-  ├─ 7 rhythmic divisions (whole, half, quarter, eighth, triplet, 6-tuplet, sixteenth)
-  ├─ 5 presets (Deep Meditation, Focus Flow, Lucid Dream, Peak Performance, Shamanic Journey)
-  ├─ Independent volume per layer
-  ├─ Live parameter changes (no restart needed)
-  └─ Mix with music mode (layer binaural over playback)
-```
-
-<br/>
-
-## `> AI DJ ENGINE`
-
-Not a crossfader with a timer. A real mixing engine.
-
-```
- ANALYSIS
-  ├─ Essentia.js WASM: float-precision BPM (not rounded integers)
-  ├─ Key detection + Camelot wheel mapping
-  ├─ Danceability scoring
-  ├─ 16-band spectral profiling (real DFT with Hann windowing)
-  ├─ Structure mapping (intro/buildup/drop/breakdown/outro detection)
-  ├─ Vocal section detection via zero-crossing rate
-  ├─ Audio buffer caching (no triple-download)
-  └─ Background queue pre-analysis
-
- MIXING INTELLIGENCE
-  ├─ Beat-phase alignment (modular arithmetic on beat intervals)
-  ├─ Micro-drift correction during all overlapping transitions
-  ├─ Spectral compatibility scoring (frequency clash detection)
-  ├─ Vocal clash avoidance
-  ├─ Set journey: warmup → building → peak → cooldown → finale
-  ├─ Energy arc management across last 3 mixes
-  ├─ Context-aware transition selection (phrase, energy, key, history)
-  ├─ Pattern variety enforcement (tracks usage over last 5 mixes)
-  └─ User behavior learning (skip = negative, full play = positive)
-
- 9 TRANSITION PATTERNS
-  ├─ Blend — S-curve crossfade with progressive EQ handoff
-  ├─ Cut — instant beat-locked switch
-  ├─ Bass Swap — low-end handoff on the downbeat
-  ├─ Echo Out — delay/feedback chain with high-pass echo tail
-  ├─ Loop Tease — tease incoming twice, then commit
-  ├─ Double Drop — align both tracks' drops to hit simultaneously
-  ├─ Backspin — vinyl backspin simulation with pitch slowdown
-  ├─ Filter Sweep — LP filter 20kHz→200Hz with resonance
-  └─ Power Down — turntable power-loss (pitch drop + slowdown)
+# Install
+adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-<br/>
+### Remote Access (Tailscale)
+For accessing your music library outside your home network:
+1. Install [Tailscale](https://tailscale.com/) on your server and phone
+2. Use your server's Tailscale IP as the `baseUrl` (e.g., `http://100.x.x.x:4533`)
 
-## `> 3D SONIC SIMILARITY MAP`
+---
 
-Your entire music library visualized as an interactive 3D space.
+## Project Structure
 
-- **X-axis**: Energy (0-1)
-- **Y-axis**: BPM (60-200)
-- **Z-axis**: Danceability (0-1)
-- **Color**: Camelot key → hue (12 keys mapped to color wheel)
-- **Size**: Danceability (bigger = more danceable)
+```
+aether-android/
+├── player.html                          # THE APP (17K lines)
+├── main.js                              # Electron main (desktop)
+├── preload.js                           # Electron preload (desktop)
+├── mobile/
+│   ├── build-www.sh                     # Build pipeline
+│   ├── capacitor.config.ts              # Capacitor config
+│   ├── www/
+│   │   ├── index.html                   # Transformed player.html
+│   │   ├── mobile-bridge.js             # Swipe, MediaSession, offline, adaptive viz
+│   │   └── mobile-tweaks.css            # 1,313 lines of premium mobile CSS
+│   └── android/
+│       └── app/src/main/java/com/aether/player/
+│           ├── SubsonicClient.kt        # REST client
+│           ├── AetherMediaService.kt    # Media3 service (Android Auto)
+│           ├── AetherCredentialPlugin.kt # WebView ↔ native bridge
+│           ├── AetherLocalLibraryPlugin.kt # MediaStore fallback
+│           ├── AetherFileServer.kt      # Local file serving
+│           ├── AetherCarAppService.kt   # Android Auto entry
+│           ├── AetherNavigationSession.kt # Auto session
+│           ├── AetherMapScreen.kt       # Tron GPS HUD (496 lines)
+│           └── TronMapStyle.kt          # Google Maps styling
+```
 
-Drag to orbit, scroll to zoom. Twinkling starfield background. Nebula clouds shift as you rotate. Tracks with matching keys form "constellations" connected by faint colored lines. Currently playing track pulses with animated glow. DJ mix history traced as cyan paths through 3D space.
+---
 
-<br/>
+## Visualizer Gallery
 
-## `> TECH STACK`
+All 14 scenes are OLED-optimized with true black backgrounds and vivid neon accents. Tap the visualizer panel to cycle through scenes.
+
+| | | |
+|:---:|:---:|:---:|
+| Fractal Flame | Void Pulse | Tron Grid |
+| Waveform Bars | Aurora Borealis | Cosmic Mandala |
+| Bio-Genesis | Command Deck | Lyric Rain |
+| Neural Web II | DNA Helix II | Frequency Mountain |
+
+---
+
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Runtime | Electron 33 |
-| Renderer | Vanilla HTML/CSS/JS (single file, 16,000+ lines) |
-| Audio | Web Audio API (AudioContext, AnalyserNode, BiquadFilter, WaveShaper, DynamicsCompressor, ConvolverNode, DelayNode) |
-| Audio Analysis | Essentia.js WASM (BPM, key, danceability, onset detection) |
-| Graphics | Canvas 2D (requestAnimationFrame, perspective projection) |
-| Backend | Navidrome (Subsonic API v1.16.1) |
-| Lyrics | LRCLIB API (free, no key required) |
-| Weather | wttr.in API (no key required) |
-| Discord | Local IPC named pipe protocol (zero npm dependencies) |
-| Auth | MD5 token authentication (salt + password hash) |
-| Build | electron-builder (NSIS installer) |
-| State | localStorage (all settings, tags, profiles, sessions) |
+| **Runtime** | Capacitor 8 WebView |
+| **UI** | Vanilla HTML/CSS/JS (17K lines, no frameworks) |
+| **Audio** | Web Audio API + MediaElement pipeline |
+| **Visualizers** | Canvas 2D, 14 scenes, 30-60fps adaptive |
+| **Native** | Kotlin, Media3 ExoPlayer, Car App Library |
+| **Maps** | Google Maps SDK + custom Tron styling |
+| **Backend** | Navidrome (Subsonic API v1.16.1) |
+| **Build** | Gradle + Capacitor CLI |
 
-<br/>
+---
 
-## `> ARCHITECTURE`
+## Legal
 
 ```
- AETHER/
-  ├── main.js          # Electron main process — window, tray, IPC, Discord RPC, stem file detection
-  ├── preload.js       # Context bridge — safe IPC + filesystem access
-  ├── player.html      # THE APP — 16,000+ lines of UI, audio, visualizers, DJ engine, everything
-  ├── package.json     # Electron + builder config
-  ├── icon.ico         # App icon (purple on black)
-  ├── index.html       # Website / landing page (GitHub Pages)
-  ├── Launch.vbs       # Silent launcher (no console window)
-  └── .gitignore       # Security-first exclusions
+This software is for personal use with your own music library.
+Requires a self-hosted Navidrome or Subsonic-compatible server.
+No music is included or distributed with this application.
 ```
 
-### Audio Pipeline
-```
-  AudioElement                    Binaural Engine          Warmth Engine
-       │                          ├─ OscL → Pan(-1)┐      ├─ Vinyl noise
-  MediaElementSource              ├─ OscR → Pan(+1)┤      ├─ Tape hiss
-       │                          └─ GainNode ──────┤      ├─ WaveShaper (saturation)
-  BiquadFilters ×10 (EQ)              ↓             │      ├─ LFO delay (flutter)
-       │                         RhythmMasterGain──┤      └─ LP filter (rolloff)
-  Hearing Compensation EQ                           │           │
-       │                                            │           │
-       └─── Warmth Engine ─────────────────────────┤           │
-                                                    │           │
-                                              AnalyserNode ←───┘
-                                                    │
-                                         DynamicsCompressor (Master Limiter)
-                                                    │
-                                           AudioContext.destination
-                                                    │
-                                      ╔══════════════════════════════╗
-                                      ║  Beat Detection → Visualizers ║
-                                      ║  DJ Engine → Dual Deck Mix    ║
-                                      ║  Stem Engine → 4-channel mix  ║
-                                      ╚══════════════════════════════╝
-```
+---
 
-<br/>
+## License
 
-## `> KEYBOARD SHORTCUTS`
+MIT License. See [LICENSE](LICENSE) for details.
 
-| Key | Action |
-|-----|--------|
-| `Space` | Play / Pause |
-| `Ctrl + Right/Left` | Next / Previous Track |
-| `Ctrl + Up/Down` | Volume Up / Down |
-| `Left / Right` | Seek -5s / +5s |
-| `Ctrl + K` | Search |
-| `Ctrl + G` | Magic Playlist generator |
-| `Ctrl + P` | Pomodoro focus mode |
-| `Ctrl + W` | Weather ambient toggle |
-| `Ctrl + S` | Stems panel |
-| `Ctrl + ,` | Settings |
-| `M` | Mute |
-| `S` | Shuffle |
-| `R` | Repeat |
-| `Q` | Queue |
-| `V` | Cycle Visualizer |
-| `F` | Fullscreen Visualizer |
-| `W` | Warmth engine toggle |
-| `I` | Signal path display |
-| `T` | Sleep timer |
-| `D` | DJ Mode |
-| `B` | DJ: Blend |
-| `C` | DJ: Cut |
-| `G` | DJ: Bass Swap |
-| `E` | DJ: Echo Out |
-| `F` | DJ: Filter Sweep |
-| `P` | DJ: Power Down |
-| `X` | DJ: Snap crossfader |
-| `Z` | DJ: Swap bass |
-| `A` | DJ: Toggle auto-mix |
-| `?` | DJ: Help overlay |
-| `N / P` | Next / Previous Sheep Video |
-| `Escape` | Close Overlays |
+---
 
-<br/>
+## Credits
 
-## `> QUICK START`
+Built with **[Claude Code](https://claude.ai/claude-code)** — AI-assisted development from Anthropic.
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) 18+
-- [Navidrome](https://www.navidrome.org/) running on your network
-- Music library configured in Navidrome
-
-### Install & Run
-```bash
-git clone https://github.com/EmperorBadussy/aether.git
-cd aether
-npm install
-npm start
-```
-
-### Configure
-1. Launch AETHER
-2. Open Settings (gear icon in sidebar)
-3. Enter your Navidrome server URL, username, and password
-4. Click APPLY — your library loads instantly
-
-### Build Installer
-```bash
-npm run dist
-```
-Outputs to `dist/` — NSIS installer for Windows x64.
-
-<br/>
-
-## `> COMPANION APP`
-
-AETHER is one half of a two-app ecosystem:
-
-| | AETHER | CHARON |
-|---|--------|--------|
-| **Purpose** | Play your library | Build your library |
-| **Color** | Tron Purple | Styx Cyan |
-| **Backend** | Navidrome (Subsonic API) | Tidal (tidalapi + tiddl) |
-| **Repo** | You're here | [EmperorBadussy/charon](https://github.com/EmperorBadussy/charon) |
-
-**AETHER** plays. **CHARON** harvests.
-
-<br/>
-
-## `> LICENSE`
-
-MIT License. Do whatever you want. Credit appreciated but not required.
-
-<br/>
+Part of the **PHANTOM Suite** ecosystem.
 
 ---
 
 <p align="center">
-  <sub>Built for OLED. Engineered for audiophiles. Designed from 2077.</sub>
-</p>
-
-<p align="center">
-  <code>[ AETHER v2.0.0 ]</code>
+  <sub>OLED-optimized. Beat-reactive. Zero compromise.</sub>
 </p>

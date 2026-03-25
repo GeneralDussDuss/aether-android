@@ -53,3 +53,11 @@ navidrome.db-*
 
 # Electric Sheep video cache
 sheep_videos/
+
+# Mobile / Android
+mobile/node_modules/
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/local.properties
+mobile/android/app/google-services.json
+*.apk

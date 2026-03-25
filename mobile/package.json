@@ -1,0 +1,17 @@
+{
+  "name": "aether-mobile",
+  "version": "1.0.0",
+  "description": "AETHER Mobile — Android + Android Auto",
+  "private": true,
+  "scripts": {
+    "sync": "npx cap sync android",
+    "open": "npx cap open android",
+    "build": "npx cap sync android && cd android && ./gradlew assembleDebug",
+    "install-apk": "adb install -r android/app/build/outputs/apk/debug/app-debug.apk"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0"
+  }
+}
