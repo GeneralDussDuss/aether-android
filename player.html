@@ -15088,227 +15088,258 @@ function drawChromeOcean(ctx, w, h, time) {
   const beat = beatIntensity;
   const horizon = h * 0.38;
 
-  // Fade trail for smooth motion
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+  // Fade trail
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.13)';
   ctx.fillRect(0, 0, w, h);
 
-  // === SKY ===
+  // === SKY — deep alien gradient ===
   const skyGrad = ctx.createLinearGradient(0, 0, 0, horizon);
-  skyGrad.addColorStop(0, '#0a0020');
-  skyGrad.addColorStop(0.3, '#120040');
-  skyGrad.addColorStop(0.6, '#2a0060');
-  skyGrad.addColorStop(0.85, '#8a1070');
+  skyGrad.addColorStop(0, '#060018');
+  skyGrad.addColorStop(0.15, '#0a0028');
+  skyGrad.addColorStop(0.35, '#140050');
+  skyGrad.addColorStop(0.55, '#2a0068');
+  skyGrad.addColorStop(0.72, '#5a0870');
+  skyGrad.addColorStop(0.88, '#aa1878');
   skyGrad.addColorStop(1, '#ff2090');
   ctx.fillStyle = skyGrad;
   ctx.fillRect(0, 0, w, horizon + 2);
 
-  // Aurora bands in sky
+  // === STARS twinkling in upper sky ===
   ctx.globalCompositeOperation = 'lighter';
-  const auroraBands = [
-    { y: horizon * 0.2, color: [80, 200, 255], freq: 0.8, amp: 12 },
-    { y: horizon * 0.35, color: [200, 50, 255], freq: 1.2, amp: 8 },
-    { y: horizon * 0.55, color: [50, 255, 180], freq: 0.6, amp: 15 },
-    { y: horizon * 0.75, color: [255, 100, 200], freq: 1.5, amp: 6 }
-  ];
-  for (let ab = 0; ab < auroraBands.length; ab++) {
-    const band = auroraBands[ab];
-    const reactivity = mid * 0.6 + 0.4;
+  for (let si = 0; si < 45; si++) {
+    const sx = ((si * 137.508 + 23.7) % w);
+    const sy = ((si * 89.33 + 7.1) % (horizon * 0.5));
+    const twinkle = 0.25 + Math.sin(t * (1.2 + si * 0.08) + si * 7.3) * 0.35;
+    const starSize = 0.4 + (si % 4) * 0.35;
     ctx.beginPath();
-    ctx.moveTo(0, band.y);
+    ctx.arc(sx, sy, starSize, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${twinkle * (0.25 + energy * 0.25)})`;
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // === AURORA BANDS — 6 ribbons ===
+  ctx.globalCompositeOperation = 'lighter';
+  const auroraDefs = [
+    { y: horizon * 0.12, color: [80, 200, 255], freq: 0.8, amp: 14 },
+    { y: horizon * 0.22, color: [200, 50, 255], freq: 1.2, amp: 10 },
+    { y: horizon * 0.35, color: [50, 255, 180], freq: 0.6, amp: 18 },
+    { y: horizon * 0.5, color: [255, 100, 200], freq: 1.5, amp: 8 },
+    { y: horizon * 0.65, color: [120, 80, 255], freq: 0.9, amp: 12 },
+    { y: horizon * 0.78, color: [255, 180, 100], freq: 1.1, amp: 6 }
+  ];
+  for (let ab = 0; ab < auroraDefs.length; ab++) {
+    const aband = auroraDefs[ab];
+    const react = mid * 0.6 + 0.4;
+    ctx.beginPath();
+    ctx.moveTo(0, aband.y);
     for (let x = 0; x <= w; x += 3) {
-      const wave = Math.sin(x * 0.003 * band.freq + t * 1.5 + ab) * band.amp * reactivity +
-                   Math.sin(x * 0.007 + t * 0.8) * band.amp * 0.5;
-      ctx.lineTo(x, band.y + wave);
+      const wave = Math.sin(x * 0.003 * aband.freq + t * 1.5 + ab) * aband.amp * react +
+                   Math.sin(x * 0.007 + t * 0.8) * aband.amp * 0.5 +
+                   Math.sin(x * 0.0015 + t * 0.3 + ab * 2) * aband.amp * 0.3;
+      ctx.lineTo(x, aband.y + wave);
     }
-    ctx.strokeStyle = `rgba(${band.color[0]}, ${band.color[1]}, ${band.color[2]}, ${0.15 + mid * 0.25})`;
-    ctx.lineWidth = 2 + mid * 3;
-    ctx.shadowColor = `rgba(${band.color[0]}, ${band.color[1]}, ${band.color[2]}, 0.5)`;
-    ctx.shadowBlur = 15 + mid * 10;
+    ctx.strokeStyle = `rgba(${aband.color[0]}, ${aband.color[1]}, ${aband.color[2]}, ${0.12 + mid * 0.22})`;
+    ctx.lineWidth = 2 + mid * 4;
+    ctx.shadowColor = `rgba(${aband.color[0]}, ${aband.color[1]}, ${aband.color[2]}, 0.5)`;
+    ctx.shadowBlur = 18 + mid * 12;
     ctx.stroke();
   }
   ctx.shadowBlur = 0;
   ctx.globalCompositeOperation = 'source-over';
 
-  // === GOD RAYS from above ===
+  // === GOD RAYS — 7 volumetric shafts penetrating sky and ocean ===
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  const sunX = w * 0.5 + Math.sin(t * 0.15) * w * 0.1;
-  const sunY = -h * 0.05;
+  const sunPosX = w * 0.5 + Math.sin(t * 0.15) * w * 0.12;
+  const sunPosY = -h * 0.08;
   for (let gr = 0; gr < 7; gr++) {
-    const rayAngle = -0.35 + (gr / 6) * 0.7 + Math.sin(t * 0.3 + gr * 1.1) * 0.08;
-    const rayLen = horizon * 1.4;
-    const rayWidth = 0.03 + Math.sin(t * 0.5 + gr * 0.7) * 0.012;
-    const rayAlpha = (0.03 + energy * 0.04 + beat * 0.03) * (0.6 + Math.sin(t * 0.7 + gr) * 0.4);
+    const rayAngle = -0.4 + (gr / 6) * 0.8 + Math.sin(t * 0.25 + gr * 1.1) * 0.1;
+    const rayLen = horizon * 1.5;
+    const rayW = 0.035 + Math.sin(t * 0.5 + gr * 0.7) * 0.015;
+    const rayA = (0.025 + energy * 0.05 + beat * 0.04) * (0.5 + Math.sin(t * 0.7 + gr) * 0.5);
     ctx.beginPath();
-    ctx.moveTo(sunX, sunY);
-    ctx.lineTo(sunX + Math.cos(Math.PI * 0.5 + rayAngle - rayWidth) * rayLen,
-               sunY + Math.sin(Math.PI * 0.5 + rayAngle - rayWidth) * rayLen);
-    ctx.lineTo(sunX + Math.cos(Math.PI * 0.5 + rayAngle + rayWidth) * rayLen,
-               sunY + Math.sin(Math.PI * 0.5 + rayAngle + rayWidth) * rayLen);
+    ctx.moveTo(sunPosX, sunPosY);
+    ctx.lineTo(sunPosX + Math.cos(Math.PI * 0.5 + rayAngle - rayW) * rayLen,
+               sunPosY + Math.sin(Math.PI * 0.5 + rayAngle - rayW) * rayLen);
+    ctx.lineTo(sunPosX + Math.cos(Math.PI * 0.5 + rayAngle + rayW) * rayLen,
+               sunPosY + Math.sin(Math.PI * 0.5 + rayAngle + rayW) * rayLen);
     ctx.closePath();
-    const rayGrad = ctx.createLinearGradient(sunX, sunY, sunX, horizon);
-    rayGrad.addColorStop(0, `rgba(255, 200, 255, ${rayAlpha * 1.5})`);
-    rayGrad.addColorStop(0.5, `rgba(255, 150, 220, ${rayAlpha})`);
-    rayGrad.addColorStop(1, `rgba(255, 100, 180, 0)`);
-    ctx.fillStyle = rayGrad;
+    const rGr = ctx.createLinearGradient(sunPosX, sunPosY, sunPosX, horizon);
+    rGr.addColorStop(0, `rgba(255, 200, 255, ${rayA * 1.5})`);
+    rGr.addColorStop(0.3, `rgba(255, 170, 240, ${rayA * 1.1})`);
+    rGr.addColorStop(0.6, `rgba(255, 150, 220, ${rayA * 0.6})`);
+    rGr.addColorStop(1, `rgba(255, 100, 180, 0)`);
+    ctx.fillStyle = rGr;
     ctx.fill();
+    // Refracted ray continuation into ocean
+    if (gr % 2 === 0) {
+      const oRA = rayA * 0.3;
+      const hitX = sunPosX + Math.cos(Math.PI * 0.5 + rayAngle) * horizon * 1.05;
+      const refAngle = rayAngle * 0.6;
+      const oLen = (h - horizon) * 0.55;
+      ctx.beginPath();
+      ctx.moveTo(hitX - 15, horizon);
+      ctx.lineTo(hitX + Math.cos(Math.PI * 0.5 + refAngle) * oLen - 8, horizon + oLen);
+      ctx.lineTo(hitX + Math.cos(Math.PI * 0.5 + refAngle) * oLen + 8, horizon + oLen);
+      ctx.lineTo(hitX + 15, horizon);
+      ctx.closePath();
+      const oRG = ctx.createLinearGradient(0, horizon, 0, horizon + oLen);
+      oRG.addColorStop(0, `rgba(100, 220, 255, ${oRA})`);
+      oRG.addColorStop(1, `rgba(50, 150, 200, 0)`);
+      ctx.fillStyle = oRG;
+      ctx.fill();
+    }
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
 
-  // === LIGHTNING on heavy beats ===
-  if (beat > 0.75 && time - chromeOceanLightningTimer > 400) {
+  // === LIGHTNING — midpoint displacement with branches ===
+  if (beat > 0.7 && time - chromeOceanLightningTimer > 350) {
     chromeOceanLightningTimer = time;
-    chromeOceanFlashAlpha = 0.4 + beat * 0.3;
-    const boltX = w * 0.15 + Math.random() * w * 0.7;
-    const pts = [{ x: boltX, y: 0 }];
-    let curX = boltX, curY = 0;
-    const segs = 12 + Math.floor(Math.random() * 8);
-    for (let s = 1; s <= segs; s++) {
-      curY = (s / segs) * horizon * 0.9;
-      curX += (Math.random() - 0.5) * 60;
-      pts.push({ x: curX, y: curY });
-      // Branch
-      if (Math.random() < 0.3 && s > 2) {
-        const brLen = 3 + Math.floor(Math.random() * 4);
-        let bx = curX, by = curY;
-        const brPts = [{ x: bx, y: by }];
-        for (let b = 0; b < brLen; b++) {
-          bx += (Math.random() - 0.5) * 40;
-          by += 8 + Math.random() * 15;
-          brPts.push({ x: bx, y: by });
-        }
-        pts.branch = pts.branch || [];
+    chromeOceanFlashAlpha = 0.5 + beat * 0.35;
+    const boltX = w * 0.1 + Math.random() * w * 0.8;
+    const subdivide = (x1, y1, x2, y2, disp, d) => {
+      if (d <= 0) return [{ x: x2, y: y2 }];
+      const mx = (x1 + x2) / 2 + (Math.random() - 0.5) * disp;
+      const my = (y1 + y2) / 2 + (Math.random() - 0.5) * disp * 0.25;
+      return subdivide(x1, y1, mx, my, disp * 0.52, d - 1).concat(subdivide(mx, my, x2, y2, disp * 0.52, d - 1));
+    };
+    const endY = horizon * 0.85;
+    const pts = [{ x: boltX, y: 0 }].concat(subdivide(boltX, 0, boltX + (Math.random() - 0.5) * 80, endY, 100, 6));
+    pts.branch = [];
+    for (let bi = 0; bi < 2 + Math.floor(Math.random() * 3); bi++) {
+      const si = 3 + Math.floor(Math.random() * Math.max(1, pts.length - 5));
+      if (si < pts.length) {
+        const src = pts[si];
+        const brPts = [{ x: src.x, y: src.y }].concat(subdivide(src.x, src.y, src.x + (Math.random() - 0.5) * 120, src.y + 30 + Math.random() * 60, 40, 4));
         pts.branch.push(brPts);
       }
     }
     chromeOceanLightning = pts;
+    chromeOceanSecondaryBolts = [];
+    if (beat > 0.85) {
+      const bx2 = w * 0.15 + Math.random() * w * 0.7;
+      chromeOceanSecondaryBolts.push([{ x: bx2, y: 0 }].concat(subdivide(bx2, 0, bx2 + (Math.random() - 0.5) * 60, endY * 0.7, 70, 5)));
+    }
   }
-  // Draw lightning
   if (chromeOceanLightning && chromeOceanFlashAlpha > 0.01) {
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    // Flash
-    ctx.fillStyle = `rgba(200, 180, 255, ${chromeOceanFlashAlpha * 0.15})`;
+    ctx.fillStyle = `rgba(200, 180, 255, ${chromeOceanFlashAlpha * 0.18})`;
     ctx.fillRect(0, 0, w, horizon);
-    // Bolt
-    const drawBolt = (pts, alpha, width) => {
+    ctx.fillStyle = `rgba(150, 130, 220, ${chromeOceanFlashAlpha * 0.06})`;
+    ctx.fillRect(0, horizon, w, h - horizon);
+    const drawBolt = (pts2, alpha, width) => {
       ctx.beginPath();
-      ctx.moveTo(pts[0].x, pts[0].y);
-      for (let p = 1; p < pts.length; p++) ctx.lineTo(pts[p].x, pts[p].y);
+      ctx.moveTo(pts2[0].x, pts2[0].y);
+      for (let p = 1; p < pts2.length; p++) ctx.lineTo(pts2[p].x, pts2[p].y);
       ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
       ctx.lineWidth = width;
       ctx.shadowColor = `rgba(180, 150, 255, ${alpha})`;
-      ctx.shadowBlur = 20;
+      ctx.shadowBlur = 25;
       ctx.stroke();
     };
-    drawBolt(chromeOceanLightning, chromeOceanFlashAlpha, 3);
-    drawBolt(chromeOceanLightning, chromeOceanFlashAlpha * 0.7, 1);
+    drawBolt(chromeOceanLightning, chromeOceanFlashAlpha * 0.3, 6);
+    drawBolt(chromeOceanLightning, chromeOceanFlashAlpha, 2.5);
+    drawBolt(chromeOceanLightning, chromeOceanFlashAlpha * 0.8, 0.8);
     if (chromeOceanLightning.branch) {
       for (const br of chromeOceanLightning.branch) {
         drawBolt(br, chromeOceanFlashAlpha * 0.5, 1.5);
+        drawBolt(br, chromeOceanFlashAlpha * 0.3, 0.5);
       }
+    }
+    for (let sb = 0; sb < chromeOceanSecondaryBolts.length; sb++) {
+      drawBolt(chromeOceanSecondaryBolts[sb], chromeOceanFlashAlpha * 0.6, 2);
     }
     ctx.shadowBlur = 0;
     ctx.globalCompositeOperation = 'source-over';
     ctx.restore();
-    chromeOceanFlashAlpha *= 0.88;
+    chromeOceanFlashAlpha *= 0.86;
+    if (chromeOceanFlashAlpha < 0.01) chromeOceanSecondaryBolts = [];
   }
 
-  // === UNDERWATER CAUSTICS on surface ===
+  // === UNDERWATER CAUSTICS — dense interference ===
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  for (let ci = 0; ci < 12; ci++) {
-    const cx2 = (ci / 12) * w + Math.sin(t * 0.4 + ci * 2.1) * 40;
-    const cy2 = horizon + 10 + Math.sin(t * 0.6 + ci * 1.3) * 20;
-    const cSize = 30 + Math.sin(t * 0.8 + ci) * 15;
-    const cAlpha = (0.015 + energy * 0.02) * (0.5 + Math.sin(t + ci * 0.7) * 0.5);
-    // Interference pattern — overlapping circles
-    for (let j = 0; j < 3; j++) {
-      const ox = Math.sin(t * (0.3 + j * 0.2) + ci + j) * 15;
-      const oy = Math.cos(t * (0.4 + j * 0.15) + ci * 0.8 + j) * 10;
+  for (let ci = 0; ci < 18; ci++) {
+    const ccx = (ci / 18) * w + Math.sin(t * 0.4 + ci * 2.1) * 35;
+    const ccy = horizon + 8 + Math.sin(t * 0.6 + ci * 1.3) * 25 + ci * 2;
+    const cSz = 25 + Math.sin(t * 0.8 + ci) * 15;
+    const cA = (0.012 + energy * 0.02) * (0.4 + Math.sin(t + ci * 0.7) * 0.4);
+    for (let j = 0; j < 4; j++) {
+      const ox = Math.sin(t * (0.3 + j * 0.17) + ci + j) * 18;
+      const oy = Math.cos(t * (0.4 + j * 0.12) + ci * 0.8 + j) * 12;
       ctx.beginPath();
-      ctx.arc(cx2 + ox, cy2 + oy, cSize, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(100, 220, 255, ${cAlpha})`;
-      ctx.lineWidth = 1;
+      ctx.arc(ccx + ox, ccy + oy, cSz + j * 5, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(100, 220, 255, ${cA * (1 - j * 0.2)})`;
+      ctx.lineWidth = 0.8;
       ctx.stroke();
+    }
+    if (ci % 3 === 0) {
+      ctx.beginPath();
+      ctx.arc(ccx, ccy, 3 + energy * 4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(150, 240, 255, ${cA * 2 * (0.5 + Math.sin(t * 1.5 + ci * 2) * 0.5)})`;
+      ctx.fill();
     }
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
 
-  // === OCEAN SURFACE with 6 wave harmonics ===
-  const oceanRows = Math.floor((h - horizon) * 0.7);
-  const swellAmp = 8 + bass * 25;
-  const rippleAmp = 2 + treble * 8;
+  // === OCEAN SURFACE — 8 wave harmonics ===
+  const oceanRows = Math.floor((h - horizon) * 0.75);
+  const swellAmp = 10 + bass * 30;
+  const rippleAmp = 3 + treble * 10;
 
   for (let row = 0; row < oceanRows; row += 2) {
     const screenY = horizon + row;
     const depth = row / oceanRows;
     const depthScale = 0.05 + depth * 0.95;
-
     ctx.beginPath();
-    for (let x = 0; x <= w; x += 4) {
-      // 6 wave harmonics for complex ocean
+    for (let x = 0; x <= w; x += 3) {
       const wave1 = Math.sin(x * 0.004 + t * 0.7) * swellAmp * depthScale;
       const wave2 = Math.sin(x * 0.009 - t * 1.1 + 2.0) * swellAmp * 0.5 * depthScale;
       const wave3 = Math.sin(x * 0.02 + t * 2.5) * rippleAmp * depthScale;
       const wave4 = Math.sin(x * 0.035 - t * 3.2 + 1.5) * rippleAmp * 0.6 * depthScale;
       const wave5 = Math.sin(x * 0.0025 + t * 0.35 + 0.8) * swellAmp * 0.7 * depthScale;
       const wave6 = Math.sin(x * 0.055 - t * 4.1 + 3.2) * rippleAmp * 0.35 * depthScale;
-      const waveHeight = wave1 + wave2 + wave3 + wave4 + wave5 + wave6;
-
-      const dw1 = Math.cos(x * 0.004 + t * 0.7) * 0.004 * swellAmp * depthScale;
-      const dw2 = Math.cos(x * 0.009 - t * 1.1 + 2.0) * 0.009 * swellAmp * 0.5 * depthScale;
-      const slope = Math.abs(dw1 + dw2);
-      const fresnel = Math.min(1, 0.3 + slope * 8);
-
-      const reflectedSkyRow = Math.max(0, Math.min(horizon - 1, horizon - row * 0.4 + waveHeight * 2));
-      const skyRatio = reflectedSkyRow / horizon;
-
-      const chromeR = Math.floor((192 + skyRatio * 63) * fresnel);
-      const chromeG = Math.floor((200 + skyRatio * 55) * fresnel * 0.85);
-      const chromeB = Math.floor((210 + skyRatio * 45) * fresnel);
-
-      const magentaBlend = Math.max(0, 1 - depth * 2) * 0.3;
-
-      if (x === 0) ctx.moveTo(x, screenY + waveHeight);
-      else ctx.lineTo(x, screenY + waveHeight);
+      const wave7 = Math.sin(x * 0.0015 + t * 0.2 + 4.1) * swellAmp * 0.4 * depthScale;
+      const wave8 = Math.sin(x * 0.08 + t * 5.5 - 1.2) * rippleAmp * 0.2 * depthScale;
+      const waveH = wave1 + wave2 + wave3 + wave4 + wave5 + wave6 + wave7 + wave8;
+      if (x === 0) ctx.moveTo(x, screenY + waveH);
+      else ctx.lineTo(x, screenY + waveH);
     }
     const alpha = 0.4 + depth * 0.4 + energy * 0.2;
-    const depthDarken = 1 - depth * 0.4;
-    ctx.strokeStyle = `rgba(${Math.floor(180 * depthDarken + bass * 40)}, ${Math.floor(200 * depthDarken)}, ${Math.floor(220 * depthDarken + treble * 30)}, ${alpha})`;
+    const dd = 1 - depth * 0.45;
+    ctx.strokeStyle = `rgba(${Math.floor(180 * dd + bass * 45)}, ${Math.floor(200 * dd)}, ${Math.floor(225 * dd + treble * 35)}, ${alpha})`;
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    // Specular highlights on wave crests
-    if (row % 6 === 0) {
+    if (row % 4 === 0) {
       ctx.globalCompositeOperation = 'lighter';
-      for (let x = 0; x < w; x += 20) {
-        const crest = Math.sin(x * 0.004 + t * 0.7) + Math.sin(x * 0.009 - t * 1.1 + 2.0);
-        if (crest > 0.8) {
-          const specAlpha = (crest - 0.8) * 2 * fresnel_calc(x, t, depthScale) * (0.5 + energy * 0.5);
-          ctx.fillStyle = `rgba(255, 250, 255, ${Math.min(0.6, specAlpha)})`;
-          ctx.fillRect(x - 2, screenY + crest * swellAmp * depthScale - 1, 5 + treble * 3, 1.5);
+      for (let x = 0; x < w; x += 14) {
+        const crest = Math.sin(x * 0.004 + t * 0.7) + Math.sin(x * 0.009 - t * 1.1 + 2.0) + Math.sin(x * 0.0025 + t * 0.35) * 0.5;
+        if (crest > 1.0) {
+          const specA = (crest - 1.0) * 1.5 * fresnel_calc(x, t, depthScale) * (0.4 + energy * 0.6);
+          ctx.fillStyle = `rgba(255, 250, 255, ${Math.min(0.7, specA)})`;
+          ctx.fillRect(x - 2, screenY + crest * swellAmp * depthScale * 0.3 - 1, 4 + treble * 4, 1.5);
         }
       }
       ctx.globalCompositeOperation = 'source-over';
     }
   }
 
-  // === BIOLUMINESCENT CREATURES below surface ===
+  // === BIOLUMINESCENT CREATURES — 12 entities with tentacles ===
   if (!chromeOceanBioCreatures) {
     chromeOceanBioCreatures = [];
-    for (let i = 0; i < 10; i++) {
+    const hues = [[80, 255, 200], [50, 180, 255], [200, 100, 255], [255, 120, 80], [100, 255, 150], [180, 80, 255]];
+    for (let i = 0; i < 12; i++) {
       chromeOceanBioCreatures.push({
-        x: Math.random() * w,
-        y: horizon + 40 + Math.random() * (h - horizon - 80),
-        vx: (Math.random() - 0.5) * 0.8,
-        size: 12 + Math.random() * 25,
-        phase: Math.random() * Math.PI * 2,
-        hue: [0, 200, 255][Math.floor(Math.random() * 3)] === 0
-             ? [80, 255, 200] : (Math.random() < 0.5 ? [50, 180, 255] : [200, 100, 255]),
-        pulseSpeed: 0.5 + Math.random() * 1.5
+        x: Math.random() * w, y: horizon + 35 + Math.random() * (h - horizon - 70),
+        vx: (Math.random() - 0.5) * 0.9, size: 14 + Math.random() * 30,
+        phase: Math.random() * Math.PI * 2, hue: hues[i % hues.length],
+        pulseSpeed: 0.4 + Math.random() * 1.8, tentacles: 3 + Math.floor(Math.random() * 4),
+        bodyRatio: 0.5 + Math.random() * 0.4
       });
     }
   }
@@ -15316,142 +15347,181 @@ function drawChromeOcean(ctx, w, h, time) {
   ctx.globalCompositeOperation = 'lighter';
   for (let i = 0; i < chromeOceanBioCreatures.length; i++) {
     const cr = chromeOceanBioCreatures[i];
-    cr.x += cr.vx + Math.sin(t * 0.3 + cr.phase) * 0.4;
+    cr.x += cr.vx + Math.sin(t * 0.3 + cr.phase) * 0.5;
     cr.phase += 0.008;
-    if (cr.x < -50) cr.x = w + 50;
-    if (cr.x > w + 50) cr.x = -50;
-    const pulse = 0.4 + Math.sin(t * cr.pulseSpeed + cr.phase) * 0.3 + beat * 0.3;
-    const depth = (cr.y - horizon) / (h - horizon);
-    // Distort position based on wave above
-    const waveDistort = Math.sin(cr.x * 0.004 + t * 0.7) * 8 * (1 - depth * 0.5);
-    const drawX = cr.x + waveDistort;
-    const drawY = cr.y + Math.sin(t * 0.5 + cr.phase) * 5;
-    const cAlpha = pulse * 0.25 * (1 - depth * 0.4);
-    const grad = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, cr.size);
-    grad.addColorStop(0, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, ${cAlpha})`);
-    grad.addColorStop(0.5, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, ${cAlpha * 0.4})`);
-    grad.addColorStop(1, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, 0)`);
-    ctx.fillStyle = grad;
+    if (cr.x < -60) cr.x = w + 60;
+    if (cr.x > w + 60) cr.x = -60;
+    const pulse = 0.4 + Math.sin(t * cr.pulseSpeed + cr.phase) * 0.35 + beat * 0.3;
+    const cdepth = (cr.y - horizon) / (h - horizon);
+    const wDistort = Math.sin(cr.x * 0.004 + t * 0.7) * 10 * (1 - cdepth * 0.5);
+    const dx = cr.x + wDistort;
+    const dy = cr.y + Math.sin(t * 0.5 + cr.phase) * 6;
+    const cAl = pulse * 0.28 * (1 - cdepth * 0.4);
+    const cg = ctx.createRadialGradient(dx, dy, 0, dx, dy, cr.size);
+    cg.addColorStop(0, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, ${cAl})`);
+    cg.addColorStop(0.4, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, ${cAl * 0.5})`);
+    cg.addColorStop(1, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, 0)`);
+    ctx.fillStyle = cg;
     ctx.beginPath();
-    ctx.ellipse(drawX, drawY, cr.size * (1 + Math.sin(t + cr.phase) * 0.15), cr.size * 0.7, 0, 0, Math.PI * 2);
+    ctx.ellipse(dx, dy, cr.size * (1 + Math.sin(t + cr.phase) * 0.15), cr.size * cr.bodyRatio, 0, 0, Math.PI * 2);
+    ctx.fill();
+    for (let ti = 0; ti < cr.tentacles; ti++) {
+      ctx.beginPath();
+      ctx.moveTo(dx, dy + cr.size * cr.bodyRatio * 0.5);
+      const tLen = cr.size * (0.8 + Math.sin(t + ti + cr.phase) * 0.3);
+      const tcx1 = dx + Math.sin(t * 0.7 + ti * 2) * tLen * 0.4;
+      const tcy1 = dy + cr.size * cr.bodyRatio + tLen * 0.4;
+      const tcx2 = dx + Math.sin(t * 0.5 + ti * 3 + 1) * tLen * 0.6;
+      const tcy2 = dy + cr.size * cr.bodyRatio + tLen * 0.9;
+      ctx.bezierCurveTo(tcx1, tcy1, tcx2, tcy2, dx + Math.sin(t + ti) * tLen * 0.3, dy + cr.size * cr.bodyRatio + tLen);
+      ctx.strokeStyle = `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, ${cAl * 0.5})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(dx, dy, cr.size * 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${cAl * 0.6})`;
     ctx.fill();
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
 
-  // === FOAM / SPRAY particles on bass hits ===
-  if (beat > 0.55 && chromeOceanFoamParticles.length < 60) {
-    for (let f = 0; f < 5 + Math.floor(beat * 8); f++) {
+  // === FOAM / SPRAY particles ===
+  if (beat > 0.5 && chromeOceanFoamParticles.length < 80) {
+    for (let f = 0; f < 6 + Math.floor(beat * 12); f++) {
       const fx = Math.random() * w;
-      const fRow = Math.random() * oceanRows * 0.3;
-      const waveAtX = Math.sin(fx * 0.004 + t * 0.7) * swellAmp * 0.3;
+      const fRow = Math.random() * oceanRows * 0.25;
       chromeOceanFoamParticles.push({
-        x: fx, y: horizon + fRow + waveAtX,
-        vx: (Math.random() - 0.5) * 4,
-        vy: -(2 + Math.random() * 5 + beat * 4),
-        size: 1 + Math.random() * 2.5,
-        life: 1
+        x: fx, y: horizon + fRow + Math.sin(fx * 0.004 + t * 0.7) * swellAmp * 0.3,
+        vx: (Math.random() - 0.5) * 5, vy: -(2.5 + Math.random() * 6 + beat * 5),
+        size: 0.8 + Math.random() * 3, life: 1, bright: 0.5 + Math.random() * 0.5
       });
     }
   }
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   for (let i = chromeOceanFoamParticles.length - 1; i >= 0; i--) {
-    const f = chromeOceanFoamParticles[i];
-    f.x += f.vx;
-    f.y += f.vy;
-    f.vy += 0.12;
-    f.life -= 0.018;
-    if (f.life <= 0 || f.y > h) { chromeOceanFoamParticles.splice(i, 1); continue; }
+    const fp = chromeOceanFoamParticles[i];
+    fp.x += fp.vx; fp.y += fp.vy; fp.vy += 0.14; fp.vx *= 0.99; fp.life -= 0.016;
+    if (fp.life <= 0 || fp.y > h) { chromeOceanFoamParticles.splice(i, 1); continue; }
     ctx.beginPath();
-    ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 255, 255, ${f.life * 0.6})`;
+    ctx.arc(fp.x, fp.y, fp.size * fp.life, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${fp.life * fp.bright * 0.65})`;
     ctx.fill();
+    if (fp.life > 0.5) {
+      ctx.beginPath();
+      ctx.moveTo(fp.x, fp.y);
+      ctx.lineTo(fp.x - fp.vx * 2, fp.y - fp.vy * 2);
+      ctx.strokeStyle = `rgba(200, 230, 255, ${(fp.life - 0.5) * 0.4})`;
+      ctx.lineWidth = fp.size * 0.5;
+      ctx.stroke();
+    }
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
 
-  // === CHROME DROPLETS on beat ===
-  if (beat > 0.6 && chromeOceanDroplets.length < 20) {
-    for (let d = 0; d < 3; d++) {
+  // === CHROME DROPLETS ===
+  if (beat > 0.6 && chromeOceanDroplets.length < 25) {
+    for (let d = 0; d < 4; d++) {
       chromeOceanDroplets.push({
-        x: Math.random() * w,
-        y: horizon + Math.random() * oceanRows * 0.3,
-        vx: (Math.random() - 0.5) * 3,
-        vy: -(4 + Math.random() * 6 + beat * 5),
-        size: 2 + Math.random() * 4,
-        life: 1
+        x: Math.random() * w, y: horizon + Math.random() * oceanRows * 0.3,
+        vx: (Math.random() - 0.5) * 3.5, vy: -(5 + Math.random() * 7 + beat * 6),
+        size: 2 + Math.random() * 5, life: 1
       });
     }
   }
   ctx.globalCompositeOperation = 'lighter';
   for (let i = chromeOceanDroplets.length - 1; i >= 0; i--) {
     const d = chromeOceanDroplets[i];
-    d.x += d.vx;
-    d.y += d.vy;
-    d.vy += 0.18;
-    d.life -= 0.012;
+    d.x += d.vx; d.y += d.vy; d.vy += 0.2; d.life -= 0.012;
     if (d.life <= 0 || d.y > h) { chromeOceanDroplets.splice(i, 1); continue; }
-    const grad = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.size * 2);
-    grad.addColorStop(0, `rgba(255, 255, 255, ${d.life * 0.8})`);
-    grad.addColorStop(0.4, `rgba(180, 210, 255, ${d.life * 0.5})`);
-    grad.addColorStop(1, `rgba(120, 80, 200, 0)`);
-    ctx.fillStyle = grad;
+    const dg = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.size * 2);
+    dg.addColorStop(0, `rgba(255, 255, 255, ${d.life * 0.85})`);
+    dg.addColorStop(0.3, `rgba(200, 220, 255, ${d.life * 0.5})`);
+    dg.addColorStop(0.7, `rgba(150, 120, 220, ${d.life * 0.2})`);
+    dg.addColorStop(1, `rgba(120, 80, 200, 0)`);
+    ctx.fillStyle = dg;
     ctx.beginPath();
     ctx.arc(d.x, d.y, d.size * 2, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.globalCompositeOperation = 'source-over';
 
-  // === LENS FLARE at horizon ===
+  // === LENS FLARE — multi-element with anamorphic streak ===
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  const flareX = w * 0.5 + Math.sin(t * 0.1) * w * 0.02;
+  const flareX = w * 0.5 + Math.sin(t * 0.1) * w * 0.025;
   const flareY = horizon;
-  const flareIntensity = 0.15 + energy * 0.25 + beat * 0.15;
-  // Main flare glow
-  const flareGrad = ctx.createRadialGradient(flareX, flareY, 0, flareX, flareY, w * 0.12);
-  flareGrad.addColorStop(0, `rgba(255, 200, 255, ${flareIntensity})`);
-  flareGrad.addColorStop(0.3, `rgba(255, 120, 200, ${flareIntensity * 0.5})`);
-  flareGrad.addColorStop(1, 'rgba(255, 80, 150, 0)');
-  ctx.fillStyle = flareGrad;
-  ctx.fillRect(flareX - w * 0.12, flareY - w * 0.12, w * 0.24, w * 0.24);
-  // Hexagonal flare shapes
-  for (let fi = 0; fi < 5; fi++) {
-    const fDist = (fi + 1) * w * 0.04 + Math.sin(t + fi) * 5;
-    const fAngle = Math.PI + (fi * 0.3);
-    const fx = flareX + Math.cos(fAngle) * fDist * 0.3;
-    const fy = flareY + (fi - 2) * 15;
-    const fSize = 4 + fi * 2 + Math.sin(t * 2 + fi) * 2;
-    const fAlpha = flareIntensity * (0.15 - fi * 0.02);
+  const flareInt = 0.18 + energy * 0.3 + beat * 0.18;
+  const fG = ctx.createRadialGradient(flareX, flareY, 0, flareX, flareY, w * 0.15);
+  fG.addColorStop(0, `rgba(255, 220, 255, ${flareInt * 1.2})`);
+  fG.addColorStop(0.2, `rgba(255, 150, 220, ${flareInt * 0.7})`);
+  fG.addColorStop(0.5, `rgba(255, 100, 180, ${flareInt * 0.3})`);
+  fG.addColorStop(1, 'rgba(255, 80, 150, 0)');
+  ctx.fillStyle = fG;
+  ctx.fillRect(flareX - w * 0.15, flareY - w * 0.15, w * 0.3, w * 0.3);
+  // Anamorphic streak
+  ctx.fillStyle = `rgba(255, 200, 240, ${flareInt * 0.25})`;
+  ctx.fillRect(0, flareY - 1.5, w, 3);
+  ctx.fillStyle = `rgba(255, 150, 200, ${flareInt * 0.12})`;
+  ctx.fillRect(0, flareY - 4, w, 8);
+  // Hexagonal ghosts
+  const fHues = [[255, 200, 255], [200, 255, 220], [220, 180, 255], [255, 220, 180], [180, 220, 255], [255, 180, 200], [200, 255, 200]];
+  for (let fi = 0; fi < 7; fi++) {
+    const ffx = flareX + (flareX - w * 0.5) * (fi - 3) * 0.15;
+    const ffy = flareY + (fi - 3) * 12 + Math.sin(t * 1.5 + fi) * 3;
+    const fSz = 3 + fi * 2.5 + Math.sin(t * 2 + fi) * 2;
+    const fAl = flareInt * (0.12 - fi * 0.012);
+    const fH = fHues[fi];
     ctx.beginPath();
     for (let v = 0; v < 6; v++) {
-      const a = (v / 6) * Math.PI * 2;
-      const px = fx + Math.cos(a) * fSize;
-      const py = fy + Math.sin(a) * fSize;
+      const a = (v / 6) * Math.PI * 2 + t * 0.2;
+      const px = ffx + Math.cos(a) * fSz;
+      const py = ffy + Math.sin(a) * fSz;
       if (v === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
     }
     ctx.closePath();
-    ctx.fillStyle = `rgba(255, 180, 255, ${Math.max(0, fAlpha)})`;
+    ctx.fillStyle = `rgba(${fH[0]}, ${fH[1]}, ${fH[2]}, ${Math.max(0, fAl)})`;
     ctx.fill();
+    if (fi % 2 === 0) {
+      ctx.beginPath();
+      ctx.arc(ffx, ffy, fSz * 1.5, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${fH[0]}, ${fH[1]}, ${fH[2]}, ${fAl * 0.4})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
 
-  // === Horizon glow line ===
+  // === Horizon glow ===
   ctx.globalCompositeOperation = 'lighter';
-  const horizGrad = ctx.createLinearGradient(0, horizon - 8, 0, horizon + 8);
-  horizGrad.addColorStop(0, 'rgba(255, 100, 200, 0)');
-  horizGrad.addColorStop(0.5, `rgba(255, 150, 220, ${0.3 + energy * 0.4})`);
-  horizGrad.addColorStop(1, 'rgba(255, 100, 200, 0)');
-  ctx.fillStyle = horizGrad;
-  ctx.fillRect(0, horizon - 8, w, 16);
+  const hG = ctx.createLinearGradient(0, horizon - 10, 0, horizon + 10);
+  hG.addColorStop(0, 'rgba(255, 100, 200, 0)');
+  hG.addColorStop(0.3, `rgba(255, 130, 210, ${0.15 + energy * 0.2})`);
+  hG.addColorStop(0.5, `rgba(255, 180, 230, ${0.35 + energy * 0.45})`);
+  hG.addColorStop(0.7, `rgba(255, 130, 210, ${0.15 + energy * 0.2})`);
+  hG.addColorStop(1, 'rgba(255, 100, 200, 0)');
+  ctx.fillStyle = hG;
+  ctx.fillRect(0, horizon - 10, w, 20);
   ctx.globalCompositeOperation = 'source-over';
 
+  // === Deep ocean ambient glow ===
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const deepG = ctx.createLinearGradient(0, horizon, 0, h);
+  deepG.addColorStop(0, `rgba(30, 80, 120, ${0.02 + energy * 0.03})`);
+  deepG.addColorStop(0.3, `rgba(20, 60, 100, ${0.03 + bass * 0.04})`);
+  deepG.addColorStop(1, 'rgba(5, 15, 30, 0)');
+  ctx.fillStyle = deepG;
+  ctx.fillRect(0, horizon, w, h - horizon);
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+
   // Vignette
-  const vig = ctx.createRadialGradient(w / 2, h / 2, w * 0.25, w / 2, h / 2, w * 0.7);
+  const vig = ctx.createRadialGradient(w / 2, h / 2, w * 0.22, w / 2, h / 2, w * 0.72);
   vig.addColorStop(0, 'transparent');
-  vig.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+  vig.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
   ctx.fillStyle = vig;
   ctx.fillRect(0, 0, w, h);
 }
@@ -15478,36 +15548,31 @@ function drawHyperspaceTunnel(ctx, w, h, time) {
   const beat = beatIntensity;
   const cx = w / 2, cy = h / 2;
 
-  // Full clear with slight motion blur
-  ctx.fillStyle = 'rgba(0, 0, 8, 0.92)';
+  ctx.fillStyle = 'rgba(0, 0, 8, 0.91)';
   ctx.fillRect(0, 0, w, h);
 
-  const speed = 0.8 + energy * 3;
-  const numRings = 65;
-  const numLongLines = 18;
+  const speed = 0.8 + energy * 3.5;
+  const numRings = 70;
+  const numLongLines = 24;
   const baseRadius = Math.min(w, h) * 0.55;
 
-  // === SCREEN SHAKE on heavy bass ===
-  hyperTunnelShakeX = hyperTunnelShakeX * 0.85 + (beat > 0.6 ? (Math.random() - 0.5) * beat * 12 : 0);
-  hyperTunnelShakeY = hyperTunnelShakeY * 0.85 + (beat > 0.6 ? (Math.random() - 0.5) * beat * 12 : 0);
+  // === SCREEN SHAKE ===
+  hyperTunnelShakeX = hyperTunnelShakeX * 0.82 + (beat > 0.55 ? (Math.random() - 0.5) * beat * 16 : 0);
+  hyperTunnelShakeY = hyperTunnelShakeY * 0.82 + (beat > 0.55 ? (Math.random() - 0.5) * beat * 16 : 0);
   ctx.save();
   ctx.translate(hyperTunnelShakeX, hyperTunnelShakeY);
 
   // Init rings
   if (!hyperTunnelRings) {
     hyperTunnelRings = [];
-    for (let i = 0; i < numRings; i++) {
-      hyperTunnelRings.push({ z: 0.05 + (i / numRings) * 4.0 });
-    }
+    for (let i = 0; i < numRings; i++) hyperTunnelRings.push({ z: 0.05 + (i / numRings) * 4.0 });
   }
   // Init stars
   if (!hyperTunnelStars) {
     hyperTunnelStars = [];
-    for (let i = 0; i < 160; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const dist = 0.1 + Math.random() * 0.9;
+    for (let i = 0; i < 200; i++) {
       hyperTunnelStars.push({
-        angle: angle, dist: dist,
+        angle: Math.random() * Math.PI * 2, dist: 0.1 + Math.random() * 0.9,
         z: Math.random() * 4, bright: 0.3 + Math.random() * 0.7
       });
     }
@@ -15515,50 +15580,49 @@ function drawHyperspaceTunnel(ctx, w, h, time) {
   // Init nebulae
   if (!hyperTunnelNebulae) {
     hyperTunnelNebulae = [];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 12; i++) {
       hyperTunnelNebulae.push({
-        angle: Math.random() * Math.PI * 2,
-        dist: 0.2 + Math.random() * 0.6,
-        z: 0.5 + Math.random() * 3.5,
-        size: 0.15 + Math.random() * 0.3,
-        hue: Math.random() * 360,
-        alpha: 0.02 + Math.random() * 0.04
+        angle: Math.random() * Math.PI * 2, dist: 0.15 + Math.random() * 0.65,
+        z: 0.5 + Math.random() * 3.5, size: 0.12 + Math.random() * 0.35,
+        hue: Math.random() * 360, alpha: 0.015 + Math.random() * 0.04
       });
     }
   }
   // Init data streams
   if (!hyperTunnelDataStreams) {
     hyperTunnelDataStreams = [];
-    const chars = '01>|/<>{}[]#$%&@!?=+-*^~';
-    for (let i = 0; i < 12; i++) {
-      const streamChars = [];
-      for (let c = 0; c < 15; c++) {
-        streamChars.push({
-          char: chars[Math.floor(Math.random() * chars.length)],
-          zOff: c * 0.12, alpha: 1 - c * 0.06
-        });
+    const chars = '01>|/<>{}[]#$%&@!?=+-*^~:;()_';
+    for (let i = 0; i < 16; i++) {
+      const sc = [];
+      for (let c = 0; c < 18; c++) {
+        sc.push({ char: chars[Math.floor(Math.random() * chars.length)], zOff: c * 0.1, alpha: 1 - c * 0.05 });
       }
       hyperTunnelDataStreams.push({
-        angle: Math.random() * Math.PI * 2,
-        dist: 0.7 + Math.random() * 0.25,
-        z: Math.random() * 4,
-        speed: 1.5 + Math.random() * 2,
-        chars: streamChars,
-        hue: Math.random() < 0.5 ? 180 : 300
+        angle: Math.random() * Math.PI * 2, dist: 0.65 + Math.random() * 0.3,
+        z: Math.random() * 4, speed: 1.5 + Math.random() * 2.5, chars: sc,
+        hue: [180, 280, 320, 140][Math.floor(Math.random() * 4)]
       });
     }
   }
 
-  // Vignette edge darkening
+  // Vignette edge
   const vigGrad = ctx.createRadialGradient(cx, cy, w * 0.15, cx, cy, w * 0.6);
   vigGrad.addColorStop(0, 'transparent');
   vigGrad.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
 
-  // === NEBULA CLOUDS ===
+  // === DEEP BACKGROUND GLOW ===
   ctx.globalCompositeOperation = 'lighter';
+  const bgG = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.5);
+  bgG.addColorStop(0, `rgba(20, 10, 50, ${0.05 + energy * 0.08})`);
+  bgG.addColorStop(0.5, `rgba(10, 5, 30, ${0.02 + energy * 0.03})`);
+  bgG.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = bgG;
+  ctx.fillRect(0, 0, w, h);
+
+  // === NEBULA CLOUDS ===
   for (let i = 0; i < hyperTunnelNebulae.length; i++) {
     const neb = hyperTunnelNebulae[i];
-    neb.z -= speed * 0.012;
+    neb.z -= speed * 0.011;
     if (neb.z < 0.2) { neb.z = 3.5 + Math.random(); neb.angle = Math.random() * Math.PI * 2; neb.hue = Math.random() * 360; }
     const r = (baseRadius * neb.dist) / neb.z;
     if (r > w * 1.5) continue;
@@ -15566,11 +15630,11 @@ function drawHyperspaceTunnel(ctx, w, h, time) {
     const ny = cy + Math.sin(neb.angle) * r;
     const nSize = (baseRadius * neb.size) / neb.z;
     const nAlpha = neb.alpha * (1 - neb.z / 4) * (0.5 + energy * 0.5);
-    const grad = ctx.createRadialGradient(nx, ny, 0, nx, ny, nSize);
-    grad.addColorStop(0, `hsla(${neb.hue}, 80%, 50%, ${nAlpha})`);
-    grad.addColorStop(0.5, `hsla(${neb.hue}, 60%, 30%, ${nAlpha * 0.4})`);
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grad;
+    const ng = ctx.createRadialGradient(nx, ny, 0, nx, ny, nSize);
+    ng.addColorStop(0, `hsla(${neb.hue}, 80%, 50%, ${nAlpha})`);
+    ng.addColorStop(0.4, `hsla(${neb.hue}, 60%, 35%, ${nAlpha * 0.5})`);
+    ng.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = ng;
     ctx.fillRect(nx - nSize, ny - nSize, nSize * 2, nSize * 2);
   }
 
@@ -15579,124 +15643,136 @@ function drawHyperspaceTunnel(ctx, w, h, time) {
     const star = hyperTunnelStars[i];
     star.z -= speed * 0.016;
     if (star.z < 0.02) { star.z = 3.5 + Math.random(); star.angle = Math.random() * Math.PI * 2; star.dist = 0.1 + Math.random() * 0.9; }
-
     const r = (baseRadius * star.dist) / star.z;
     const sx = cx + Math.cos(star.angle) * r;
     const sy = cy + Math.sin(star.angle) * r;
-
-    const streakLen = speed * 14 / (star.z * star.z);
-    const dx = sx - cx, dy = sy - cy;
-    const mag = Math.sqrt(dx * dx + dy * dy) || 1;
-    const ex = sx + (dx / mag) * streakLen;
-    const ey = sy + (dy / mag) * streakLen;
-
+    const streakLen = speed * 16 / (star.z * star.z);
+    const ddx = sx - cx, ddy = sy - cy;
+    const mag = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
+    const ex = sx + (ddx / mag) * streakLen;
+    const ey = sy + (ddy / mag) * streakLen;
     const alpha = Math.min(1, star.bright * (1 - star.z / 4.5) * (0.3 + energy * 0.7));
     ctx.beginPath();
     ctx.moveTo(sx, sy);
     ctx.lineTo(ex, ey);
     ctx.strokeStyle = `rgba(180, 220, 255, ${alpha})`;
-    ctx.lineWidth = 0.8 + (1 / star.z) * 0.5;
+    ctx.lineWidth = 0.8 + (1 / star.z) * 0.6;
     ctx.stroke();
   }
 
-  // === ENERGY PULSES traveling down tunnel ===
-  if (hyperTunnelPulses.length < 4 && Math.random() < 0.03 + beat * 0.05) {
-    hyperTunnelPulses.push({ z: 4.0, brightness: 0.5 + beat * 0.5, hue: Math.random() < 0.5 ? 190 : 310 });
+  // === ENERGY PULSES ===
+  if (hyperTunnelPulses.length < 5 && Math.random() < 0.035 + beat * 0.06) {
+    hyperTunnelPulses.push({ z: 4.0, brightness: 0.5 + beat * 0.5, hue: [190, 280, 310, 150][Math.floor(Math.random() * 4)] });
   }
   for (let i = hyperTunnelPulses.length - 1; i >= 0; i--) {
     const p = hyperTunnelPulses[i];
-    p.z -= speed * 0.025;
+    p.z -= speed * 0.028;
     if (p.z < 0.05) { hyperTunnelPulses.splice(i, 1); continue; }
     const r = baseRadius / p.z;
     if (r > w * 2) { hyperTunnelPulses.splice(i, 1); continue; }
-    const pAlpha = p.brightness * (1 - p.z / 4.5) * 0.6;
+    const pA = p.brightness * (1 - p.z / 4.5) * 0.6;
+    // Double ring pulse
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = `hsla(${p.hue}, 100%, 80%, ${pAlpha})`;
-    ctx.lineWidth = 3 + (1 / p.z) * 2;
-    ctx.shadowColor = `hsla(${p.hue}, 100%, 70%, ${pAlpha * 0.8})`;
-    ctx.shadowBlur = 15 + (1 / p.z) * 5;
+    ctx.strokeStyle = `hsla(${p.hue}, 100%, 80%, ${pA})`;
+    ctx.lineWidth = 3 + (1 / p.z) * 2.5;
+    ctx.shadowColor = `hsla(${p.hue}, 100%, 70%, ${pA * 0.8})`;
+    ctx.shadowBlur = 18 + (1 / p.z) * 6;
+    ctx.stroke();
+    // Inner glow ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 0.92, 0, Math.PI * 2);
+    ctx.strokeStyle = `hsla(${p.hue}, 100%, 90%, ${pA * 0.4})`;
+    ctx.lineWidth = 1 + (1 / p.z);
     ctx.stroke();
   }
   ctx.shadowBlur = 0;
 
-  // === TUNNEL RINGS with hex grid segments ===
+  // === TUNNEL RINGS with hex segments ===
   for (let i = 0; i < hyperTunnelRings.length; i++) {
     const ring = hyperTunnelRings[i];
     ring.z -= speed * 0.016;
     if (ring.z < 0.05) ring.z += 4.0;
-
     const r = baseRadius / ring.z;
     if (r > w * 1.5) continue;
-
-    const depthRatio = ring.z / 4.0;
+    const depthR = ring.z / 4.0;
     let rr, rg, rb;
-    if (depthRatio < 0.33) {
-      const t2 = depthRatio / 0.33;
+    if (depthR < 0.33) {
+      const t2 = depthR / 0.33;
       rr = Math.floor(255 * (1 - t2)); rg = Math.floor(30 * (1 - t2) + 220 * t2); rb = Math.floor(180 * (1 - t2) + 232 * t2);
-    } else if (depthRatio < 0.66) {
-      const t2 = (depthRatio - 0.33) / 0.33;
+    } else if (depthR < 0.66) {
+      const t2 = (depthR - 0.33) / 0.33;
       rr = Math.floor(100 * t2); rg = Math.floor(220 * (1 - t2) + 50 * t2); rb = Math.floor(232 * (1 - t2) + 255 * t2);
     } else {
       rr = 100; rg = 50; rb = 255;
     }
-
-    const alpha = Math.min(1, (1 - depthRatio) * 0.6 + energy * 0.4);
-    const isBeatRing = beat > 0.5 && (i % 5 === Math.floor(t * 3) % 5);
-    const ringWidth = isBeatRing ? 2.5 + beat * 2 : 0.8 + (1 - depthRatio) * 1.2;
-    const ringAlpha = isBeatRing ? Math.min(1, alpha + 0.4) : alpha;
+    const alpha = Math.min(1, (1 - depthR) * 0.6 + energy * 0.4);
+    const isBeatRing = beat > 0.5 && (i % 4 === Math.floor(t * 3) % 4);
+    const ringW = isBeatRing ? 2.5 + beat * 2.5 : 0.8 + (1 - depthR) * 1.4;
+    const ringA = isBeatRing ? Math.min(1, alpha + 0.4) : alpha;
 
     // Chromatic aberration near screen edges
     const edgeDist = r / (w * 0.7);
-    const chromaOffset = edgeDist > 0.5 ? (edgeDist - 0.5) * 4 : 0;
+    const chromOff = edgeDist > 0.4 ? (edgeDist - 0.4) * 5 : 0;
 
     // Draw hex-segmented ring
     const hexCount = 12;
     for (let hx = 0; hx < hexCount; hx++) {
       const a1 = (hx / hexCount) * Math.PI * 2;
       const a2 = ((hx + 1) / hexCount) * Math.PI * 2;
-      const wobble1 = 1 + Math.sin(a1 * 3 + t * 2 + i) * 0.03 * bass;
-      const wobble2 = 1 + Math.sin(a2 * 3 + t * 2 + i) * 0.03 * bass;
-      const x1 = cx + Math.cos(a1) * r * wobble1;
-      const y1 = cy + Math.sin(a1) * r * wobble1;
-      const x2 = cx + Math.cos(a2) * r * wobble2;
-      const y2 = cy + Math.sin(a2) * r * wobble2;
+      const wb1 = 1 + Math.sin(a1 * 3 + t * 2 + i) * 0.035 * bass;
+      const wb2 = 1 + Math.sin(a2 * 3 + t * 2 + i) * 0.035 * bass;
+      const x1 = cx + Math.cos(a1) * r * wb1;
+      const y1 = cy + Math.sin(a1) * r * wb1;
+      const x2 = cx + Math.cos(a2) * r * wb2;
+      const y2 = cy + Math.sin(a2) * r * wb2;
 
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
 
-      // Chromatic aberration - red offset
-      if (chromaOffset > 0.5) {
-        ctx.strokeStyle = `rgba(255, ${rg}, ${Math.floor(rb * 0.3)}, ${ringAlpha * 0.3})`;
-        ctx.lineWidth = ringWidth;
-        ctx.save();
-        ctx.translate(chromaOffset, 0);
-        ctx.stroke();
-        ctx.restore();
-        // Blue offset
-        ctx.strokeStyle = `rgba(${Math.floor(rr * 0.3)}, ${rg}, 255, ${ringAlpha * 0.3})`;
-        ctx.save();
-        ctx.translate(-chromaOffset, 0);
-        ctx.stroke();
-        ctx.restore();
+      if (chromOff > 0.6) {
+        ctx.strokeStyle = `rgba(255, ${rg}, ${Math.floor(rb * 0.3)}, ${ringA * 0.35})`;
+        ctx.lineWidth = ringW;
+        ctx.save(); ctx.translate(chromOff, 0); ctx.stroke(); ctx.restore();
+        ctx.strokeStyle = `rgba(${Math.floor(rr * 0.3)}, ${rg}, 255, ${ringA * 0.35})`;
+        ctx.save(); ctx.translate(-chromOff, 0); ctx.stroke(); ctx.restore();
       }
 
-      ctx.strokeStyle = `rgba(${rr}, ${rg}, ${rb}, ${ringAlpha})`;
-      ctx.lineWidth = ringWidth;
-      ctx.shadowColor = `rgba(${rr}, ${rg}, ${rb}, ${ringAlpha * 0.6})`;
-      ctx.shadowBlur = isBeatRing ? 20 : 8;
+      ctx.strokeStyle = `rgba(${rr}, ${rg}, ${rb}, ${ringA})`;
+      ctx.lineWidth = ringW;
+      ctx.shadowColor = `rgba(${rr}, ${rg}, ${rb}, ${ringA * 0.6})`;
+      ctx.shadowBlur = isBeatRing ? 22 : 8;
       ctx.stroke();
+
+      // Cross-bars on every other hex segment for grid feel
+      if (hx % 2 === 0 && i % 3 === 0 && ring.z < 3.5) {
+        const mA = (a1 + a2) / 2;
+        const nextZ = ring.z + 0.1;
+        if (nextZ < 4) {
+          const r2 = baseRadius / nextZ;
+          const mx1 = cx + Math.cos(mA) * r * ((wb1 + wb2) / 2);
+          const my1 = cy + Math.sin(mA) * r * ((wb1 + wb2) / 2);
+          const mx2 = cx + Math.cos(mA) * r2 * ((wb1 + wb2) / 2);
+          const my2 = cy + Math.sin(mA) * r2 * ((wb1 + wb2) / 2);
+          ctx.beginPath();
+          ctx.moveTo(mx1, my1);
+          ctx.lineTo(mx2, my2);
+          ctx.strokeStyle = `rgba(${rr}, ${rg}, ${rb}, ${ringA * 0.3})`;
+          ctx.lineWidth = 0.4;
+          ctx.stroke();
+        }
+      }
     }
   }
   ctx.shadowBlur = 0;
 
-  // === HEXAGONAL GRID on tunnel walls ===
+  // === HEXAGONAL GRID longitudinal lines ===
   for (let li = 0; li < numLongLines; li++) {
     const angle = (li / numLongLines) * Math.PI * 2;
     ctx.beginPath();
     let first = true;
-    for (let zi = 0.1; zi < 4.0; zi += 0.05) {
+    for (let zi = 0.1; zi < 4.0; zi += 0.04) {
       const r = baseRadius / zi;
       const wobble = 1 + Math.sin(angle * 3 + t * 2 + zi) * 0.03 * bass;
       const px = cx + Math.cos(angle) * r * wobble;
@@ -15705,16 +15781,16 @@ function drawHyperspaceTunnel(ctx, w, h, time) {
       if (first) { ctx.moveTo(px, py); first = false; }
       else ctx.lineTo(px, py);
     }
-    const lAlpha = 0.15 + mid * 0.2;
-    ctx.strokeStyle = `rgba(0, 220, 232, ${lAlpha})`;
+    const lA = 0.12 + mid * 0.22;
+    ctx.strokeStyle = `rgba(0, 220, 232, ${lA})`;
     ctx.lineWidth = 0.6;
-    ctx.shadowColor = `rgba(0, 220, 232, ${lAlpha})`;
+    ctx.shadowColor = `rgba(0, 220, 232, ${lA})`;
     ctx.shadowBlur = 6;
     ctx.stroke();
   }
   ctx.shadowBlur = 0;
 
-  // === DATA STREAMS flowing along tunnel walls ===
+  // === DATA STREAMS ===
   ctx.font = '10px monospace';
   ctx.textAlign = 'center';
   for (let i = 0; i < hyperTunnelDataStreams.length; i++) {
@@ -15723,9 +15799,8 @@ function drawHyperspaceTunnel(ctx, w, h, time) {
     if (ds.z < 0.1) {
       ds.z = 3.8 + Math.random();
       ds.angle = Math.random() * Math.PI * 2;
-      for (let c = 0; c < ds.chars.length; c++) {
-        ds.chars[c].char = '01>|/<>{}[]#$%&@!?=+-*^~'[Math.floor(Math.random() * 24)];
-      }
+      const chars = '01>|/<>{}[]#$%&@!?=+-*^~:;()_';
+      for (let c = 0; c < ds.chars.length; c++) ds.chars[c].char = chars[Math.floor(Math.random() * chars.length)];
     }
     for (let c = 0; c < ds.chars.length; c++) {
       const ch = ds.chars[c];
@@ -15735,36 +15810,45 @@ function drawHyperspaceTunnel(ctx, w, h, time) {
       if (r > w * 1.5) continue;
       const sx = cx + Math.cos(ds.angle) * r;
       const sy = cy + Math.sin(ds.angle) * r;
-      const cAlpha = ch.alpha * (1 - cz / 4.5) * (0.3 + treble * 0.5) * 0.6;
-      ctx.fillStyle = `hsla(${ds.hue}, 100%, 70%, ${cAlpha})`;
+      const cA = ch.alpha * (1 - cz / 4.5) * (0.3 + treble * 0.5) * 0.65;
+      ctx.fillStyle = `hsla(${ds.hue}, 100%, 70%, ${cA})`;
       ctx.fillText(ch.char, sx, sy);
     }
   }
 
-  // === BEAT EXPLOSIONS at vanishing point ===
-  if (beat > 0.6 && hyperTunnelExplosions.length < 100) {
-    const count = 20 + Math.floor(beat * 30);
+  // === BEAT EXPLOSIONS ===
+  if (beat > 0.55 && hyperTunnelExplosions.length < 120) {
+    const count = 25 + Math.floor(beat * 35);
     for (let e = 0; e < count; e++) {
       const angle = Math.random() * Math.PI * 2;
-      const spd = 1 + Math.random() * 4;
+      const spd = 1 + Math.random() * 5;
       hyperTunnelExplosions.push({
-        x: cx, y: cy,
-        vx: Math.cos(angle) * spd,
-        vy: Math.sin(angle) * spd,
-        life: 1,
-        size: 1 + Math.random() * 2,
-        hue: 180 + Math.random() * 140
+        x: cx, y: cy, vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd,
+        life: 1, size: 0.8 + Math.random() * 2.5, hue: 180 + Math.random() * 140,
+        trail: []
       });
     }
   }
   for (let i = hyperTunnelExplosions.length - 1; i >= 0; i--) {
     const e = hyperTunnelExplosions[i];
-    e.x += e.vx * (1 + energy * 2);
-    e.y += e.vy * (1 + energy * 2);
-    e.vx *= 1.02;
-    e.vy *= 1.02;
+    e.trail.push({ x: e.x, y: e.y });
+    if (e.trail.length > 5) e.trail.shift();
+    e.x += e.vx * (1 + energy * 2.5);
+    e.y += e.vy * (1 + energy * 2.5);
+    e.vx *= 1.025;
+    e.vy *= 1.025;
     e.life -= 0.02;
     if (e.life <= 0) { hyperTunnelExplosions.splice(i, 1); continue; }
+    // Trail
+    for (let ti = 0; ti < e.trail.length - 1; ti++) {
+      const ta = (ti / e.trail.length) * e.life * 0.3;
+      ctx.beginPath();
+      ctx.moveTo(e.trail[ti].x, e.trail[ti].y);
+      ctx.lineTo(e.trail[ti + 1].x, e.trail[ti + 1].y);
+      ctx.strokeStyle = `hsla(${e.hue}, 100%, 70%, ${ta})`;
+      ctx.lineWidth = e.size * 0.4;
+      ctx.stroke();
+    }
     ctx.beginPath();
     ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
     ctx.fillStyle = `hsla(${e.hue}, 100%, 80%, ${e.life * 0.7})`;
@@ -15775,11 +15859,12 @@ function drawHyperspaceTunnel(ctx, w, h, time) {
 
   // === Center glow ===
   ctx.globalCompositeOperation = 'lighter';
-  const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.15);
-  coreGrad.addColorStop(0, `rgba(200, 230, 255, ${0.15 + energy * 0.25})`);
-  coreGrad.addColorStop(0.5, `rgba(100, 50, 200, ${0.05 + energy * 0.1})`);
-  coreGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-  ctx.fillStyle = coreGrad;
+  const coreG = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.18);
+  coreG.addColorStop(0, `rgba(200, 230, 255, ${0.15 + energy * 0.3})`);
+  coreG.addColorStop(0.3, `rgba(150, 100, 255, ${0.08 + energy * 0.15})`);
+  coreG.addColorStop(0.6, `rgba(80, 30, 180, ${0.03 + energy * 0.05})`);
+  coreG.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = coreG;
   ctx.fillRect(0, 0, w, h);
   ctx.globalCompositeOperation = 'source-over';
 
@@ -15810,93 +15895,114 @@ function drawPlasmaReactor(ctx, w, h, time) {
   const minDim = Math.min(w, h);
 
   // Trail fade
-  ctx.fillStyle = 'rgba(0, 0, 5, 0.12)';
+  ctx.fillStyle = 'rgba(0, 0, 5, 0.11)';
   ctx.fillRect(0, 0, w, h);
 
-  const coreRadius = minDim * (0.08 + bass * 0.06);
+  const coreRadius = minDim * (0.08 + bass * 0.07);
   const containR1 = minDim * 0.22;
   const containR2 = minDim * 0.32;
   const containR3 = minDim * 0.42;
 
   // === RADIATION SHIMMER / heat haze ===
-  // Draw subtle distortion rings around core
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  for (let sh = 0; sh < 5; sh++) {
-    const shimR = coreRadius * (1.5 + sh * 0.6) + Math.sin(t * 3 + sh * 1.2) * 5;
-    const shimAlpha = 0.008 + energy * 0.012;
-    const shimGrad = ctx.createRadialGradient(cx, cy, shimR - 5, cx, cy, shimR + 5);
-    shimGrad.addColorStop(0, `rgba(200, 150, 255, 0)`);
-    shimGrad.addColorStop(0.5, `rgba(200, 150, 255, ${shimAlpha})`);
-    shimGrad.addColorStop(1, `rgba(200, 150, 255, 0)`);
-    ctx.fillStyle = shimGrad;
+  for (let sh = 0; sh < 7; sh++) {
+    const shimR = coreRadius * (1.4 + sh * 0.55) + Math.sin(t * 3 + sh * 1.2) * 6;
+    const shimA = 0.007 + energy * 0.015;
+    const shimG = ctx.createRadialGradient(cx, cy, shimR - 6, cx, cy, shimR + 6);
+    shimG.addColorStop(0, `rgba(200, 150, 255, 0)`);
+    shimG.addColorStop(0.5, `rgba(200, 150, 255, ${shimA})`);
+    shimG.addColorStop(1, `rgba(200, 150, 255, 0)`);
+    ctx.fillStyle = shimG;
     ctx.beginPath();
-    ctx.arc(cx + Math.sin(t * 2 + sh) * 2, cy + Math.cos(t * 1.7 + sh) * 2, shimR + 10, 0, Math.PI * 2);
+    ctx.arc(cx + Math.sin(t * 2 + sh) * 3, cy + Math.cos(t * 1.7 + sh) * 3, shimR + 12, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
 
-  // === MAGNETIC FIELD LINES ===
+  // === MAGNETIC FIELD LINES — 12 dipole lines ===
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  for (let fl = 0; fl < 10; fl++) {
-    const fieldAngle = (fl / 10) * Math.PI * 2;
-    const fieldAlpha = 0.06 + energy * 0.08 + beat * 0.04;
+  for (let fl = 0; fl < 12; fl++) {
+    const fieldAngle = (fl / 12) * Math.PI * 2;
+    const fieldA = 0.05 + energy * 0.1 + beat * 0.05;
     ctx.beginPath();
-    // Dipole field line: from north pole, arcs out, returns to south pole
-    const poleDist = containR2 * 0.8;
-    for (let ft = 0; ft <= 40; ft++) {
-      const fRatio = ft / 40;
-      const theta = fRatio * Math.PI; // 0 to PI (pole to pole)
-      // Dipole: r = R * sin^2(theta) scaled by field line index
-      const fieldR = (containR1 * 0.4 + fl * containR1 * 0.08) * Math.sin(theta) * Math.sin(theta);
+    const poleDist = containR2 * 0.85;
+    for (let ft = 0; ft <= 50; ft++) {
+      const fRatio = ft / 50;
+      const theta = fRatio * Math.PI;
+      const fieldR = (containR1 * 0.35 + fl * containR1 * 0.07) * Math.sin(theta) * Math.sin(theta);
       const cosRot = Math.cos(fieldAngle);
-      const sinRot = Math.sin(fieldAngle);
-      // Map to 2D: project field line shape
       const localX = fieldR * Math.sin(theta);
       const localY = -poleDist * Math.cos(theta);
-      const px = cx + localX * cosRot + Math.sin(t * 0.5 + fl + fRatio * 3) * 2;
-      const py = cy + localY + Math.sin(t * 0.3 + fl * 0.7) * 2;
+      const px = cx + localX * cosRot + Math.sin(t * 0.5 + fl + fRatio * 3) * 2.5;
+      const py = cy + localY + Math.sin(t * 0.3 + fl * 0.7) * 2.5;
       if (ft === 0) ctx.moveTo(px, py);
       else ctx.lineTo(px, py);
     }
-    ctx.strokeStyle = `rgba(80, 180, 255, ${fieldAlpha})`;
-    ctx.lineWidth = 0.6;
+    // Pulsing brightness along field lines
+    const fPulse = 0.5 + Math.sin(t * 1.5 + fl * 0.5) * 0.5;
+    ctx.strokeStyle = `rgba(80, 180, 255, ${fieldA * fPulse})`;
+    ctx.lineWidth = 0.5 + fPulse * 0.5;
     ctx.stroke();
+    // Moving charge indicator along field line
+    const chargePos = ((t * 0.8 + fl * 0.3) % 1);
+    const cTheta = chargePos * Math.PI;
+    const cFieldR = (containR1 * 0.35 + fl * containR1 * 0.07) * Math.sin(cTheta) * Math.sin(cTheta);
+    const ccx2 = cx + cFieldR * Math.sin(cTheta) * Math.cos(fieldAngle);
+    const ccy2 = cy - poleDist * Math.cos(cTheta);
+    ctx.beginPath();
+    ctx.arc(ccx2, ccy2, 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(150, 220, 255, ${fieldA * 2})`;
+    ctx.fill();
   }
   ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
 
   // === CONTAINMENT RINGS (3 rotating ellipses) ===
   ctx.globalCompositeOperation = 'lighter';
-  const containmentWarning = beat > 0.7;
-  plasmaReactorContainShake = plasmaReactorContainShake * 0.9 + (containmentWarning ? beat * 6 : 0);
+  const containWarn = beat > 0.7;
+  plasmaReactorContainShake = plasmaReactorContainShake * 0.88 + (containWarn ? beat * 7 : 0);
   const rings = [
-    { r: containR1, speed: 0.3, tilt: 0.7, color: containmentWarning ? [255, 60, 60] : [0, 200, 255] },
-    { r: containR2, speed: -0.2, tilt: 0.5, color: containmentWarning ? [255, 40, 40] : [50, 150, 255] },
-    { r: containR3, speed: 0.15, tilt: 0.6, color: containmentWarning ? [255, 80, 80] : [0, 180, 230] }
+    { r: containR1, speed: 0.3, tilt: 0.7, color: containWarn ? [255, 60, 60] : [0, 200, 255] },
+    { r: containR2, speed: -0.2, tilt: 0.5, color: containWarn ? [255, 40, 40] : [50, 150, 255] },
+    { r: containR3, speed: 0.15, tilt: 0.6, color: containWarn ? [255, 80, 80] : [0, 180, 230] }
   ];
   for (let ri = 0; ri < rings.length; ri++) {
     const ring = rings[ri];
     const angle = t * ring.speed + ri * 2.1;
     const scaleX = 0.6 + Math.sin(t * ring.speed * 1.5 + ri) * 0.3 * ring.tilt;
     const scaleY = 0.6 + Math.cos(t * ring.speed * 1.5 + ri + 1) * 0.3 * ring.tilt;
-    const shakeOX = (Math.random() - 0.5) * plasmaReactorContainShake;
-    const shakeOY = (Math.random() - 0.5) * plasmaReactorContainShake;
-
+    const shOX = (Math.random() - 0.5) * plasmaReactorContainShake;
+    const shOY = (Math.random() - 0.5) * plasmaReactorContainShake;
     ctx.save();
-    ctx.translate(cx + shakeOX, cy + shakeOY);
+    ctx.translate(cx + shOX, cy + shOY);
     ctx.rotate(angle);
     ctx.scale(scaleX, scaleY);
-    ctx.beginPath();
-    ctx.arc(0, 0, ring.r, 0, Math.PI * 2);
-    const ringAlpha = 0.25 + energy * 0.35 + beat * 0.2;
-    ctx.strokeStyle = `rgba(${ring.color[0]}, ${ring.color[1]}, ${ring.color[2]}, ${ringAlpha})`;
-    ctx.lineWidth = containmentWarning ? 2 + beat * 3 : 1.2 + beat * 1.5;
-    ctx.shadowColor = `rgba(${ring.color[0]}, ${ring.color[1]}, ${ring.color[2]}, ${ringAlpha * 0.8})`;
-    ctx.shadowBlur = containmentWarning ? 20 + beat * 15 : 12 + beat * 10;
-    ctx.stroke();
+    // Double-line containment ring
+    for (let rl = 0; rl < 2; rl++) {
+      ctx.beginPath();
+      ctx.arc(0, 0, ring.r + rl * 4, 0, Math.PI * 2);
+      const rA = (0.2 + energy * 0.35 + beat * 0.2) * (rl === 0 ? 1 : 0.3);
+      ctx.strokeStyle = `rgba(${ring.color[0]}, ${ring.color[1]}, ${ring.color[2]}, ${rA})`;
+      ctx.lineWidth = containWarn ? 2.5 + beat * 3 - rl : 1.2 + beat * 1.5 - rl * 0.5;
+      ctx.shadowColor = `rgba(${ring.color[0]}, ${ring.color[1]}, ${ring.color[2]}, ${rA * 0.8})`;
+      ctx.shadowBlur = containWarn ? 22 + beat * 15 : 12 + beat * 10;
+      ctx.stroke();
+    }
+    // Warning hash marks when critical
+    if (containWarn && ri === 0) {
+      for (let hm = 0; hm < 8; hm++) {
+        const hmA = (hm / 8) * Math.PI * 2 + t * 5;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(hmA) * (ring.r - 6), Math.sin(hmA) * (ring.r - 6));
+        ctx.lineTo(Math.cos(hmA) * (ring.r + 6), Math.sin(hmA) * (ring.r + 6));
+        ctx.strokeStyle = `rgba(255, 255, 0, ${0.3 + beat * 0.5})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
     ctx.restore();
   }
   ctx.shadowBlur = 0;
@@ -15904,61 +16010,59 @@ function drawPlasmaReactor(ctx, w, h, time) {
   // === ENERGY FIELD between rings ===
   for (let fi = 0; fi < 3; fi++) {
     const fieldR = containR1 + (containR3 - containR1) * (fi / 2);
-    const fieldGrad = ctx.createRadialGradient(cx, cy, fieldR * 0.8, cx, cy, fieldR * 1.1);
+    const fG = ctx.createRadialGradient(cx, cy, fieldR * 0.8, cx, cy, fieldR * 1.1);
     const pulse = Math.sin(t * 2 + fi * 1.5) * 0.5 + 0.5;
-    const fAlpha = (0.02 + energy * 0.04) * pulse;
+    const fA = (0.02 + energy * 0.04) * pulse;
     const offset = 2 + beat * 4;
-    fieldGrad.addColorStop(0, `rgba(100, 150, 255, ${fAlpha})`);
-    fieldGrad.addColorStop(0.5, `rgba(200, 100, 255, ${fAlpha * 0.7})`);
-    fieldGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = fieldGrad;
-    ctx.fillRect(0, 0, w, h);
-    const rGrad = ctx.createRadialGradient(cx + offset, cy, fieldR * 0.85, cx + offset, cy, fieldR * 1.05);
-    rGrad.addColorStop(0, `rgba(255, 50, 50, ${fAlpha * 0.3})`);
-    rGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = rGrad;
-    ctx.fillRect(0, 0, w, h);
-    const bGrad = ctx.createRadialGradient(cx - offset, cy, fieldR * 0.85, cx - offset, cy, fieldR * 1.05);
-    bGrad.addColorStop(0, `rgba(50, 50, 255, ${fAlpha * 0.3})`);
-    bGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = bGrad;
+    fG.addColorStop(0, `rgba(100, 150, 255, ${fA})`);
+    fG.addColorStop(0.5, `rgba(200, 100, 255, ${fA * 0.7})`);
+    fG.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = fG;
     ctx.fillRect(0, 0, w, h);
   }
 
-  // === ORBITING DEBRIS ===
+  // === ORBITING DEBRIS — 30 chunks ===
   if (!plasmaReactorDebris) {
     plasmaReactorDebris = [];
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 30; i++) {
       plasmaReactorDebris.push({
         angle: Math.random() * Math.PI * 2,
-        orbitR: containR1 * 0.6 + Math.random() * (containR3 * 1.1 - containR1 * 0.6),
-        speed: (0.1 + Math.random() * 0.4) * (Math.random() < 0.5 ? 1 : -1),
-        size: 1.5 + Math.random() * 4,
-        eccX: 0.8 + Math.random() * 0.4,
-        eccY: 0.8 + Math.random() * 0.4,
-        tilt: Math.random() * Math.PI,
-        shape: Math.floor(Math.random() * 3)
+        orbitR: containR1 * 0.55 + Math.random() * (containR3 * 1.15 - containR1 * 0.55),
+        speed: (0.1 + Math.random() * 0.45) * (Math.random() < 0.5 ? 1 : -1),
+        size: 1.5 + Math.random() * 4.5,
+        eccX: 0.75 + Math.random() * 0.45, eccY: 0.75 + Math.random() * 0.45,
+        tilt: Math.random() * Math.PI, shape: Math.floor(Math.random() * 3),
+        trail: []
       });
     }
   }
   for (let i = 0; i < plasmaReactorDebris.length; i++) {
     const d = plasmaReactorDebris[i];
     d.angle += d.speed * 0.016 * (0.5 + energy * 0.5);
-    const dx = cx + Math.cos(d.angle + d.tilt) * d.orbitR * d.eccX;
-    const dy = cy + Math.sin(d.angle) * d.orbitR * d.eccY;
-    // Glow on side facing core
-    const toCoreAngle = Math.atan2(cy - dy, cx - dx);
-    const facingCore = Math.cos(d.angle - toCoreAngle);
-    const glowAlpha = Math.max(0, facingCore) * 0.6 + 0.2;
+    const ddx = cx + Math.cos(d.angle + d.tilt) * d.orbitR * d.eccX;
+    const ddy = cy + Math.sin(d.angle) * d.orbitR * d.eccY;
+    d.trail.push({ x: ddx, y: ddy });
+    if (d.trail.length > 4) d.trail.shift();
+    const toCoreA = Math.atan2(cy - ddy, cx - ddx);
+    const facingCore = Math.cos(d.angle - toCoreA);
+    const glowA = Math.max(0, facingCore) * 0.6 + 0.2;
+    // Trail
+    for (let ti = 0; ti < d.trail.length - 1; ti++) {
+      ctx.beginPath();
+      ctx.moveTo(d.trail[ti].x, d.trail[ti].y);
+      ctx.lineTo(d.trail[ti + 1].x, d.trail[ti + 1].y);
+      ctx.strokeStyle = `rgba(255, 150, 50, ${(ti / d.trail.length) * 0.15})`;
+      ctx.lineWidth = d.size * 0.3;
+      ctx.stroke();
+    }
     ctx.beginPath();
-    ctx.arc(dx, dy, d.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${Math.floor(120 + facingCore * 135)}, ${Math.floor(60 + facingCore * 80)}, ${Math.floor(30 + facingCore * 50)}, ${glowAlpha})`;
+    ctx.arc(ddx, ddy, d.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${Math.floor(120 + facingCore * 135)}, ${Math.floor(60 + facingCore * 80)}, ${Math.floor(30 + facingCore * 50)}, ${glowA})`;
     ctx.fill();
-    // Hot glow
     if (facingCore > 0.3) {
       ctx.beginPath();
-      ctx.arc(dx, dy, d.size * 1.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 150, 50, ${(facingCore - 0.3) * 0.15})`;
+      ctx.arc(ddx, ddy, d.size * 1.8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 150, 50, ${(facingCore - 0.3) * 0.18})`;
       ctx.fill();
     }
   }
@@ -15966,18 +16070,14 @@ function drawPlasmaReactor(ctx, w, h, time) {
   // === ORBITING PARTICLES ===
   if (!plasmaReactorParticles) {
     plasmaReactorParticles = [];
-    for (let i = 0; i < 80; i++) {
-      const orbitR = containR1 * 0.5 + Math.random() * (containR3 - containR1) * 0.8;
+    for (let i = 0; i < 100; i++) {
       plasmaReactorParticles.push({
         angle: Math.random() * Math.PI * 2,
-        orbitR: orbitR,
+        orbitR: containR1 * 0.5 + Math.random() * (containR3 - containR1) * 0.8,
         speed: (0.3 + Math.random() * 0.8) * (Math.random() < 0.5 ? 1 : -1),
-        size: 0.8 + Math.random() * 2,
-        eccX: 0.7 + Math.random() * 0.5,
-        eccY: 0.7 + Math.random() * 0.5,
-        tilt: Math.random() * Math.PI,
-        hue: Math.random() * 60 + 180,
-        trail: []
+        size: 0.8 + Math.random() * 2, eccX: 0.7 + Math.random() * 0.5,
+        eccY: 0.7 + Math.random() * 0.5, tilt: Math.random() * Math.PI,
+        hue: Math.random() * 60 + 180, trail: []
       });
     }
   }
@@ -15987,7 +16087,7 @@ function drawPlasmaReactor(ctx, w, h, time) {
     const px = cx + Math.cos(p.angle + p.tilt) * p.orbitR * p.eccX;
     const py = cy + Math.sin(p.angle) * p.orbitR * p.eccY;
     p.trail.push({ x: px, y: py });
-    if (p.trail.length > 8) p.trail.shift();
+    if (p.trail.length > 10) p.trail.shift();
     for (let ti = 0; ti < p.trail.length - 1; ti++) {
       const ta = (ti / p.trail.length) * 0.4;
       ctx.beginPath();
@@ -16003,82 +16103,73 @@ function drawPlasmaReactor(ctx, w, h, time) {
     ctx.fill();
   }
 
-  // === LIGHTNING ARCS (8-10 simultaneous, some between rings) ===
-  if (!plasmaReactorArcs || time - plasmaReactorArcTimer > 100) {
+  // === LIGHTNING ARCS — 8-10 simultaneous ===
+  if (!plasmaReactorArcs || time - plasmaReactorArcTimer > 90) {
     plasmaReactorArcTimer = time;
     plasmaReactorArcs = [];
-    const numArcs = 6 + Math.floor(beat * 4);
+    const numArcs = 7 + Math.floor(beat * 5);
     for (let a = 0; a < numArcs; a++) {
-      const isRingArc = a > numArcs * 0.6; // Some arc between rings
-      let startX, startY, tx, ty;
+      const isRingArc = a > numArcs * 0.55;
+      let sx2, sy2, tx, ty;
       if (isRingArc) {
         const sa = Math.random() * Math.PI * 2;
         const sr = containR1 + Math.random() * (containR2 - containR1);
-        startX = cx + Math.cos(sa) * sr;
-        startY = cy + Math.sin(sa) * sr;
+        sx2 = cx + Math.cos(sa) * sr; sy2 = cy + Math.sin(sa) * sr;
         const ta2 = sa + (Math.random() - 0.5) * 1.5;
         const tr = containR2 + Math.random() * (containR3 - containR2);
-        tx = cx + Math.cos(ta2) * tr;
-        ty = cy + Math.sin(ta2) * tr;
+        tx = cx + Math.cos(ta2) * tr; ty = cy + Math.sin(ta2) * tr;
       } else {
-        startX = cx; startY = cy;
-        const targetAngle = Math.random() * Math.PI * 2;
-        const targetR = containR1 + Math.random() * (containR3 - containR1);
-        tx = cx + Math.cos(targetAngle) * targetR;
-        ty = cy + Math.sin(targetAngle) * targetR;
+        sx2 = cx; sy2 = cy;
+        const tAngle = Math.random() * Math.PI * 2;
+        const tR = containR1 + Math.random() * (containR3 - containR1);
+        tx = cx + Math.cos(tAngle) * tR; ty = cy + Math.sin(tAngle) * tR;
       }
-      const points = [{ x: startX, y: startY }];
-      const segments = 8 + Math.floor(Math.random() * 6);
-      for (let s = 1; s <= segments; s++) {
-        const ratio = s / segments;
-        const baseX = startX + (tx - startX) * ratio;
-        const baseY = startY + (ty - startY) * ratio;
-        const jitter = (1 - ratio * 0.5) * 25;
-        points.push({ x: baseX + (Math.random() - 0.5) * jitter, y: baseY + (Math.random() - 0.5) * jitter });
+      const points = [{ x: sx2, y: sy2 }];
+      const segs = 8 + Math.floor(Math.random() * 7);
+      for (let s = 1; s <= segs; s++) {
+        const ratio = s / segs;
+        const jitter = (1 - ratio * 0.5) * 28;
+        points.push({
+          x: sx2 + (tx - sx2) * ratio + (Math.random() - 0.5) * jitter,
+          y: sy2 + (ty - sy2) * ratio + (Math.random() - 0.5) * jitter
+        });
       }
-      plasmaReactorArcs.push({ points: points, hue: 270 + Math.random() * 60, endX: tx, endY: ty });
+      plasmaReactorArcs.push({ points, hue: 270 + Math.random() * 60, endX: tx, endY: ty });
     }
   }
   for (let a = 0; a < plasmaReactorArcs.length; a++) {
     const arc = plasmaReactorArcs[a];
-    const arcAlpha = 0.3 + beat * 0.5 + energy * 0.2;
+    const arcA = 0.3 + beat * 0.5 + energy * 0.2;
     ctx.beginPath();
     ctx.moveTo(arc.points[0].x, arc.points[0].y);
     for (let p = 1; p < arc.points.length; p++) {
       ctx.lineTo(arc.points[p].x + (Math.random() - 0.5) * 3, arc.points[p].y + (Math.random() - 0.5) * 3);
     }
-    ctx.strokeStyle = `hsla(${arc.hue}, 100%, 85%, ${arcAlpha})`;
-    ctx.lineWidth = 1 + beat * 2;
-    ctx.shadowColor = `hsla(${arc.hue}, 100%, 70%, ${arcAlpha})`;
-    ctx.shadowBlur = 10 + beat * 15;
+    ctx.strokeStyle = `hsla(${arc.hue}, 100%, 85%, ${arcA})`;
+    ctx.lineWidth = 1 + beat * 2.5;
+    ctx.shadowColor = `hsla(${arc.hue}, 100%, 70%, ${arcA})`;
+    ctx.shadowBlur = 12 + beat * 18;
     ctx.stroke();
-    ctx.strokeStyle = `rgba(255, 255, 255, ${arcAlpha * 0.6})`;
+    ctx.strokeStyle = `rgba(255, 255, 255, ${arcA * 0.6})`;
     ctx.lineWidth = 0.5 + beat;
     ctx.stroke();
-    // Sparks at arc endpoint
-    if (beat > 0.4 && Math.random() < 0.3 && plasmaReactorSparks.length < 80) {
-      for (let sp = 0; sp < 3; sp++) {
+    if (beat > 0.35 && Math.random() < 0.35 && plasmaReactorSparks.length < 100) {
+      for (let sp = 0; sp < 4; sp++) {
         plasmaReactorSparks.push({
           x: arc.endX || arc.points[arc.points.length - 1].x,
           y: arc.endY || arc.points[arc.points.length - 1].y,
-          vx: (Math.random() - 0.5) * 6,
-          vy: (Math.random() - 0.5) * 6,
-          life: 0.5 + Math.random() * 0.5,
-          size: 0.5 + Math.random() * 1.5,
-          hue: arc.hue
+          vx: (Math.random() - 0.5) * 7, vy: (Math.random() - 0.5) * 7,
+          life: 0.5 + Math.random() * 0.5, size: 0.5 + Math.random() * 1.8, hue: arc.hue
         });
       }
     }
   }
   ctx.shadowBlur = 0;
 
-  // === SPARKS flying off containment rings ===
+  // === SPARKS ===
   for (let i = plasmaReactorSparks.length - 1; i >= 0; i--) {
     const sp = plasmaReactorSparks[i];
-    sp.x += sp.vx;
-    sp.y += sp.vy;
-    sp.vy += 0.05;
-    sp.life -= 0.025;
+    sp.x += sp.vx; sp.y += sp.vy; sp.vy += 0.06; sp.life -= 0.025;
     if (sp.life <= 0) { plasmaReactorSparks.splice(i, 1); continue; }
     ctx.beginPath();
     ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
@@ -16087,71 +16178,78 @@ function drawPlasmaReactor(ctx, w, h, time) {
   }
 
   // === PLASMA JETS on heavy beats ===
-  if (beat > 0.65 && plasmaReactorJets.length < 40) {
-    for (let j = 0; j < 8; j++) {
-      const dir = Math.random() < 0.5 ? -1 : 1; // up or down
+  if (beat > 0.6 && plasmaReactorJets.length < 50) {
+    for (let j = 0; j < 10; j++) {
+      const dir = Math.random() < 0.5 ? -1 : 1;
       plasmaReactorJets.push({
-        x: cx + (Math.random() - 0.5) * coreRadius * 0.8,
-        y: cy,
-        vx: (Math.random() - 0.5) * 2,
-        vy: dir * (5 + Math.random() * 8 + beat * 6),
-        life: 1,
-        size: 1.5 + Math.random() * 3,
-        hue: 280 + Math.random() * 50
+        x: cx + (Math.random() - 0.5) * coreRadius, y: cy,
+        vx: (Math.random() - 0.5) * 2.5, vy: dir * (5 + Math.random() * 9 + beat * 7),
+        life: 1, size: 1.5 + Math.random() * 3.5, hue: 280 + Math.random() * 50,
+        trail: []
       });
     }
   }
   for (let i = plasmaReactorJets.length - 1; i >= 0; i--) {
     const j = plasmaReactorJets[i];
-    j.x += j.vx;
-    j.y += j.vy;
-    j.life -= 0.02;
+    j.trail.push({ x: j.x, y: j.y });
+    if (j.trail.length > 6) j.trail.shift();
+    j.x += j.vx; j.y += j.vy; j.life -= 0.018;
     if (j.life <= 0 || j.y < 0 || j.y > h) { plasmaReactorJets.splice(i, 1); continue; }
+    // Trail
+    for (let ti = 0; ti < j.trail.length - 1; ti++) {
+      ctx.beginPath();
+      ctx.moveTo(j.trail[ti].x, j.trail[ti].y);
+      ctx.lineTo(j.trail[ti + 1].x, j.trail[ti + 1].y);
+      ctx.strokeStyle = `hsla(${j.hue}, 100%, 75%, ${(ti / j.trail.length) * j.life * 0.4})`;
+      ctx.lineWidth = j.size * j.life * 0.6;
+      ctx.stroke();
+    }
     ctx.beginPath();
     ctx.arc(j.x, j.y, j.size * j.life, 0, Math.PI * 2);
     ctx.fillStyle = `hsla(${j.hue}, 100%, 80%, ${j.life * 0.6})`;
     ctx.shadowColor = `hsla(${j.hue}, 100%, 60%, ${j.life * 0.4})`;
-    ctx.shadowBlur = 8;
+    ctx.shadowBlur = 10;
     ctx.fill();
   }
   ctx.shadowBlur = 0;
 
-  // === EMP SHOCKWAVE on big beats ===
-  if (beat > 0.7 && plasmaReactorShockwaves.length < 3) {
-    plasmaReactorShockwaves.push({ r: coreRadius, maxR: minDim * 0.6, life: 1 });
+  // === EMP SHOCKWAVE ===
+  if (beat > 0.65 && plasmaReactorShockwaves.length < 4) {
+    plasmaReactorShockwaves.push({ r: coreRadius, maxR: minDim * 0.65, life: 1 });
   }
   for (let i = plasmaReactorShockwaves.length - 1; i >= 0; i--) {
     const sw = plasmaReactorShockwaves[i];
-    sw.r += (sw.maxR - sw.r) * 0.06;
-    sw.life -= 0.02;
+    sw.r += (sw.maxR - sw.r) * 0.055;
+    sw.life -= 0.018;
     if (sw.life <= 0) { plasmaReactorShockwaves.splice(i, 1); continue; }
     ctx.beginPath();
     ctx.arc(cx, cy, sw.r, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(180, 150, 255, ${sw.life * 0.3})`;
-    ctx.lineWidth = 2 + sw.life * 4;
-    ctx.shadowColor = `rgba(180, 150, 255, ${sw.life * 0.2})`;
-    ctx.shadowBlur = 15;
+    ctx.strokeStyle = `rgba(180, 150, 255, ${sw.life * 0.35})`;
+    ctx.lineWidth = 2.5 + sw.life * 5;
+    ctx.shadowColor = `rgba(180, 150, 255, ${sw.life * 0.25})`;
+    ctx.shadowBlur = 18;
     ctx.stroke();
-    // Inner distortion ring
     ctx.beginPath();
-    ctx.arc(cx, cy, sw.r * 0.95, 0, Math.PI * 2);
+    ctx.arc(cx, cy, sw.r * 0.94, 0, Math.PI * 2);
     ctx.strokeStyle = `rgba(255, 255, 255, ${sw.life * 0.15})`;
     ctx.lineWidth = 1;
+    ctx.stroke();
+    // Distortion ring glow
+    ctx.beginPath();
+    ctx.arc(cx, cy, sw.r * 1.02, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(100, 80, 200, ${sw.life * 0.1})`;
+    ctx.lineWidth = 6;
     ctx.stroke();
   }
   ctx.shadowBlur = 0;
 
   // === BEAT TENDRILS ===
-  if (beat > 0.5 && plasmaReactorTendrils.length < 12) {
-    const tendrilAngle = Math.random() * Math.PI * 2;
+  if (beat > 0.5 && plasmaReactorTendrils.length < 14) {
+    const tA = Math.random() * Math.PI * 2;
     plasmaReactorTendrils.push({
-      angle: tendrilAngle,
-      extend: 0,
-      maxExtend: containR2 * (0.5 + Math.random() * 0.8),
-      life: 1,
-      hue: 300 + Math.random() * 40,
-      cp1a: tendrilAngle + (Math.random() - 0.5) * 1.2,
-      cp2a: tendrilAngle + (Math.random() - 0.5) * 0.8
+      angle: tA, extend: 0, maxExtend: containR2 * (0.5 + Math.random() * 0.8),
+      life: 1, hue: 300 + Math.random() * 40,
+      cp1a: tA + (Math.random() - 0.5) * 1.2, cp2a: tA + (Math.random() - 0.5) * 0.8
     });
   }
   for (let i = plasmaReactorTendrils.length - 1; i >= 0; i--) {
@@ -16159,17 +16257,17 @@ function drawPlasmaReactor(ctx, w, h, time) {
     td.extend = Math.min(td.maxExtend, td.extend + td.maxExtend * 0.08);
     td.life -= 0.015;
     if (td.life <= 0) { plasmaReactorTendrils.splice(i, 1); continue; }
-    const startX = cx + Math.cos(td.angle) * coreRadius;
-    const startY = cy + Math.sin(td.angle) * coreRadius;
-    const endX = cx + Math.cos(td.angle) * (coreRadius + td.extend);
-    const endY = cy + Math.sin(td.angle) * (coreRadius + td.extend);
-    const cp1x = cx + Math.cos(td.cp1a) * td.extend * 0.5;
-    const cp1y = cy + Math.sin(td.cp1a) * td.extend * 0.5;
-    const cp2x = cx + Math.cos(td.cp2a) * td.extend * 0.8;
-    const cp2y = cy + Math.sin(td.cp2a) * td.extend * 0.8;
+    const sx2 = cx + Math.cos(td.angle) * coreRadius;
+    const sy2 = cy + Math.sin(td.angle) * coreRadius;
+    const ex = cx + Math.cos(td.angle) * (coreRadius + td.extend);
+    const ey = cy + Math.sin(td.angle) * (coreRadius + td.extend);
     ctx.beginPath();
-    ctx.moveTo(startX, startY);
-    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+    ctx.moveTo(sx2, sy2);
+    ctx.bezierCurveTo(
+      cx + Math.cos(td.cp1a) * td.extend * 0.5, cy + Math.sin(td.cp1a) * td.extend * 0.5,
+      cx + Math.cos(td.cp2a) * td.extend * 0.8, cy + Math.sin(td.cp2a) * td.extend * 0.8,
+      ex, ey
+    );
     ctx.strokeStyle = `hsla(${td.hue}, 100%, 75%, ${td.life * 0.7})`;
     ctx.lineWidth = 2 + td.life * 2;
     ctx.shadowColor = `hsla(${td.hue}, 100%, 60%, ${td.life * 0.5})`;
@@ -16179,36 +16277,36 @@ function drawPlasmaReactor(ctx, w, h, time) {
   ctx.shadowBlur = 0;
 
   // === PLASMA CORE ===
-  const outerGlow = ctx.createRadialGradient(cx, cy, coreRadius * 0.5, cx, cy, coreRadius * 3);
-  outerGlow.addColorStop(0, `rgba(200, 100, 255, ${0.2 + bass * 0.3})`);
-  outerGlow.addColorStop(0.3, `rgba(255, 80, 180, ${0.1 + bass * 0.15})`);
+  const outerGlow = ctx.createRadialGradient(cx, cy, coreRadius * 0.5, cx, cy, coreRadius * 3.5);
+  outerGlow.addColorStop(0, `rgba(200, 100, 255, ${0.2 + bass * 0.35})`);
+  outerGlow.addColorStop(0.3, `rgba(255, 80, 180, ${0.1 + bass * 0.18})`);
   outerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
   ctx.fillStyle = outerGlow;
   ctx.beginPath();
-  ctx.arc(cx, cy, coreRadius * 3, 0, Math.PI * 2);
+  ctx.arc(cx, cy, coreRadius * 3.5, 0, Math.PI * 2);
   ctx.fill();
 
-  const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreRadius);
-  coreGrad.addColorStop(0, `rgba(255, 255, 255, ${0.9 + energy * 0.1})`);
-  coreGrad.addColorStop(0.2, `rgba(255, 200, 150, ${0.8})`);
-  coreGrad.addColorStop(0.5, `rgba(255, 100, 200, 0.6)`);
-  coreGrad.addColorStop(0.8, `rgba(180, 50, 255, 0.4)`);
-  coreGrad.addColorStop(1, 'rgba(80, 0, 150, 0)');
-  ctx.fillStyle = coreGrad;
+  const cG = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreRadius);
+  cG.addColorStop(0, `rgba(255, 255, 255, ${0.9 + energy * 0.1})`);
+  cG.addColorStop(0.15, `rgba(255, 230, 200, 0.85)`);
+  cG.addColorStop(0.35, `rgba(255, 150, 200, 0.65)`);
+  cG.addColorStop(0.6, `rgba(220, 80, 255, 0.4)`);
+  cG.addColorStop(0.85, `rgba(150, 30, 200, 0.2)`);
+  cG.addColorStop(1, 'rgba(80, 0, 150, 0)');
+  ctx.fillStyle = cG;
   ctx.beginPath();
   ctx.arc(cx, cy, coreRadius, 0, Math.PI * 2);
   ctx.fill();
 
   // Swirl detail inside core
-  for (let si = 0; si < 30; si++) {
-    const sa = t * 3 + si * 0.5 + Math.sin(t + si * 0.3) * 0.5;
+  for (let si = 0; si < 40; si++) {
+    const sa = t * 3 + si * 0.45 + Math.sin(t + si * 0.3) * 0.5;
     const sr = coreRadius * (0.1 + Math.random() * 0.8) * (0.5 + Math.sin(t * 2 + si) * 0.5);
-    const sx = cx + Math.cos(sa) * sr;
-    const sy = cy + Math.sin(sa) * sr;
-    const ss = 1 + Math.random() * 3;
+    const sx2 = cx + Math.cos(sa) * sr;
+    const sy2 = cy + Math.sin(sa) * sr;
     ctx.beginPath();
-    ctx.arc(sx, sy, ss, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 255, 255, ${0.1 + Math.random() * 0.2})`;
+    ctx.arc(sx2, sy2, 1 + Math.random() * 3, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${0.08 + Math.random() * 0.2})`;
     ctx.fill();
   }
   ctx.globalCompositeOperation = 'source-over';
@@ -16226,76 +16324,131 @@ let xenoHiveInit = false;
 let xenoHiveSpores = null;
 let xenoHiveVeinPhase = 0;
 let xenoHiveBreathPhase = 0;
+let xenoHiveEggs = null;
+let xenoHiveAcidDrips = [];
+let xenoHiveNeuralSignals = [];
+let xenoHiveShadowTimer = 0;
+let xenoHiveShadowAlpha = 0;
+let xenoHiveMembraneShapes = null;
 
 function drawXenomorphHive(ctx, w, h, time) {
   const t = time * 0.001;
   const bass = bands.bass, mid = bands.mid, treble = bands.treble, energy = bands.energy;
   const beat = beatIntensity;
-  const cx = w * 0.5, cy = h * 0.42; // Vanishing point slightly above center
+  const cx = w * 0.5, cy = h * 0.4;
 
   // Full clear
-  ctx.fillStyle = '#050510';
+  ctx.fillStyle = '#040510';
   ctx.fillRect(0, 0, w, h);
 
-  // Breathing effect — hive contracts on beat
-  xenoHiveBreathPhase = xenoHiveBreathPhase * 0.92 + beat * 0.4;
+  // === HEARTBEAT — entire scene pulses with bass ===
+  xenoHiveBreathPhase = xenoHiveBreathPhase * 0.9 + beat * 0.45;
   const breathScale = 1 - xenoHiveBreathPhase * 0.08;
+  const heartPulse = 0.85 + bass * 0.15 + Math.sin(t * 3) * 0.03;
 
-  // Vein pulse wave (travels from back to front)
-  xenoHiveVeinPhase += 0.02 + bass * 0.04;
+  // Global heartbeat brightness overlay
+  ctx.fillStyle = `rgba(20, 40, 30, ${Math.max(0, (1 - heartPulse) * 0.3)})`;
+  ctx.fillRect(0, 0, w, h);
+
+  xenoHiveVeinPhase += 0.02 + bass * 0.05;
 
   // === DISTANT LIGHT SOURCE ===
   ctx.globalCompositeOperation = 'lighter';
-  const lightIntensity = 0.15 + energy * 0.35 + Math.sin(t * 1.5) * 0.05;
-  const lightGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.35);
-  lightGrad.addColorStop(0, `rgba(100, 255, 200, ${lightIntensity})`);
-  lightGrad.addColorStop(0.2, `rgba(50, 200, 150, ${lightIntensity * 0.5})`);
-  lightGrad.addColorStop(0.5, `rgba(0, 80, 60, ${lightIntensity * 0.2})`);
-  lightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-  ctx.fillStyle = lightGrad;
+  const lightInt = (0.12 + energy * 0.35 + Math.sin(t * 1.5) * 0.05) * heartPulse;
+  const lG = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.38);
+  lG.addColorStop(0, `rgba(100, 255, 200, ${lightInt})`);
+  lG.addColorStop(0.15, `rgba(60, 220, 160, ${lightInt * 0.6})`);
+  lG.addColorStop(0.35, `rgba(20, 120, 80, ${lightInt * 0.25})`);
+  lG.addColorStop(0.6, `rgba(0, 60, 40, ${lightInt * 0.1})`);
+  lG.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = lG;
   ctx.fillRect(0, 0, w, h);
 
   // Volumetric light rays
-  const numRays = 8;
-  for (let ri = 0; ri < numRays; ri++) {
-    const rayAngle = (ri / numRays) * Math.PI * 2 + t * 0.1;
-    const rayLen = w * 0.3 + Math.sin(t + ri) * w * 0.05;
-    const rayWidth = 0.15 + Math.sin(t * 0.7 + ri * 0.5) * 0.08;
+  for (let ri = 0; ri < 10; ri++) {
+    const rAngle = (ri / 10) * Math.PI * 2 + t * 0.08;
+    const rLen = w * 0.32 + Math.sin(t + ri) * w * 0.05;
+    const rW = 0.12 + Math.sin(t * 0.7 + ri * 0.5) * 0.07;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx + Math.cos(rayAngle - rayWidth) * rayLen, cy + Math.sin(rayAngle - rayWidth) * rayLen);
-    ctx.lineTo(cx + Math.cos(rayAngle + rayWidth) * rayLen, cy + Math.sin(rayAngle + rayWidth) * rayLen);
+    ctx.lineTo(cx + Math.cos(rAngle - rW) * rLen, cy + Math.sin(rAngle - rW) * rLen);
+    ctx.lineTo(cx + Math.cos(rAngle + rW) * rLen, cy + Math.sin(rAngle + rW) * rLen);
     ctx.closePath();
-    ctx.fillStyle = `rgba(50, 255, 180, ${0.01 + energy * 0.02})`;
+    ctx.fillStyle = `rgba(50, 255, 180, ${(0.008 + energy * 0.018) * heartPulse})`;
     ctx.fill();
   }
   ctx.globalCompositeOperation = 'source-over';
 
-  // === ORGANIC RIBS ===
-  const numRibs = 18;
-  for (let ri = 0; ri < numRibs; ri++) {
-    const depth = ri / numRibs; // 0=nearest, 1=farthest
-    const perspective = 0.15 + depth * 0.85;
+  // === OCCASIONAL SHADOW — huge shape passes across light ===
+  if (time - xenoHiveShadowTimer > 8000 + Math.random() * 12000 && xenoHiveShadowAlpha <= 0.01) {
+    xenoHiveShadowTimer = time;
+    xenoHiveShadowAlpha = 0.5 + Math.random() * 0.3;
+  }
+  if (xenoHiveShadowAlpha > 0.01) {
+    const shadowX = cx + Math.sin(t * 0.5) * w * 0.25;
+    const shadowY = cy + Math.cos(t * 0.3) * h * 0.15;
+    const shadowR = w * (0.15 + Math.sin(t * 0.8) * 0.05);
+    ctx.beginPath();
+    ctx.ellipse(shadowX, shadowY, shadowR, shadowR * 0.4, t * 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0, 0, 0, ${xenoHiveShadowAlpha * 0.6})`;
+    ctx.fill();
+    xenoHiveShadowAlpha *= 0.985;
+  }
 
-    // Rib arch — bezier curve from bottom-left to bottom-right through top
+  // === MEMBRANE WALLS — translucent with shapes behind ===
+  if (!xenoHiveMembraneShapes) {
+    xenoHiveMembraneShapes = [];
+    for (let i = 0; i < 6; i++) {
+      xenoHiveMembraneShapes.push({
+        side: i < 3 ? -1 : 1, y: h * 0.2 + Math.random() * h * 0.5,
+        speed: 0.3 + Math.random() * 0.6, size: 30 + Math.random() * 50,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+  // Left and right membrane walls
+  for (let side = -1; side <= 1; side += 2) {
+    const wallX = side === -1 ? w * 0.08 : w * 0.92;
+    const wallW = w * 0.12;
+    // Membrane base
+    const mG = ctx.createLinearGradient(side === -1 ? 0 : w - wallW, 0, side === -1 ? wallW : w, 0);
+    mG.addColorStop(0, side === -1 ? `rgba(15, 25, 20, ${0.4 * heartPulse})` : 'rgba(0,0,0,0)');
+    mG.addColorStop(0.5, `rgba(10, 30, 20, ${0.15 * heartPulse})`);
+    mG.addColorStop(1, side === -1 ? 'rgba(0,0,0,0)' : `rgba(15, 25, 20, ${0.4 * heartPulse})`);
+    ctx.fillStyle = mG;
+    ctx.fillRect(side === -1 ? 0 : w - wallW, 0, wallW, h);
+    // Shapes moving behind membrane
+    for (let ms = 0; ms < xenoHiveMembraneShapes.length; ms++) {
+      const shape = xenoHiveMembraneShapes[ms];
+      if (shape.side !== side) continue;
+      const sy = shape.y + Math.sin(t * shape.speed + shape.phase) * 40;
+      const sx = wallX + Math.sin(t * 0.3 + shape.phase) * 10;
+      ctx.beginPath();
+      ctx.ellipse(sx, sy, shape.size * 0.6, shape.size, t * 0.1 + shape.phase, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(5, 15, 10, ${0.2 + Math.sin(t * 0.5 + shape.phase) * 0.1})`;
+      ctx.fill();
+    }
+  }
+
+  // === ORGANIC RIBS — extended deeper ===
+  const numRibs = 24;
+  for (let ri = 0; ri < numRibs; ri++) {
+    const depth = ri / numRibs;
+    const perspective = 0.12 + depth * 0.88;
     const ribY = cy + (h - cy) * (1 - depth) * breathScale;
-    const ribWidth = w * (1 - depth * 0.85) * breathScale;
-    const ribHeight = h * 0.4 * (1 - depth * 0.7);
+    const ribWidth = w * (1 - depth * 0.88) * breathScale;
+    const ribHeight = h * 0.42 * (1 - depth * 0.72);
     const ribLeft = cx - ribWidth / 2;
     const ribRight = cx + ribWidth / 2;
     const ribTop = ribY - ribHeight;
-
-    const ribAlpha = (1 - depth * 0.7) * 0.6;
-    const ribThickness = (3 - depth * 2) * breathScale;
-
-    // Bioluminescent edge color
+    const ribA = (1 - depth * 0.65) * 0.6 * heartPulse;
+    const ribThick = (3.5 - depth * 2.2) * breathScale;
     const veinWave = Math.sin(xenoHiveVeinPhase - depth * 6) * 0.5 + 0.5;
-    const biolumAlpha = veinWave * (0.2 + bass * 0.5);
-    const biolumColor = ri % 2 === 0 ? [57, 255, 20] : [0, 240, 255]; // green or blue
+    const biolumA = veinWave * (0.15 + bass * 0.5);
+    const biolumC = ri % 2 === 0 ? [57, 255, 20] : [0, 240, 255];
 
-    // Draw rib structure
     ctx.beginPath();
-    ctx.moveTo(ribLeft, h * 0.95);
+    ctx.moveTo(ribLeft, h * 0.97);
     ctx.bezierCurveTo(
       ribLeft + ribWidth * 0.1, ribTop + ribHeight * 0.3,
       cx - ribWidth * 0.1, ribTop,
@@ -16304,137 +16457,265 @@ function drawXenomorphHive(ctx, w, h, time) {
     ctx.bezierCurveTo(
       cx + ribWidth * 0.1, ribTop,
       ribRight - ribWidth * 0.1, ribTop + ribHeight * 0.3,
-      ribRight, h * 0.95
+      ribRight, h * 0.97
     );
 
-    // Dark biomechanical fill
-    ctx.strokeStyle = `rgba(26, 26, 42, ${ribAlpha})`;
-    ctx.lineWidth = ribThickness + 4;
+    ctx.strokeStyle = `rgba(22, 22, 38, ${ribA})`;
+    ctx.lineWidth = ribThick + 5;
     ctx.stroke();
-
-    // Bioluminescent edge
-    ctx.strokeStyle = `rgba(${biolumColor[0]}, ${biolumColor[1]}, ${biolumColor[2]}, ${biolumAlpha})`;
-    ctx.lineWidth = ribThickness * 0.6;
-    ctx.shadowColor = `rgba(${biolumColor[0]}, ${biolumColor[1]}, ${biolumColor[2]}, ${biolumAlpha * 0.8})`;
-    ctx.shadowBlur = 8 + bass * 12;
+    ctx.strokeStyle = `rgba(${biolumC[0]}, ${biolumC[1]}, ${biolumC[2]}, ${biolumA * heartPulse})`;
+    ctx.lineWidth = ribThick * 0.6;
+    ctx.shadowColor = `rgba(${biolumC[0]}, ${biolumC[1]}, ${biolumC[2]}, ${biolumA * 0.8})`;
+    ctx.shadowBlur = 8 + bass * 14;
     ctx.stroke();
   }
   ctx.shadowBlur = 0;
 
-  // === BIOLUMINESCENT VEINS between ribs ===
+  // === MUCUS / SLIME STRINGS between walls — catenary curves ===
   ctx.globalCompositeOperation = 'lighter';
-  for (let vi = 0; vi < 24; vi++) {
-    const veinX = cx + (vi - 12) * (w / 26);
-    const veinWave = Math.sin(xenoHiveVeinPhase - vi * 0.3) * 0.5 + 0.5;
-    const vColor = vi % 3 === 0 ? [57, 255, 20] : [0, 240, 255];
-    const vAlpha = veinWave * (0.1 + bass * 0.3);
-
+  for (let sl = 0; sl < 8; sl++) {
+    const slY = h * 0.2 + (sl / 8) * h * 0.55;
+    const slDepth = sl / 8;
+    const slWidth = w * (0.6 - slDepth * 0.4);
+    const slLeft = cx - slWidth / 2;
+    const slRight = cx + slWidth / 2;
+    const sag = 15 + Math.sin(t * 0.4 + sl * 1.3) * 8 + bass * 10;
+    const slA = (0.04 + energy * 0.06) * (1 - slDepth * 0.5) * heartPulse;
     ctx.beginPath();
-    const startY = h * 0.95;
-    const endY = cy + (h - cy) * 0.1;
+    ctx.moveTo(slLeft, slY);
+    for (let sx = 0; sx <= 20; sx++) {
+      const sRatio = sx / 20;
+      const catX = slLeft + sRatio * slWidth;
+      const catSag = sag * (1 - Math.pow(2 * sRatio - 1, 2));
+      const sway = Math.sin(t * 0.6 + sl + sRatio * 3) * 3;
+      ctx.lineTo(catX, slY + catSag + sway);
+    }
+    ctx.strokeStyle = `rgba(80, 200, 150, ${slA})`;
+    ctx.lineWidth = 0.4 + Math.sin(t + sl) * 0.2;
+    ctx.stroke();
+  }
 
-    // Vein runs from near bottom toward vanishing point with organic curves
-    const segments = 10;
+  // === BIOLUMINESCENT VEINS with NEURAL SIGNALS ===
+  for (let vi = 0; vi < 28; vi++) {
+    const veinX = cx + (vi - 14) * (w / 30);
+    const veinWave = Math.sin(xenoHiveVeinPhase - vi * 0.3) * 0.5 + 0.5;
+    const vC = vi % 3 === 0 ? [57, 255, 20] : [0, 240, 255];
+    const vA = veinWave * (0.08 + bass * 0.3) * heartPulse;
+    ctx.beginPath();
+    const startY = h * 0.97;
+    const endY = cy + (h - cy) * 0.08;
+    const segments = 12;
     for (let s = 0; s <= segments; s++) {
       const ratio = s / segments;
-      const vx = veinX + (cx - veinX) * ratio * 0.9 + Math.sin(t * 0.8 + vi + ratio * 4) * 8 * (1 - ratio);
+      const vx = veinX + (cx - veinX) * ratio * 0.92 + Math.sin(t * 0.8 + vi + ratio * 4) * 8 * (1 - ratio);
       const vy = startY + (endY - startY) * ratio;
       if (s === 0) ctx.moveTo(vx, vy);
       else ctx.lineTo(vx, vy);
     }
-
-    ctx.strokeStyle = `rgba(${vColor[0]}, ${vColor[1]}, ${vColor[2]}, ${vAlpha})`;
+    ctx.strokeStyle = `rgba(${vC[0]}, ${vC[1]}, ${vC[2]}, ${vA})`;
     ctx.lineWidth = 0.8 + veinWave * 1.5;
-    ctx.shadowColor = `rgba(${vColor[0]}, ${vColor[1]}, ${vColor[2]}, ${vAlpha * 0.6})`;
-    ctx.shadowBlur = 6 + bass * 8;
+    ctx.shadowColor = `rgba(${vC[0]}, ${vC[1]}, ${vC[2]}, ${vA * 0.6})`;
+    ctx.shadowBlur = 6 + bass * 10;
     ctx.stroke();
 
-    // Pulse dot traveling along vein
-    const dotPos = (xenoHiveVeinPhase * 0.3 + vi * 0.2) % 1;
-    const dotX = veinX + (cx - veinX) * dotPos * 0.9 + Math.sin(t * 0.8 + vi + dotPos * 4) * 8 * (1 - dotPos);
-    const dotY = startY + (endY - startY) * dotPos;
+    // Multiple pulse dots — neural signals
+    for (let nd = 0; nd < 3; nd++) {
+      const dotPos = ((xenoHiveVeinPhase * 0.35 + vi * 0.2 + nd * 0.33) % 1);
+      const dotX = veinX + (cx - veinX) * dotPos * 0.92 + Math.sin(t * 0.8 + vi + dotPos * 4) * 8 * (1 - dotPos);
+      const dotY = startY + (endY - startY) * dotPos;
+      const dotA = vA * 2 * (0.3 + treble * 0.7);
+      ctx.beginPath();
+      ctx.arc(dotX, dotY, 1.2 + bass * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${vC[0]}, ${vC[1]}, ${vC[2]}, ${dotA})`;
+      ctx.fill();
+    }
+  }
+  ctx.shadowBlur = 0;
+
+  // === NEURAL SIGNAL FLASHES — bright impulses traveling along veins ===
+  if (beat > 0.4 && xenoHiveNeuralSignals.length < 8) {
+    const startVein = Math.floor(Math.random() * 28);
+    xenoHiveNeuralSignals.push({
+      vein: startVein, pos: 0, speed: 0.02 + Math.random() * 0.03 + beat * 0.02,
+      brightness: 0.5 + beat * 0.5, color: Math.random() < 0.5 ? [57, 255, 20] : [0, 240, 255]
+    });
+  }
+  for (let i = xenoHiveNeuralSignals.length - 1; i >= 0; i--) {
+    const ns = xenoHiveNeuralSignals[i];
+    ns.pos += ns.speed;
+    if (ns.pos > 1) { xenoHiveNeuralSignals.splice(i, 1); continue; }
+    const vi = ns.vein;
+    const veinX = cx + (vi - 14) * (w / 30);
+    const startY = h * 0.97;
+    const endY = cy + (h - cy) * 0.08;
+    const nx = veinX + (cx - veinX) * ns.pos * 0.92 + Math.sin(t * 0.8 + vi + ns.pos * 4) * 8 * (1 - ns.pos);
+    const ny = startY + (endY - startY) * ns.pos;
+    const nR = 4 + ns.brightness * 6;
+    const nG = ctx.createRadialGradient(nx, ny, 0, nx, ny, nR);
+    nG.addColorStop(0, `rgba(${ns.color[0]}, ${ns.color[1]}, ${ns.color[2]}, ${ns.brightness * 0.8})`);
+    nG.addColorStop(0.5, `rgba(${ns.color[0]}, ${ns.color[1]}, ${ns.color[2]}, ${ns.brightness * 0.3})`);
+    nG.addColorStop(1, `rgba(${ns.color[0]}, ${ns.color[1]}, ${ns.color[2]}, 0)`);
+    ctx.fillStyle = nG;
+    ctx.fillRect(nx - nR, ny - nR, nR * 2, nR * 2);
+    ns.brightness *= 0.99;
+  }
+
+  // === ACID DRIPS from ceiling ===
+  if (xenoHiveAcidDrips.length < 5 && Math.random() < 0.02) {
+    xenoHiveAcidDrips.push({
+      x: w * 0.15 + Math.random() * w * 0.7, y: 0, vy: 0.5 + Math.random() * 1,
+      size: 1.5 + Math.random() * 2, trail: [], hue: 100 + Math.random() * 40
+    });
+  }
+  for (let i = xenoHiveAcidDrips.length - 1; i >= 0; i--) {
+    const dr = xenoHiveAcidDrips[i];
+    dr.trail.push({ x: dr.x, y: dr.y, a: 0.6 });
+    if (dr.trail.length > 20) dr.trail.shift();
+    dr.vy += 0.08;
+    dr.y += dr.vy;
+    if (dr.y > h) { xenoHiveAcidDrips.splice(i, 1); continue; }
+    // Trail
+    for (let ti = 0; ti < dr.trail.length; ti++) {
+      dr.trail[ti].a *= 0.92;
+      ctx.beginPath();
+      ctx.arc(dr.trail[ti].x, dr.trail[ti].y, dr.size * 0.4, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${dr.hue}, 100%, 60%, ${dr.trail[ti].a * 0.5})`;
+      ctx.fill();
+    }
+    // Drop
     ctx.beginPath();
-    ctx.arc(dotX, dotY, 1.5 + bass * 2, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${vColor[0]}, ${vColor[1]}, ${vColor[2]}, ${vAlpha * 2})`;
+    ctx.arc(dr.x, dr.y, dr.size, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${dr.hue}, 100%, 70%, 0.8)`;
+    ctx.shadowColor = `hsla(${dr.hue}, 100%, 50%, 0.5)`;
+    ctx.shadowBlur = 8;
     ctx.fill();
   }
   ctx.shadowBlur = 0;
 
-  // === FLOATING SPORES ===
+  // === EGG SACS on the floor ===
+  if (!xenoHiveEggs) {
+    xenoHiveEggs = [];
+    for (let i = 0; i < 5; i++) {
+      xenoHiveEggs.push({
+        x: w * 0.2 + (i / 4) * w * 0.6 + (Math.random() - 0.5) * w * 0.08,
+        y: h * 0.82 + Math.random() * h * 0.06,
+        w: 18 + Math.random() * 14, h2: 25 + Math.random() * 18,
+        phase: Math.random() * Math.PI * 2, pulseSpeed: 0.3 + Math.random() * 0.5,
+        hue: 100 + Math.random() * 40, innerPhase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+  for (let i = 0; i < xenoHiveEggs.length; i++) {
+    const egg = xenoHiveEggs[i];
+    const ePulse = 0.5 + Math.sin(t * egg.pulseSpeed + egg.phase) * 0.3 + beat * 0.2;
+    // Outer translucent shell
+    ctx.beginPath();
+    ctx.ellipse(egg.x, egg.y, egg.w * breathScale, egg.h2 * breathScale, 0, 0, Math.PI * 2);
+    const eG = ctx.createRadialGradient(egg.x, egg.y, 0, egg.x, egg.y, egg.h2);
+    eG.addColorStop(0, `hsla(${egg.hue}, 80%, 40%, ${ePulse * 0.25 * heartPulse})`);
+    eG.addColorStop(0.5, `hsla(${egg.hue}, 60%, 25%, ${ePulse * 0.15 * heartPulse})`);
+    eG.addColorStop(0.8, `hsla(${egg.hue}, 40%, 15%, ${ePulse * 0.08})`);
+    eG.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = eG;
+    ctx.fill();
+    // Membrane outline
+    ctx.strokeStyle = `hsla(${egg.hue}, 70%, 50%, ${ePulse * 0.2})`;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    // Something moving inside
+    const innerX = egg.x + Math.sin(t * 0.8 + egg.innerPhase) * egg.w * 0.25;
+    const innerY = egg.y + Math.cos(t * 0.6 + egg.innerPhase) * egg.h2 * 0.2;
+    ctx.beginPath();
+    ctx.ellipse(innerX, innerY, 4 + Math.sin(t + egg.phase) * 2, 6 + Math.cos(t * 1.2 + egg.phase) * 2, t * 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(20, 30, 20, ${0.3 + ePulse * 0.2})`;
+    ctx.fill();
+    // Inner glow
+    ctx.beginPath();
+    ctx.arc(egg.x, egg.y, egg.w * 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${egg.hue}, 100%, 60%, ${ePulse * 0.08 * heartPulse})`;
+    ctx.fill();
+  }
+
+  // === FLOATING SPORES — varied sizes, clusters, trailing tendrils ===
   if (!xenoHiveSpores) {
     xenoHiveSpores = [];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 65; i++) {
+      const isLarge = i < 8;
+      const isCluster = i >= 8 && i < 20;
       xenoHiveSpores.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        z: 0.2 + Math.random() * 0.8,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: -0.2 - Math.random() * 0.5,
-        size: 0.5 + Math.random() * 2,
-        phase: Math.random() * Math.PI * 2,
-        hue: Math.random() < 0.5 ? 130 : 185 // green or cyan
+        x: Math.random() * w, y: Math.random() * h, z: 0.2 + Math.random() * 0.8,
+        vx: (Math.random() - 0.5) * 0.3, vy: -0.2 - Math.random() * 0.5,
+        size: isLarge ? 2.5 + Math.random() * 3.5 : (isCluster ? 1 + Math.random() * 1.5 : 0.5 + Math.random() * 2),
+        phase: Math.random() * Math.PI * 2, hue: Math.random() < 0.5 ? 130 : 185,
+        hasTendril: isLarge, clusterOffset: isCluster ? { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 } : null
       });
     }
   }
   for (let i = 0; i < xenoHiveSpores.length; i++) {
     const sp = xenoHiveSpores[i];
     sp.x += sp.vx + Math.sin(t * 0.5 + sp.phase) * 0.3;
-    sp.y += sp.vy * sp.z; // Parallax — closer = faster
+    sp.y += sp.vy * sp.z;
     sp.phase += 0.01;
-
-    // Wrap around
-    if (sp.y < -10) { sp.y = h + 10; sp.x = Math.random() * w; }
-    if (sp.x < -10) sp.x = w + 10;
-    if (sp.x > w + 10) sp.x = -10;
-
-    // Size grows as it approaches camera (y increases toward bottom = closer)
+    if (sp.y < -15) { sp.y = h + 15; sp.x = Math.random() * w; }
+    if (sp.x < -15) sp.x = w + 15;
+    if (sp.x > w + 15) sp.x = -15;
     const apparentSize = sp.size * (0.5 + (1 - sp.y / h) * sp.z);
-    const spAlpha = Math.min(0.6, 0.1 + sp.z * 0.3 + treble * 0.2) * (1 - Math.abs(sp.y - h / 2) / (h / 2) * 0.3);
-
+    const spA = Math.min(0.6, 0.08 + sp.z * 0.3 + treble * 0.2) * heartPulse * (1 - Math.abs(sp.y - h / 2) / (h / 2) * 0.3);
     ctx.beginPath();
     ctx.arc(sp.x, sp.y, Math.max(0.5, apparentSize), 0, Math.PI * 2);
-    ctx.fillStyle = `hsla(${sp.hue}, 100%, 70%, ${spAlpha})`;
-    ctx.shadowColor = `hsla(${sp.hue}, 100%, 60%, ${spAlpha * 0.5})`;
+    ctx.fillStyle = `hsla(${sp.hue}, 100%, 70%, ${spA})`;
+    ctx.shadowColor = `hsla(${sp.hue}, 100%, 60%, ${spA * 0.5})`;
     ctx.shadowBlur = 4;
     ctx.fill();
+    // Trailing tendrils for large spores
+    if (sp.hasTendril) {
+      ctx.beginPath();
+      ctx.moveTo(sp.x, sp.y + apparentSize);
+      ctx.bezierCurveTo(
+        sp.x + Math.sin(t + sp.phase) * 5, sp.y + apparentSize + 8,
+        sp.x - Math.sin(t * 0.7 + sp.phase) * 4, sp.y + apparentSize + 14,
+        sp.x + Math.sin(t * 1.2 + sp.phase) * 3, sp.y + apparentSize + 20
+      );
+      ctx.strokeStyle = `hsla(${sp.hue}, 100%, 60%, ${spA * 0.4})`;
+      ctx.lineWidth = 0.4;
+      ctx.stroke();
+    }
   }
   ctx.shadowBlur = 0;
 
   // === AMBIENT ORGANIC NOISE ===
-  const noiseCount = 200 + Math.floor(energy * 100);
+  const noiseCount = 250 + Math.floor(energy * 120);
   for (let ni = 0; ni < noiseCount; ni++) {
-    const nx = Math.random() * w;
-    const ny = Math.random() * h;
     ctx.fillStyle = `rgba(20, 30, 25, ${0.03 + Math.random() * 0.04})`;
-    ctx.fillRect(nx, ny, 1, 1);
+    ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
   }
 
   // === BEAT FLASH — bioluminescent surge ===
   if (beat > 0.5) {
-    const flashAlpha = (beat - 0.5) * 0.15;
-    const flashGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.5);
-    flashGrad.addColorStop(0, `rgba(57, 255, 20, ${flashAlpha})`);
-    flashGrad.addColorStop(0.5, `rgba(0, 240, 255, ${flashAlpha * 0.5})`);
-    flashGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = flashGrad;
+    const flashA = (beat - 0.5) * 0.18 * heartPulse;
+    const flashG = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.5);
+    flashG.addColorStop(0, `rgba(57, 255, 20, ${flashA})`);
+    flashG.addColorStop(0.5, `rgba(0, 240, 255, ${flashA * 0.5})`);
+    flashG.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = flashG;
     ctx.fillRect(0, 0, w, h);
   }
   ctx.globalCompositeOperation = 'source-over';
 
   // === FLOOR REFLECTION ===
-  const floorY = h * 0.85;
-  const floorGrad = ctx.createLinearGradient(0, floorY, 0, h);
-  floorGrad.addColorStop(0, 'rgba(10, 20, 15, 0)');
-  floorGrad.addColorStop(0.3, `rgba(10, 40, 30, ${0.1 + energy * 0.1})`);
-  floorGrad.addColorStop(1, `rgba(5, 15, 10, 0.3)`);
-  ctx.fillStyle = floorGrad;
+  const floorY = h * 0.84;
+  const fG2 = ctx.createLinearGradient(0, floorY, 0, h);
+  fG2.addColorStop(0, 'rgba(10, 20, 15, 0)');
+  fG2.addColorStop(0.3, `rgba(10, 40, 30, ${(0.1 + energy * 0.1) * heartPulse})`);
+  fG2.addColorStop(1, `rgba(5, 15, 10, 0.3)`);
+  ctx.fillStyle = fG2;
   ctx.fillRect(0, floorY, w, h - floorY);
 
-  // Vignette — heavy, dark, claustrophobic
-  const vig = ctx.createRadialGradient(cx, cy, w * 0.15, cx, cy, w * 0.55);
+  // Vignette — heavy, claustrophobic
+  const vig = ctx.createRadialGradient(cx, cy, w * 0.12, cx, cy, w * 0.52);
   vig.addColorStop(0, 'transparent');
-  vig.addColorStop(0.7, 'rgba(0, 0, 0, 0.3)');
-  vig.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+  vig.addColorStop(0.6, 'rgba(0, 0, 0, 0.3)');
+  vig.addColorStop(1, 'rgba(0, 0, 0, 0.7)');
   ctx.fillStyle = vig;
   ctx.fillRect(0, 0, w, h);
 }
@@ -16771,6 +17052,11 @@ function switchScene(index) {
   plasmaReactorParticles = null;
   xenoHiveInit = false; // Reset xenomorph hive
   xenoHiveSpores = null;
+  xenoHiveEggs = null;
+  xenoHiveAcidDrips = [];
+  xenoHiveNeuralSignals = [];
+  xenoHiveMembraneShapes = null;
+  xenoHiveShadowAlpha = 0;
   hackerTermLines = []; // Reset hacker terminal
   hackerTermCursor = 0;
   hackerTermScrollY = 0;
