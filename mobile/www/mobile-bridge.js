@@ -105,9 +105,9 @@
 
       // Store in a format the native Android Auto service can read
       const creds = {
-        baseUrl: settings.baseUrl || 'http://localhost:4533',
+        baseUrl: settings.baseUrl || 'http://100.117.145.79:4533',
         user: settings.user || 'phantom',
-        password: settings.password || 'your_password'
+        password: settings.password || '052990'
       };
 
       // Try Capacitor plugin bridge

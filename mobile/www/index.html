@@ -3266,11 +3266,12 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
 
 <!-- APP SHELL -->
 <div class="app-shell" id="appShell">
+  <!-- FLOATING HAMBURGER (outside sidebar so it's always visible) -->
+  <button class="sidebar-toggle" id="sidebarToggle" title="Open menu">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
-    <button class="sidebar-toggle" id="sidebarToggle" title="Expand sidebar">
-      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
     <div class="sidebar-nav">
       <!-- ═══ BROWSE ═══ -->
       <div class="sidebar-section-label">BROWSE</div>
@@ -3788,10 +3789,10 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
     <div class="settings-tab-content active" data-settings-panel="connection">
       <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">NAVIDROME SERVER</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
-        <input type="text" id="settUrl" value="http://localhost:4533" placeholder="Navidrome URL" style="background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
+        <input type="text" id="settUrl" value="http://100.117.145.79:4533" placeholder="Navidrome URL" style="background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
         <div style="display:flex;gap:8px;">
           <input type="text" id="settUser" value="phantom" placeholder="Username" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
-          <input type="password" id="settPass" value="your_password" placeholder="Password" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
+          <input type="password" id="settPass" value="052990" placeholder="Password" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
         </div>
         <button id="settTestConn" style="align-self:flex-start;background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.65rem;letter-spacing:0.1em;padding:8px 16px;cursor:pointer;transition:all 0.2s;">TEST CONNECTION</button>
       </div>
@@ -4388,9 +4389,9 @@ function md5(str) {
 // Users configure their own server URL + credentials via Settings panel.
 // Saved settings are loaded from localStorage on startup (see loadSavedSettings).
 const SUBSONIC = {
-  baseUrl: 'http://localhost:4533',
+  baseUrl: 'http://100.117.145.79:4533',
   user: 'phantom',
-  password: 'your_password',
+  password: '052990',
   auth() {
     const salt = Math.random().toString(36).slice(2, 10);
     const token = md5(this.password + salt);
@@ -8198,6 +8199,9 @@ function playCurrentTrack() {
   });
   isPlaying = true;
   document.getElementById('btnPlay').classList.add('playing');
+
+  // Report "now playing" to Navidrome (submission=false = nowPlaying, not scrobble)
+  SUBSONIC.get('scrobble', { id: t.id, submission: false }).catch(() => {});
 
   // Update now playing info
   document.getElementById('npTitle').textContent = t.title || 'Unknown';

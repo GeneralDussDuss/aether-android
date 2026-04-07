@@ -15,13 +15,14 @@ import androidx.car.app.validation.HostValidator
 class AetherCarAppService : CarAppService() {
 
     override fun createHostValidator(): HostValidator {
-        // Allow all hosts for sideloaded development.
-        // For production, restrict to known Android Auto hosts.
-        return if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
-            HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
-        } else {
-            HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
-        }
+        // ALLOW_ALL_HOSTS_VALIDATOR is used for both debug and release builds because:
+        // 1. This is a personal/sideloaded app, not distributed via Google Play Store.
+        // 2. Signature-based validation (HostValidator.Builder().addAllowedHost(...))
+        //    requires knowing the SHA-256 certificate fingerprints of each car head unit
+        //    manufacturer (Google, Samsung, etc.), which vary by OEM and firmware version.
+        // 3. If this app is ever published to Play Store, replace with signature-based
+        //    validation using known Android Auto host signatures.
+        return HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
     }
 
     override fun onCreateSession(): Session {

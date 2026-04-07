@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
+import org.json.JSONObject
 import java.util.concurrent.Executors
 
 /**
@@ -182,10 +183,7 @@ class AetherMediaService : MediaLibraryService() {
         val now = System.currentTimeMillis()
         if (now - lastNetworkCheck < NETWORK_RETRY_MS) return !isOffline
         lastNetworkCheck = now
-        isOffline = try {
-            val ping = subsonic.get("ping")
-            ping == null
-        } catch (_: Exception) { true }
+        isOffline = !subsonic.pingFast()
         return !isOffline
     }
 
@@ -247,6 +245,101 @@ class AetherMediaService : MediaLibraryService() {
                 } catch (e: Exception) {
                     future.set(LibraryResult.ofItemList(ImmutableList.of(), params))
                 }
+            }
+            return future
+        }
+
+        override fun onSearch(
+            session: MediaLibrarySession,
+            browser: MediaSession.ControllerInfo,
+            query: String,
+            params: LibraryParams?
+        ): ListenableFuture<LibraryResult<Void>> {
+            executor.execute {
+                val results = mutableListOf<MediaItem>()
+                try {
+                    if (checkOnline()) {
+                        val resp = subsonic.get("search3", mapOf(
+                            "query" to query,
+                            "songCount" to "20",
+                            "albumCount" to "10",
+                            "artistCount" to "5"
+                        ))
+                        val searchResult = resp?.optJSONObject("searchResult3")
+                        // Parse songs
+                        val songs = searchResult?.optJSONArray("song")
+                        if (songs != null) {
+                            for (i in 0 until songs.length()) {
+                                results.add(buildTrackItem(songs.getJSONObject(i)))
+                            }
+                        }
+                        // Parse albums
+                        val albums = searchResult?.optJSONArray("album")
+                        if (albums != null) {
+                            for (i in 0 until albums.length()) {
+                                val a = albums.getJSONObject(i)
+                                val id = a.optString("id")
+                                val name = a.optString("name", "Unknown Album")
+                                val artist = a.optString("artist", "")
+                                val coverArt = a.optString("coverArt", "")
+                                results.add(buildBrowsableItem("album_$id", name, artist, resolveArtworkUri(coverArt)))
+                            }
+                        }
+                    }
+                } catch (_: Exception) {
+                    // Search failed — return empty results
+                }
+                session.notifySearchResultChanged(browser, query, results.size, params)
+            }
+            return Futures.immediateFuture(LibraryResult.ofVoid())
+        }
+
+        override fun onGetSearchResult(
+            session: MediaLibrarySession,
+            browser: MediaSession.ControllerInfo,
+            query: String,
+            page: Int,
+            pageSize: Int,
+            params: LibraryParams?
+        ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+            val future = SettableFuture.create<LibraryResult<ImmutableList<MediaItem>>>()
+            executor.execute {
+                val results = mutableListOf<MediaItem>()
+                try {
+                    if (checkOnline()) {
+                        val resp = subsonic.get("search3", mapOf(
+                            "query" to query,
+                            "songCount" to "20",
+                            "albumCount" to "10",
+                            "artistCount" to "5"
+                        ))
+                        val searchResult = resp?.optJSONObject("searchResult3")
+                        val songs = searchResult?.optJSONArray("song")
+                        if (songs != null) {
+                            for (i in 0 until songs.length()) {
+                                results.add(buildTrackItem(songs.getJSONObject(i)))
+                            }
+                        }
+                        val albums = searchResult?.optJSONArray("album")
+                        if (albums != null) {
+                            for (i in 0 until albums.length()) {
+                                val a = albums.getJSONObject(i)
+                                val id = a.optString("id")
+                                val name = a.optString("name", "Unknown Album")
+                                val artist = a.optString("artist", "")
+                                val coverArt = a.optString("coverArt", "")
+                                results.add(buildBrowsableItem("album_$id", name, artist, resolveArtworkUri(coverArt)))
+                            }
+                        }
+                    }
+                } catch (_: Exception) {
+                    // Search failed
+                }
+                // Apply pagination
+                val start = page * pageSize
+                val end = minOf(start + pageSize, results.size)
+                val pageResults = if (start < results.size) results.subList(start, end) else emptyList()
+                future.set(LibraryResult.ofItemList(ImmutableList.copyOf(pageResults), params))
             }
             return future
         }
@@ -345,7 +438,7 @@ class AetherMediaService : MediaLibraryService() {
 
     private fun getPlaylistList(): List<MediaItem> {
         // Playlists are online-only
-        if (isOffline) return emptyList()
+        if (!checkOnline()) return emptyList()
         return subsonic.getPlaylists().map { playlist ->
             val id = playlist.optString("id")
             val name = playlist.optString("name", "Playlist")
@@ -355,7 +448,7 @@ class AetherMediaService : MediaLibraryService() {
     }
 
     private fun getPlaylistTracks(playlistId: String): List<MediaItem> {
-        if (isOffline) return emptyList()
+        if (!checkOnline()) return emptyList()
         return subsonic.getPlaylist(playlistId).map { track -> buildTrackItem(track) }
     }
 

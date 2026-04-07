@@ -77,8 +77,8 @@ class LocalMediaProvider(private val context: Context) {
             null, null
         )?.use { cursor ->
             while (cursor.moveToNext()) {
-                val artist = cursor.getString(0) ?: return@use
-                if (artist == "<unknown>") return@use
+                val artist = cursor.getString(0) ?: continue
+                if (artist == "<unknown>") continue
                 val albumId = cursor.getLong(1)
                 artistMap.getOrPut(artist) { mutableSetOf() }.add(albumId)
             }

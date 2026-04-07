@@ -48,7 +48,7 @@ class SubsonicClient(private val context: Context) {
 
     fun get(endpoint: String, params: Map<String, String> = emptyMap()): JSONObject? {
         val extra = if (params.isNotEmpty()) {
-            "&" + params.entries.joinToString("&") { "${it.key}=${it.value}" }
+            "&" + params.entries.joinToString("&") { "${it.key}=${java.net.URLEncoder.encode(it.value, "UTF-8")}" }
         } else ""
         val url = "$baseUrl/rest/$endpoint?${auth()}$extra"
         val request = Request.Builder().url(url).build()
@@ -59,6 +59,22 @@ class SubsonicClient(private val context: Context) {
         } catch (e: Exception) {
             null
         }
+    }
+
+    // ── Fast ping (3s timeout for online checks) ───────────────────────
+
+    fun pingFast(): Boolean {
+        val fastClient = client.newBuilder()
+            .connectTimeout(3, TimeUnit.SECONDS)
+            .readTimeout(3, TimeUnit.SECONDS)
+            .build()
+        return try {
+            val url = "$baseUrl/rest/ping?${auth()}"
+            val request = Request.Builder().url(url).build()
+            val response = fastClient.newCall(request).execute()
+            val body = response.body?.string() ?: return false
+            JSONObject(body).optJSONObject("subsonic-response")?.optString("status") == "ok"
+        } catch (e: Exception) { false }
     }
 
     // ── URL builders ─────────────────────────────────────────────────────

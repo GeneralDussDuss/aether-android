@@ -202,7 +202,7 @@ body.vertical-mode .track-list-header { grid-template-columns:30px 2fr 1fr 60px;
 .search-bar input::placeholder { color:var(--purple-muted); }
 
 /* VISUALIZER */
-.visualizer-panel { margin:20px 28px; border-radius:16px; overflow:hidden; border:1px solid var(--purple-dim); position:relative; height:280px; background:var(--bg-void); cursor:pointer; transition:box-shadow 0.3s; }
+.visualizer-panel { margin:12px 28px; border-radius:16px; overflow:hidden; border:1px solid var(--purple-dim); position:relative; height:180px; background:var(--bg-void); cursor:pointer; transition:box-shadow 0.3s; }
 .visualizer-panel:hover { box-shadow:var(--glow-medium); }
 .visualizer-panel canvas { width:100%; height:100%; display:block; }
 .viz-label { position:absolute; top:12px; left:16px; font-family:var(--font-mono); font-size:0.6rem; color:var(--purple-muted); letter-spacing:0.12em; z-index:2; pointer-events:none; }
@@ -4460,7 +4460,7 @@ let allPlaylists = [];
 let currentView = 'library';
 let vizGlowIntensity = 0;
 let currentScene = 0;
-const SCENES = ['FRACTAL FLAME', 'VOID PULSE', 'TRON GRID', 'PARTICLE FIELD', 'WAVEFORM BARS', 'AURORA BOREALIS', 'COSMIC MANDALA', 'ELECTRIC SHEEP', 'BIO-GENESIS', 'COMMAND DECK', 'NEURAL WEB II', 'DNA HELIX II', 'LYRIC RAIN', 'FREQUENCY MOUNTAIN'];
+const SCENES = ['FRACTAL FLAME', 'VOID PULSE', 'TRON GRID', 'PARTICLE FIELD', 'WAVEFORM BARS', 'AURORA BOREALIS', 'COSMIC MANDALA', 'ELECTRIC SHEEP', 'BIO-GENESIS', 'COMMAND DECK', 'NEURAL WEB II', 'DNA HELIX II', 'LYRIC RAIN', 'FREQUENCY MOUNTAIN', 'CHROME OCEAN', 'HYPERSPACE TUNNEL', 'PLASMA REACTOR', 'XENOMORPH HIVE', 'HACKER TERMINAL'];
 let vizAutoRotate = false;
 let vizAutoRotateInterval = 60000;
 let vizAutoRotateTimer = null;
@@ -10935,10 +10935,17 @@ function drawElectricSheepOverlay(ctx, w, h, time) {
 
 function vizResize() {
   const rect = vizCanvas.parentElement.getBoundingClientRect();
-  vizW = vizCanvas.width = rect.width;
-  vizH = vizCanvas.height = rect.height;
+  const w = Math.round(rect.width);
+  const h = Math.round(rect.height);
+  if (w > 0 && h > 0) {
+    vizW = vizCanvas.width = w;
+    vizH = vizCanvas.height = h;
+    flameInitialized = false;
+  }
 }
 vizResize();
+window.addEventListener('load', vizResize);
+requestAnimationFrame(vizResize);
 window.addEventListener('resize', vizResize);
 
 let lastRingSpawn = 0;
@@ -11607,15 +11614,39 @@ function drawTronGrid(ctx, w, h, time) {
   ctx.strokeStyle = `rgba(0, 220, 245, ${0.06 + bi * 0.1})`;
   ctx.lineWidth = 6 + bi * 6; ctx.stroke();
 
-  // === SKY: radial vanishing-point glow ===
-  const sunRadius = 80 + bi * 120 + bassBoost * 60;
-  const sunGrad = ctx.createRadialGradient(vanishX, horizon, 0, vanishX, horizon, sunRadius);
-  sunGrad.addColorStop(0, `rgba(183, 110, 255, ${0.35 + bi * 0.5})`);
-  sunGrad.addColorStop(0.3, `rgba(0, 220, 245, ${0.15 + bi * 0.3})`);
-  sunGrad.addColorStop(0.6, `rgba(123, 47, 190, ${0.06 + bi * 0.1})`);
+  // === SKY: massive synthwave sun on the horizon ===
+  const sunRadius = Math.min(w, h) * 0.45 + bi * 80 + bassBoost * 40;
+  const sunY = horizon;
+  // Outer atmospheric haze
+  const hazeR = sunRadius * 1.6;
+  const hazeGrad = ctx.createRadialGradient(vanishX, sunY, sunRadius * 0.3, vanishX, sunY, hazeR);
+  hazeGrad.addColorStop(0, `rgba(255, 45, 120, ${0.08 + bi * 0.12})`);
+  hazeGrad.addColorStop(0.5, `rgba(157, 78, 221, ${0.04 + bi * 0.06})`);
+  hazeGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = hazeGrad;
+  ctx.fillRect(vanishX - hazeR, sunY - hazeR, hazeR * 2, hazeR * 2);
+  // Main sun body — hot core to cool edge
+  const sunGrad = ctx.createRadialGradient(vanishX, sunY, 0, vanishX, sunY, sunRadius);
+  sunGrad.addColorStop(0, `rgba(255, 230, 180, ${0.95 + bi * 0.05})`);
+  sunGrad.addColorStop(0.15, `rgba(255, 160, 60, ${0.9 + bi * 0.1})`);
+  sunGrad.addColorStop(0.35, `rgba(255, 60, 100, ${0.75 + bi * 0.2})`);
+  sunGrad.addColorStop(0.55, `rgba(200, 30, 180, ${0.5 + bi * 0.25})`);
+  sunGrad.addColorStop(0.75, `rgba(120, 20, 220, ${0.25 + bi * 0.15})`);
   sunGrad.addColorStop(1, 'transparent');
   ctx.fillStyle = sunGrad;
-  ctx.fillRect(vanishX - sunRadius, horizon - sunRadius, sunRadius * 2, sunRadius * 2);
+  // Clip to upper half so sun sits ON the horizon
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0, 0, w, sunY); ctx.clip();
+  ctx.beginPath(); ctx.arc(vanishX, sunY, sunRadius, 0, Math.PI * 2); ctx.fill();
+  // Horizontal slice lines across the sun (retrowave style)
+  const sliceCount = 7;
+  for (let s = 1; s <= sliceCount; s++) {
+    const sliceY = sunY - sunRadius + (s / (sliceCount + 1)) * sunRadius;
+    const sliceH = 2 + s * 1.2;
+    ctx.fillStyle = `rgba(0, 0, 0, ${0.6 + s * 0.04})`;
+    ctx.fillRect(vanishX - sunRadius, sliceY, sunRadius * 2, sliceH);
+  }
+  ctx.restore();
 
   // === HORIZONTAL GRID LINES — crisp cyan, clean and sharp ===
   for (let i = 0; i < gridLines; i++) {
@@ -14822,37 +14853,79 @@ function drawFrequencyMountain(ctx, w, h, time) {
     ctx.fill();
   });
 
-  // ── Sun / horizon glow ──
+  // ── MASSIVE CYBERPUNK SUN ──
   const horizonY = h * 0.42;
-  const sunR = 35 + bass * 20 + bi * 15;
-  const sunGrad = ctx.createRadialGradient(w / 2, horizonY, 0, w / 2, horizonY, sunR * 4);
-  sunGrad.addColorStop(0, `rgba(255, ${150 + bi * 100}, ${80 + bi * 80}, ${0.9 + bi * 0.1})`);
-  sunGrad.addColorStop(0.15, `rgba(255, 100, 150, ${0.6 + bi * 0.2})`);
-  sunGrad.addColorStop(0.3, `rgba(200, 50, 200, ${0.3 + bi * 0.15})`);
-  sunGrad.addColorStop(0.6, `rgba(100, 0, 180, ${0.1 + energy * 0.1})`);
-  sunGrad.addColorStop(1, 'transparent');
-  ctx.beginPath();
-  ctx.arc(w / 2, horizonY, sunR * 4, 0, Math.PI * 2);
-  ctx.fillStyle = sunGrad;
-  ctx.fill();
+  const sunR = Math.min(w, h) * 0.35 + bass * 30 + bi * 20;
+  const cx = w / 2;
 
-  // Sun disc with horizontal scanlines
+  // Outer atmospheric haze — huge glow bleeding into the sky
+  const hazeR = sunR * 2.2;
+  const hazeGrad = ctx.createRadialGradient(cx, horizonY, sunR * 0.5, cx, horizonY, hazeR);
+  hazeGrad.addColorStop(0, `rgba(255, 80, 140, ${0.15 + bi * 0.15})`);
+  hazeGrad.addColorStop(0.3, `rgba(255, 40, 100, ${0.08 + bi * 0.08})`);
+  hazeGrad.addColorStop(0.6, `rgba(180, 0, 220, ${0.04 + energy * 0.06})`);
+  hazeGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = hazeGrad;
+  ctx.fillRect(cx - hazeR, horizonY - hazeR, hazeR * 2, hazeR * 2);
+
+  // Sun disc — clip to upper half so it sits on the horizon
   ctx.save();
   ctx.beginPath();
-  ctx.arc(w / 2, horizonY, sunR, 0, Math.PI * 2);
+  ctx.rect(0, 0, w, horizonY);
   ctx.clip();
-  const discGrad = ctx.createLinearGradient(0, horizonY - sunR, 0, horizonY + sunR);
-  discGrad.addColorStop(0, '#ff6090');
-  discGrad.addColorStop(0.5, '#ff9040');
-  discGrad.addColorStop(1, '#ffcc20');
+  ctx.beginPath();
+  ctx.arc(cx, horizonY, sunR, 0, Math.PI * 2);
+  ctx.clip();
+
+  // Cyberpunk sunset gradient — hot white core through neon pink to deep violet
+  const discGrad = ctx.createLinearGradient(0, horizonY - sunR, 0, horizonY + sunR * 0.3);
+  discGrad.addColorStop(0, `rgba(255, 250, 220, ${0.95 + bi * 0.05})`);
+  discGrad.addColorStop(0.12, '#ffe080');
+  discGrad.addColorStop(0.25, '#ff8040');
+  discGrad.addColorStop(0.4, '#ff3070');
+  discGrad.addColorStop(0.55, '#e020a0');
+  discGrad.addColorStop(0.7, '#a010d0');
+  discGrad.addColorStop(0.85, '#5000a0');
+  discGrad.addColorStop(1, '#200060');
   ctx.fillStyle = discGrad;
-  ctx.fillRect(w / 2 - sunR, horizonY - sunR, sunR * 2, sunR * 2);
-  // Scanlines through sun
-  for (let sy = horizonY - sunR; sy < horizonY + sunR; sy += 4) {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-    ctx.fillRect(w / 2 - sunR, sy, sunR * 2, 2);
+  ctx.fillRect(cx - sunR, horizonY - sunR, sunR * 2, sunR * 2);
+
+  // Retrowave horizontal slice lines — wider gaps at top, tighter at bottom
+  const sliceCount = 9;
+  for (let s = 1; s <= sliceCount; s++) {
+    const progress = s / (sliceCount + 1);
+    const sliceY = horizonY - sunR + progress * sunR;
+    const sliceH = 1.5 + progress * 3;
+    const gap = progress * 2;
+    ctx.fillStyle = `rgba(0, 0, 0, ${0.5 + progress * 0.25})`;
+    ctx.fillRect(cx - sunR, sliceY + gap, sunR * 2, sliceH);
   }
+
   ctx.restore();
+
+  // Horizon reflection glow beneath the sun
+  const reflGrad = ctx.createLinearGradient(0, horizonY, 0, horizonY + h * 0.15);
+  reflGrad.addColorStop(0, `rgba(255, 80, 160, ${0.2 + bi * 0.15})`);
+  reflGrad.addColorStop(0.5, `rgba(200, 30, 120, ${0.08 + energy * 0.06})`);
+  reflGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = reflGrad;
+  ctx.fillRect(0, horizonY, w, h * 0.15);
+
+  // Lens flare — small hexagonal highlights on beats
+  if (bi > 0.3) {
+    ctx.globalCompositeOperation = 'lighter';
+    const flareAlpha = (bi - 0.3) * 1.4;
+    for (let f = 0; f < 3; f++) {
+      const fx = cx + (f - 1) * sunR * 0.4;
+      const fy = horizonY - sunR * (0.3 + f * 0.15);
+      const fr = 3 + f * 2;
+      ctx.fillStyle = `rgba(255, 200, 255, ${flareAlpha * (0.4 - f * 0.1)})`;
+      ctx.beginPath(); ctx.arc(fx, fy, fr, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // (original clip block removed — slices now in main sun render)
 
   // ── Horizon line ──
   ctx.beginPath();
@@ -14999,10 +15072,1612 @@ function drawFrequencyMountain(ctx, w, h, time) {
   ctx.fillRect(0, 0, w, h);
 }
 
+// ============ CHROME OCEAN (Silver Surfer liquid metal sea) ============
+let chromeOceanDroplets = [];
+let chromeOceanInit = false;
+let chromeOceanBioCreatures = null;
+let chromeOceanLightning = null;
+let chromeOceanLightningTimer = 0;
+let chromeOceanFlashAlpha = 0;
+let chromeOceanFoamParticles = [];
+let chromeOceanSecondaryBolts = [];
+
+function drawChromeOcean(ctx, w, h, time) {
+  const t = time * 0.001;
+  const bass = bands.bass, mid = bands.mid, treble = bands.treble, energy = bands.energy;
+  const beat = beatIntensity;
+  const horizon = h * 0.38;
+
+  // Fade trail for smooth motion
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+  ctx.fillRect(0, 0, w, h);
+
+  // === SKY ===
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, horizon);
+  skyGrad.addColorStop(0, '#0a0020');
+  skyGrad.addColorStop(0.3, '#120040');
+  skyGrad.addColorStop(0.6, '#2a0060');
+  skyGrad.addColorStop(0.85, '#8a1070');
+  skyGrad.addColorStop(1, '#ff2090');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, w, horizon + 2);
+
+  // Aurora bands in sky
+  ctx.globalCompositeOperation = 'lighter';
+  const auroraBands = [
+    { y: horizon * 0.2, color: [80, 200, 255], freq: 0.8, amp: 12 },
+    { y: horizon * 0.35, color: [200, 50, 255], freq: 1.2, amp: 8 },
+    { y: horizon * 0.55, color: [50, 255, 180], freq: 0.6, amp: 15 },
+    { y: horizon * 0.75, color: [255, 100, 200], freq: 1.5, amp: 6 }
+  ];
+  for (let ab = 0; ab < auroraBands.length; ab++) {
+    const band = auroraBands[ab];
+    const reactivity = mid * 0.6 + 0.4;
+    ctx.beginPath();
+    ctx.moveTo(0, band.y);
+    for (let x = 0; x <= w; x += 3) {
+      const wave = Math.sin(x * 0.003 * band.freq + t * 1.5 + ab) * band.amp * reactivity +
+                   Math.sin(x * 0.007 + t * 0.8) * band.amp * 0.5;
+      ctx.lineTo(x, band.y + wave);
+    }
+    ctx.strokeStyle = `rgba(${band.color[0]}, ${band.color[1]}, ${band.color[2]}, ${0.15 + mid * 0.25})`;
+    ctx.lineWidth = 2 + mid * 3;
+    ctx.shadowColor = `rgba(${band.color[0]}, ${band.color[1]}, ${band.color[2]}, 0.5)`;
+    ctx.shadowBlur = 15 + mid * 10;
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
+  ctx.globalCompositeOperation = 'source-over';
+
+  // === GOD RAYS from above ===
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const sunX = w * 0.5 + Math.sin(t * 0.15) * w * 0.1;
+  const sunY = -h * 0.05;
+  for (let gr = 0; gr < 7; gr++) {
+    const rayAngle = -0.35 + (gr / 6) * 0.7 + Math.sin(t * 0.3 + gr * 1.1) * 0.08;
+    const rayLen = horizon * 1.4;
+    const rayWidth = 0.03 + Math.sin(t * 0.5 + gr * 0.7) * 0.012;
+    const rayAlpha = (0.03 + energy * 0.04 + beat * 0.03) * (0.6 + Math.sin(t * 0.7 + gr) * 0.4);
+    ctx.beginPath();
+    ctx.moveTo(sunX, sunY);
+    ctx.lineTo(sunX + Math.cos(Math.PI * 0.5 + rayAngle - rayWidth) * rayLen,
+               sunY + Math.sin(Math.PI * 0.5 + rayAngle - rayWidth) * rayLen);
+    ctx.lineTo(sunX + Math.cos(Math.PI * 0.5 + rayAngle + rayWidth) * rayLen,
+               sunY + Math.sin(Math.PI * 0.5 + rayAngle + rayWidth) * rayLen);
+    ctx.closePath();
+    const rayGrad = ctx.createLinearGradient(sunX, sunY, sunX, horizon);
+    rayGrad.addColorStop(0, `rgba(255, 200, 255, ${rayAlpha * 1.5})`);
+    rayGrad.addColorStop(0.5, `rgba(255, 150, 220, ${rayAlpha})`);
+    rayGrad.addColorStop(1, `rgba(255, 100, 180, 0)`);
+    ctx.fillStyle = rayGrad;
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+
+  // === LIGHTNING on heavy beats ===
+  if (beat > 0.75 && time - chromeOceanLightningTimer > 400) {
+    chromeOceanLightningTimer = time;
+    chromeOceanFlashAlpha = 0.4 + beat * 0.3;
+    const boltX = w * 0.15 + Math.random() * w * 0.7;
+    const pts = [{ x: boltX, y: 0 }];
+    let curX = boltX, curY = 0;
+    const segs = 12 + Math.floor(Math.random() * 8);
+    for (let s = 1; s <= segs; s++) {
+      curY = (s / segs) * horizon * 0.9;
+      curX += (Math.random() - 0.5) * 60;
+      pts.push({ x: curX, y: curY });
+      // Branch
+      if (Math.random() < 0.3 && s > 2) {
+        const brLen = 3 + Math.floor(Math.random() * 4);
+        let bx = curX, by = curY;
+        const brPts = [{ x: bx, y: by }];
+        for (let b = 0; b < brLen; b++) {
+          bx += (Math.random() - 0.5) * 40;
+          by += 8 + Math.random() * 15;
+          brPts.push({ x: bx, y: by });
+        }
+        pts.branch = pts.branch || [];
+        pts.branch.push(brPts);
+      }
+    }
+    chromeOceanLightning = pts;
+  }
+  // Draw lightning
+  if (chromeOceanLightning && chromeOceanFlashAlpha > 0.01) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    // Flash
+    ctx.fillStyle = `rgba(200, 180, 255, ${chromeOceanFlashAlpha * 0.15})`;
+    ctx.fillRect(0, 0, w, horizon);
+    // Bolt
+    const drawBolt = (pts, alpha, width) => {
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let p = 1; p < pts.length; p++) ctx.lineTo(pts[p].x, pts[p].y);
+      ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+      ctx.lineWidth = width;
+      ctx.shadowColor = `rgba(180, 150, 255, ${alpha})`;
+      ctx.shadowBlur = 20;
+      ctx.stroke();
+    };
+    drawBolt(chromeOceanLightning, chromeOceanFlashAlpha, 3);
+    drawBolt(chromeOceanLightning, chromeOceanFlashAlpha * 0.7, 1);
+    if (chromeOceanLightning.branch) {
+      for (const br of chromeOceanLightning.branch) {
+        drawBolt(br, chromeOceanFlashAlpha * 0.5, 1.5);
+      }
+    }
+    ctx.shadowBlur = 0;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.restore();
+    chromeOceanFlashAlpha *= 0.88;
+  }
+
+  // === UNDERWATER CAUSTICS on surface ===
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let ci = 0; ci < 12; ci++) {
+    const cx2 = (ci / 12) * w + Math.sin(t * 0.4 + ci * 2.1) * 40;
+    const cy2 = horizon + 10 + Math.sin(t * 0.6 + ci * 1.3) * 20;
+    const cSize = 30 + Math.sin(t * 0.8 + ci) * 15;
+    const cAlpha = (0.015 + energy * 0.02) * (0.5 + Math.sin(t + ci * 0.7) * 0.5);
+    // Interference pattern — overlapping circles
+    for (let j = 0; j < 3; j++) {
+      const ox = Math.sin(t * (0.3 + j * 0.2) + ci + j) * 15;
+      const oy = Math.cos(t * (0.4 + j * 0.15) + ci * 0.8 + j) * 10;
+      ctx.beginPath();
+      ctx.arc(cx2 + ox, cy2 + oy, cSize, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(100, 220, 255, ${cAlpha})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+
+  // === OCEAN SURFACE with 6 wave harmonics ===
+  const oceanRows = Math.floor((h - horizon) * 0.7);
+  const swellAmp = 8 + bass * 25;
+  const rippleAmp = 2 + treble * 8;
+
+  for (let row = 0; row < oceanRows; row += 2) {
+    const screenY = horizon + row;
+    const depth = row / oceanRows;
+    const depthScale = 0.05 + depth * 0.95;
+
+    ctx.beginPath();
+    for (let x = 0; x <= w; x += 4) {
+      // 6 wave harmonics for complex ocean
+      const wave1 = Math.sin(x * 0.004 + t * 0.7) * swellAmp * depthScale;
+      const wave2 = Math.sin(x * 0.009 - t * 1.1 + 2.0) * swellAmp * 0.5 * depthScale;
+      const wave3 = Math.sin(x * 0.02 + t * 2.5) * rippleAmp * depthScale;
+      const wave4 = Math.sin(x * 0.035 - t * 3.2 + 1.5) * rippleAmp * 0.6 * depthScale;
+      const wave5 = Math.sin(x * 0.0025 + t * 0.35 + 0.8) * swellAmp * 0.7 * depthScale;
+      const wave6 = Math.sin(x * 0.055 - t * 4.1 + 3.2) * rippleAmp * 0.35 * depthScale;
+      const waveHeight = wave1 + wave2 + wave3 + wave4 + wave5 + wave6;
+
+      const dw1 = Math.cos(x * 0.004 + t * 0.7) * 0.004 * swellAmp * depthScale;
+      const dw2 = Math.cos(x * 0.009 - t * 1.1 + 2.0) * 0.009 * swellAmp * 0.5 * depthScale;
+      const slope = Math.abs(dw1 + dw2);
+      const fresnel = Math.min(1, 0.3 + slope * 8);
+
+      const reflectedSkyRow = Math.max(0, Math.min(horizon - 1, horizon - row * 0.4 + waveHeight * 2));
+      const skyRatio = reflectedSkyRow / horizon;
+
+      const chromeR = Math.floor((192 + skyRatio * 63) * fresnel);
+      const chromeG = Math.floor((200 + skyRatio * 55) * fresnel * 0.85);
+      const chromeB = Math.floor((210 + skyRatio * 45) * fresnel);
+
+      const magentaBlend = Math.max(0, 1 - depth * 2) * 0.3;
+
+      if (x === 0) ctx.moveTo(x, screenY + waveHeight);
+      else ctx.lineTo(x, screenY + waveHeight);
+    }
+    const alpha = 0.4 + depth * 0.4 + energy * 0.2;
+    const depthDarken = 1 - depth * 0.4;
+    ctx.strokeStyle = `rgba(${Math.floor(180 * depthDarken + bass * 40)}, ${Math.floor(200 * depthDarken)}, ${Math.floor(220 * depthDarken + treble * 30)}, ${alpha})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Specular highlights on wave crests
+    if (row % 6 === 0) {
+      ctx.globalCompositeOperation = 'lighter';
+      for (let x = 0; x < w; x += 20) {
+        const crest = Math.sin(x * 0.004 + t * 0.7) + Math.sin(x * 0.009 - t * 1.1 + 2.0);
+        if (crest > 0.8) {
+          const specAlpha = (crest - 0.8) * 2 * fresnel_calc(x, t, depthScale) * (0.5 + energy * 0.5);
+          ctx.fillStyle = `rgba(255, 250, 255, ${Math.min(0.6, specAlpha)})`;
+          ctx.fillRect(x - 2, screenY + crest * swellAmp * depthScale - 1, 5 + treble * 3, 1.5);
+        }
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+  }
+
+  // === BIOLUMINESCENT CREATURES below surface ===
+  if (!chromeOceanBioCreatures) {
+    chromeOceanBioCreatures = [];
+    for (let i = 0; i < 10; i++) {
+      chromeOceanBioCreatures.push({
+        x: Math.random() * w,
+        y: horizon + 40 + Math.random() * (h - horizon - 80),
+        vx: (Math.random() - 0.5) * 0.8,
+        size: 12 + Math.random() * 25,
+        phase: Math.random() * Math.PI * 2,
+        hue: [0, 200, 255][Math.floor(Math.random() * 3)] === 0
+             ? [80, 255, 200] : (Math.random() < 0.5 ? [50, 180, 255] : [200, 100, 255]),
+        pulseSpeed: 0.5 + Math.random() * 1.5
+      });
+    }
+  }
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < chromeOceanBioCreatures.length; i++) {
+    const cr = chromeOceanBioCreatures[i];
+    cr.x += cr.vx + Math.sin(t * 0.3 + cr.phase) * 0.4;
+    cr.phase += 0.008;
+    if (cr.x < -50) cr.x = w + 50;
+    if (cr.x > w + 50) cr.x = -50;
+    const pulse = 0.4 + Math.sin(t * cr.pulseSpeed + cr.phase) * 0.3 + beat * 0.3;
+    const depth = (cr.y - horizon) / (h - horizon);
+    // Distort position based on wave above
+    const waveDistort = Math.sin(cr.x * 0.004 + t * 0.7) * 8 * (1 - depth * 0.5);
+    const drawX = cr.x + waveDistort;
+    const drawY = cr.y + Math.sin(t * 0.5 + cr.phase) * 5;
+    const cAlpha = pulse * 0.25 * (1 - depth * 0.4);
+    const grad = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, cr.size);
+    grad.addColorStop(0, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, ${cAlpha})`);
+    grad.addColorStop(0.5, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, ${cAlpha * 0.4})`);
+    grad.addColorStop(1, `rgba(${cr.hue[0]}, ${cr.hue[1]}, ${cr.hue[2]}, 0)`);
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(drawX, drawY, cr.size * (1 + Math.sin(t + cr.phase) * 0.15), cr.size * 0.7, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+
+  // === FOAM / SPRAY particles on bass hits ===
+  if (beat > 0.55 && chromeOceanFoamParticles.length < 60) {
+    for (let f = 0; f < 5 + Math.floor(beat * 8); f++) {
+      const fx = Math.random() * w;
+      const fRow = Math.random() * oceanRows * 0.3;
+      const waveAtX = Math.sin(fx * 0.004 + t * 0.7) * swellAmp * 0.3;
+      chromeOceanFoamParticles.push({
+        x: fx, y: horizon + fRow + waveAtX,
+        vx: (Math.random() - 0.5) * 4,
+        vy: -(2 + Math.random() * 5 + beat * 4),
+        size: 1 + Math.random() * 2.5,
+        life: 1
+      });
+    }
+  }
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = chromeOceanFoamParticles.length - 1; i >= 0; i--) {
+    const f = chromeOceanFoamParticles[i];
+    f.x += f.vx;
+    f.y += f.vy;
+    f.vy += 0.12;
+    f.life -= 0.018;
+    if (f.life <= 0 || f.y > h) { chromeOceanFoamParticles.splice(i, 1); continue; }
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${f.life * 0.6})`;
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+
+  // === CHROME DROPLETS on beat ===
+  if (beat > 0.6 && chromeOceanDroplets.length < 20) {
+    for (let d = 0; d < 3; d++) {
+      chromeOceanDroplets.push({
+        x: Math.random() * w,
+        y: horizon + Math.random() * oceanRows * 0.3,
+        vx: (Math.random() - 0.5) * 3,
+        vy: -(4 + Math.random() * 6 + beat * 5),
+        size: 2 + Math.random() * 4,
+        life: 1
+      });
+    }
+  }
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = chromeOceanDroplets.length - 1; i >= 0; i--) {
+    const d = chromeOceanDroplets[i];
+    d.x += d.vx;
+    d.y += d.vy;
+    d.vy += 0.18;
+    d.life -= 0.012;
+    if (d.life <= 0 || d.y > h) { chromeOceanDroplets.splice(i, 1); continue; }
+    const grad = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.size * 2);
+    grad.addColorStop(0, `rgba(255, 255, 255, ${d.life * 0.8})`);
+    grad.addColorStop(0.4, `rgba(180, 210, 255, ${d.life * 0.5})`);
+    grad.addColorStop(1, `rgba(120, 80, 200, 0)`);
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.size * 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // === LENS FLARE at horizon ===
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const flareX = w * 0.5 + Math.sin(t * 0.1) * w * 0.02;
+  const flareY = horizon;
+  const flareIntensity = 0.15 + energy * 0.25 + beat * 0.15;
+  // Main flare glow
+  const flareGrad = ctx.createRadialGradient(flareX, flareY, 0, flareX, flareY, w * 0.12);
+  flareGrad.addColorStop(0, `rgba(255, 200, 255, ${flareIntensity})`);
+  flareGrad.addColorStop(0.3, `rgba(255, 120, 200, ${flareIntensity * 0.5})`);
+  flareGrad.addColorStop(1, 'rgba(255, 80, 150, 0)');
+  ctx.fillStyle = flareGrad;
+  ctx.fillRect(flareX - w * 0.12, flareY - w * 0.12, w * 0.24, w * 0.24);
+  // Hexagonal flare shapes
+  for (let fi = 0; fi < 5; fi++) {
+    const fDist = (fi + 1) * w * 0.04 + Math.sin(t + fi) * 5;
+    const fAngle = Math.PI + (fi * 0.3);
+    const fx = flareX + Math.cos(fAngle) * fDist * 0.3;
+    const fy = flareY + (fi - 2) * 15;
+    const fSize = 4 + fi * 2 + Math.sin(t * 2 + fi) * 2;
+    const fAlpha = flareIntensity * (0.15 - fi * 0.02);
+    ctx.beginPath();
+    for (let v = 0; v < 6; v++) {
+      const a = (v / 6) * Math.PI * 2;
+      const px = fx + Math.cos(a) * fSize;
+      const py = fy + Math.sin(a) * fSize;
+      if (v === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = `rgba(255, 180, 255, ${Math.max(0, fAlpha)})`;
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+
+  // === Horizon glow line ===
+  ctx.globalCompositeOperation = 'lighter';
+  const horizGrad = ctx.createLinearGradient(0, horizon - 8, 0, horizon + 8);
+  horizGrad.addColorStop(0, 'rgba(255, 100, 200, 0)');
+  horizGrad.addColorStop(0.5, `rgba(255, 150, 220, ${0.3 + energy * 0.4})`);
+  horizGrad.addColorStop(1, 'rgba(255, 100, 200, 0)');
+  ctx.fillStyle = horizGrad;
+  ctx.fillRect(0, horizon - 8, w, 16);
+  ctx.globalCompositeOperation = 'source-over';
+
+  // Vignette
+  const vig = ctx.createRadialGradient(w / 2, h / 2, w * 0.25, w / 2, h / 2, w * 0.7);
+  vig.addColorStop(0, 'transparent');
+  vig.addColorStop(1, 'rgba(0, 0, 0, 0.35)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, w, h);
+}
+
+// Helper for Chrome Ocean fresnel
+function fresnel_calc(x, t, depthScale) {
+  const dw = Math.abs(Math.cos(x * 0.004 + t * 0.7) * 0.004 + Math.cos(x * 0.009 - t * 1.1) * 0.009);
+  return Math.min(1, 0.3 + dw * depthScale * 50);
+}
+
+// ============ HYPERSPACE TUNNEL (Warp conduit with Tron grid) ============
+let hyperTunnelRings = null;
+let hyperTunnelStars = null;
+let hyperTunnelPulses = [];
+let hyperTunnelExplosions = [];
+let hyperTunnelNebulae = null;
+let hyperTunnelDataStreams = null;
+let hyperTunnelShakeX = 0;
+let hyperTunnelShakeY = 0;
+
+function drawHyperspaceTunnel(ctx, w, h, time) {
+  const t = time * 0.001;
+  const bass = bands.bass, mid = bands.mid, treble = bands.treble, energy = bands.energy;
+  const beat = beatIntensity;
+  const cx = w / 2, cy = h / 2;
+
+  // Full clear with slight motion blur
+  ctx.fillStyle = 'rgba(0, 0, 8, 0.92)';
+  ctx.fillRect(0, 0, w, h);
+
+  const speed = 0.8 + energy * 3;
+  const numRings = 65;
+  const numLongLines = 18;
+  const baseRadius = Math.min(w, h) * 0.55;
+
+  // === SCREEN SHAKE on heavy bass ===
+  hyperTunnelShakeX = hyperTunnelShakeX * 0.85 + (beat > 0.6 ? (Math.random() - 0.5) * beat * 12 : 0);
+  hyperTunnelShakeY = hyperTunnelShakeY * 0.85 + (beat > 0.6 ? (Math.random() - 0.5) * beat * 12 : 0);
+  ctx.save();
+  ctx.translate(hyperTunnelShakeX, hyperTunnelShakeY);
+
+  // Init rings
+  if (!hyperTunnelRings) {
+    hyperTunnelRings = [];
+    for (let i = 0; i < numRings; i++) {
+      hyperTunnelRings.push({ z: 0.05 + (i / numRings) * 4.0 });
+    }
+  }
+  // Init stars
+  if (!hyperTunnelStars) {
+    hyperTunnelStars = [];
+    for (let i = 0; i < 160; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 0.1 + Math.random() * 0.9;
+      hyperTunnelStars.push({
+        angle: angle, dist: dist,
+        z: Math.random() * 4, bright: 0.3 + Math.random() * 0.7
+      });
+    }
+  }
+  // Init nebulae
+  if (!hyperTunnelNebulae) {
+    hyperTunnelNebulae = [];
+    for (let i = 0; i < 8; i++) {
+      hyperTunnelNebulae.push({
+        angle: Math.random() * Math.PI * 2,
+        dist: 0.2 + Math.random() * 0.6,
+        z: 0.5 + Math.random() * 3.5,
+        size: 0.15 + Math.random() * 0.3,
+        hue: Math.random() * 360,
+        alpha: 0.02 + Math.random() * 0.04
+      });
+    }
+  }
+  // Init data streams
+  if (!hyperTunnelDataStreams) {
+    hyperTunnelDataStreams = [];
+    const chars = '01>|/<>{}[]#$%&@!?=+-*^~';
+    for (let i = 0; i < 12; i++) {
+      const streamChars = [];
+      for (let c = 0; c < 15; c++) {
+        streamChars.push({
+          char: chars[Math.floor(Math.random() * chars.length)],
+          zOff: c * 0.12, alpha: 1 - c * 0.06
+        });
+      }
+      hyperTunnelDataStreams.push({
+        angle: Math.random() * Math.PI * 2,
+        dist: 0.7 + Math.random() * 0.25,
+        z: Math.random() * 4,
+        speed: 1.5 + Math.random() * 2,
+        chars: streamChars,
+        hue: Math.random() < 0.5 ? 180 : 300
+      });
+    }
+  }
+
+  // Vignette edge darkening
+  const vigGrad = ctx.createRadialGradient(cx, cy, w * 0.15, cx, cy, w * 0.6);
+  vigGrad.addColorStop(0, 'transparent');
+  vigGrad.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
+
+  // === NEBULA CLOUDS ===
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < hyperTunnelNebulae.length; i++) {
+    const neb = hyperTunnelNebulae[i];
+    neb.z -= speed * 0.012;
+    if (neb.z < 0.2) { neb.z = 3.5 + Math.random(); neb.angle = Math.random() * Math.PI * 2; neb.hue = Math.random() * 360; }
+    const r = (baseRadius * neb.dist) / neb.z;
+    if (r > w * 1.5) continue;
+    const nx = cx + Math.cos(neb.angle) * r;
+    const ny = cy + Math.sin(neb.angle) * r;
+    const nSize = (baseRadius * neb.size) / neb.z;
+    const nAlpha = neb.alpha * (1 - neb.z / 4) * (0.5 + energy * 0.5);
+    const grad = ctx.createRadialGradient(nx, ny, 0, nx, ny, nSize);
+    grad.addColorStop(0, `hsla(${neb.hue}, 80%, 50%, ${nAlpha})`);
+    grad.addColorStop(0.5, `hsla(${neb.hue}, 60%, 30%, ${nAlpha * 0.4})`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(nx - nSize, ny - nSize, nSize * 2, nSize * 2);
+  }
+
+  // === STAR STREAKS ===
+  for (let i = 0; i < hyperTunnelStars.length; i++) {
+    const star = hyperTunnelStars[i];
+    star.z -= speed * 0.016;
+    if (star.z < 0.02) { star.z = 3.5 + Math.random(); star.angle = Math.random() * Math.PI * 2; star.dist = 0.1 + Math.random() * 0.9; }
+
+    const r = (baseRadius * star.dist) / star.z;
+    const sx = cx + Math.cos(star.angle) * r;
+    const sy = cy + Math.sin(star.angle) * r;
+
+    const streakLen = speed * 14 / (star.z * star.z);
+    const dx = sx - cx, dy = sy - cy;
+    const mag = Math.sqrt(dx * dx + dy * dy) || 1;
+    const ex = sx + (dx / mag) * streakLen;
+    const ey = sy + (dy / mag) * streakLen;
+
+    const alpha = Math.min(1, star.bright * (1 - star.z / 4.5) * (0.3 + energy * 0.7));
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(ex, ey);
+    ctx.strokeStyle = `rgba(180, 220, 255, ${alpha})`;
+    ctx.lineWidth = 0.8 + (1 / star.z) * 0.5;
+    ctx.stroke();
+  }
+
+  // === ENERGY PULSES traveling down tunnel ===
+  if (hyperTunnelPulses.length < 4 && Math.random() < 0.03 + beat * 0.05) {
+    hyperTunnelPulses.push({ z: 4.0, brightness: 0.5 + beat * 0.5, hue: Math.random() < 0.5 ? 190 : 310 });
+  }
+  for (let i = hyperTunnelPulses.length - 1; i >= 0; i--) {
+    const p = hyperTunnelPulses[i];
+    p.z -= speed * 0.025;
+    if (p.z < 0.05) { hyperTunnelPulses.splice(i, 1); continue; }
+    const r = baseRadius / p.z;
+    if (r > w * 2) { hyperTunnelPulses.splice(i, 1); continue; }
+    const pAlpha = p.brightness * (1 - p.z / 4.5) * 0.6;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = `hsla(${p.hue}, 100%, 80%, ${pAlpha})`;
+    ctx.lineWidth = 3 + (1 / p.z) * 2;
+    ctx.shadowColor = `hsla(${p.hue}, 100%, 70%, ${pAlpha * 0.8})`;
+    ctx.shadowBlur = 15 + (1 / p.z) * 5;
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
+
+  // === TUNNEL RINGS with hex grid segments ===
+  for (let i = 0; i < hyperTunnelRings.length; i++) {
+    const ring = hyperTunnelRings[i];
+    ring.z -= speed * 0.016;
+    if (ring.z < 0.05) ring.z += 4.0;
+
+    const r = baseRadius / ring.z;
+    if (r > w * 1.5) continue;
+
+    const depthRatio = ring.z / 4.0;
+    let rr, rg, rb;
+    if (depthRatio < 0.33) {
+      const t2 = depthRatio / 0.33;
+      rr = Math.floor(255 * (1 - t2)); rg = Math.floor(30 * (1 - t2) + 220 * t2); rb = Math.floor(180 * (1 - t2) + 232 * t2);
+    } else if (depthRatio < 0.66) {
+      const t2 = (depthRatio - 0.33) / 0.33;
+      rr = Math.floor(100 * t2); rg = Math.floor(220 * (1 - t2) + 50 * t2); rb = Math.floor(232 * (1 - t2) + 255 * t2);
+    } else {
+      rr = 100; rg = 50; rb = 255;
+    }
+
+    const alpha = Math.min(1, (1 - depthRatio) * 0.6 + energy * 0.4);
+    const isBeatRing = beat > 0.5 && (i % 5 === Math.floor(t * 3) % 5);
+    const ringWidth = isBeatRing ? 2.5 + beat * 2 : 0.8 + (1 - depthRatio) * 1.2;
+    const ringAlpha = isBeatRing ? Math.min(1, alpha + 0.4) : alpha;
+
+    // Chromatic aberration near screen edges
+    const edgeDist = r / (w * 0.7);
+    const chromaOffset = edgeDist > 0.5 ? (edgeDist - 0.5) * 4 : 0;
+
+    // Draw hex-segmented ring
+    const hexCount = 12;
+    for (let hx = 0; hx < hexCount; hx++) {
+      const a1 = (hx / hexCount) * Math.PI * 2;
+      const a2 = ((hx + 1) / hexCount) * Math.PI * 2;
+      const wobble1 = 1 + Math.sin(a1 * 3 + t * 2 + i) * 0.03 * bass;
+      const wobble2 = 1 + Math.sin(a2 * 3 + t * 2 + i) * 0.03 * bass;
+      const x1 = cx + Math.cos(a1) * r * wobble1;
+      const y1 = cy + Math.sin(a1) * r * wobble1;
+      const x2 = cx + Math.cos(a2) * r * wobble2;
+      const y2 = cy + Math.sin(a2) * r * wobble2;
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+
+      // Chromatic aberration - red offset
+      if (chromaOffset > 0.5) {
+        ctx.strokeStyle = `rgba(255, ${rg}, ${Math.floor(rb * 0.3)}, ${ringAlpha * 0.3})`;
+        ctx.lineWidth = ringWidth;
+        ctx.save();
+        ctx.translate(chromaOffset, 0);
+        ctx.stroke();
+        ctx.restore();
+        // Blue offset
+        ctx.strokeStyle = `rgba(${Math.floor(rr * 0.3)}, ${rg}, 255, ${ringAlpha * 0.3})`;
+        ctx.save();
+        ctx.translate(-chromaOffset, 0);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      ctx.strokeStyle = `rgba(${rr}, ${rg}, ${rb}, ${ringAlpha})`;
+      ctx.lineWidth = ringWidth;
+      ctx.shadowColor = `rgba(${rr}, ${rg}, ${rb}, ${ringAlpha * 0.6})`;
+      ctx.shadowBlur = isBeatRing ? 20 : 8;
+      ctx.stroke();
+    }
+  }
+  ctx.shadowBlur = 0;
+
+  // === HEXAGONAL GRID on tunnel walls ===
+  for (let li = 0; li < numLongLines; li++) {
+    const angle = (li / numLongLines) * Math.PI * 2;
+    ctx.beginPath();
+    let first = true;
+    for (let zi = 0.1; zi < 4.0; zi += 0.05) {
+      const r = baseRadius / zi;
+      const wobble = 1 + Math.sin(angle * 3 + t * 2 + zi) * 0.03 * bass;
+      const px = cx + Math.cos(angle) * r * wobble;
+      const py = cy + Math.sin(angle) * r * wobble;
+      if (r > w * 1.5) continue;
+      if (first) { ctx.moveTo(px, py); first = false; }
+      else ctx.lineTo(px, py);
+    }
+    const lAlpha = 0.15 + mid * 0.2;
+    ctx.strokeStyle = `rgba(0, 220, 232, ${lAlpha})`;
+    ctx.lineWidth = 0.6;
+    ctx.shadowColor = `rgba(0, 220, 232, ${lAlpha})`;
+    ctx.shadowBlur = 6;
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
+
+  // === DATA STREAMS flowing along tunnel walls ===
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'center';
+  for (let i = 0; i < hyperTunnelDataStreams.length; i++) {
+    const ds = hyperTunnelDataStreams[i];
+    ds.z -= ds.speed * 0.016;
+    if (ds.z < 0.1) {
+      ds.z = 3.8 + Math.random();
+      ds.angle = Math.random() * Math.PI * 2;
+      for (let c = 0; c < ds.chars.length; c++) {
+        ds.chars[c].char = '01>|/<>{}[]#$%&@!?=+-*^~'[Math.floor(Math.random() * 24)];
+      }
+    }
+    for (let c = 0; c < ds.chars.length; c++) {
+      const ch = ds.chars[c];
+      const cz = ds.z + ch.zOff;
+      if (cz < 0.1 || cz > 4.0) continue;
+      const r = (baseRadius * ds.dist) / cz;
+      if (r > w * 1.5) continue;
+      const sx = cx + Math.cos(ds.angle) * r;
+      const sy = cy + Math.sin(ds.angle) * r;
+      const cAlpha = ch.alpha * (1 - cz / 4.5) * (0.3 + treble * 0.5) * 0.6;
+      ctx.fillStyle = `hsla(${ds.hue}, 100%, 70%, ${cAlpha})`;
+      ctx.fillText(ch.char, sx, sy);
+    }
+  }
+
+  // === BEAT EXPLOSIONS at vanishing point ===
+  if (beat > 0.6 && hyperTunnelExplosions.length < 100) {
+    const count = 20 + Math.floor(beat * 30);
+    for (let e = 0; e < count; e++) {
+      const angle = Math.random() * Math.PI * 2;
+      const spd = 1 + Math.random() * 4;
+      hyperTunnelExplosions.push({
+        x: cx, y: cy,
+        vx: Math.cos(angle) * spd,
+        vy: Math.sin(angle) * spd,
+        life: 1,
+        size: 1 + Math.random() * 2,
+        hue: 180 + Math.random() * 140
+      });
+    }
+  }
+  for (let i = hyperTunnelExplosions.length - 1; i >= 0; i--) {
+    const e = hyperTunnelExplosions[i];
+    e.x += e.vx * (1 + energy * 2);
+    e.y += e.vy * (1 + energy * 2);
+    e.vx *= 1.02;
+    e.vy *= 1.02;
+    e.life -= 0.02;
+    if (e.life <= 0) { hyperTunnelExplosions.splice(i, 1); continue; }
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${e.hue}, 100%, 80%, ${e.life * 0.7})`;
+    ctx.fill();
+  }
+
+  ctx.globalCompositeOperation = 'source-over';
+
+  // === Center glow ===
+  ctx.globalCompositeOperation = 'lighter';
+  const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.15);
+  coreGrad.addColorStop(0, `rgba(200, 230, 255, ${0.15 + energy * 0.25})`);
+  coreGrad.addColorStop(0.5, `rgba(100, 50, 200, ${0.05 + energy * 0.1})`);
+  coreGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = coreGrad;
+  ctx.fillRect(0, 0, w, h);
+  ctx.globalCompositeOperation = 'source-over';
+
+  // Restore from screen shake
+  ctx.restore();
+
+  // Vignette
+  ctx.fillStyle = vigGrad;
+  ctx.fillRect(0, 0, w, h);
+}
+
+// ============ PLASMA REACTOR (Contained fusion core) ============
+let plasmaReactorArcs = null;
+let plasmaReactorTendrils = [];
+let plasmaReactorParticles = null;
+let plasmaReactorArcTimer = 0;
+let plasmaReactorDebris = null;
+let plasmaReactorJets = [];
+let plasmaReactorSparks = [];
+let plasmaReactorShockwaves = [];
+let plasmaReactorContainShake = 0;
+
+function drawPlasmaReactor(ctx, w, h, time) {
+  const t = time * 0.001;
+  const bass = bands.bass, mid = bands.mid, treble = bands.treble, energy = bands.energy;
+  const beat = beatIntensity;
+  const cx = w / 2, cy = h / 2;
+  const minDim = Math.min(w, h);
+
+  // Trail fade
+  ctx.fillStyle = 'rgba(0, 0, 5, 0.12)';
+  ctx.fillRect(0, 0, w, h);
+
+  const coreRadius = minDim * (0.08 + bass * 0.06);
+  const containR1 = minDim * 0.22;
+  const containR2 = minDim * 0.32;
+  const containR3 = minDim * 0.42;
+
+  // === RADIATION SHIMMER / heat haze ===
+  // Draw subtle distortion rings around core
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let sh = 0; sh < 5; sh++) {
+    const shimR = coreRadius * (1.5 + sh * 0.6) + Math.sin(t * 3 + sh * 1.2) * 5;
+    const shimAlpha = 0.008 + energy * 0.012;
+    const shimGrad = ctx.createRadialGradient(cx, cy, shimR - 5, cx, cy, shimR + 5);
+    shimGrad.addColorStop(0, `rgba(200, 150, 255, 0)`);
+    shimGrad.addColorStop(0.5, `rgba(200, 150, 255, ${shimAlpha})`);
+    shimGrad.addColorStop(1, `rgba(200, 150, 255, 0)`);
+    ctx.fillStyle = shimGrad;
+    ctx.beginPath();
+    ctx.arc(cx + Math.sin(t * 2 + sh) * 2, cy + Math.cos(t * 1.7 + sh) * 2, shimR + 10, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+
+  // === MAGNETIC FIELD LINES ===
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (let fl = 0; fl < 10; fl++) {
+    const fieldAngle = (fl / 10) * Math.PI * 2;
+    const fieldAlpha = 0.06 + energy * 0.08 + beat * 0.04;
+    ctx.beginPath();
+    // Dipole field line: from north pole, arcs out, returns to south pole
+    const poleDist = containR2 * 0.8;
+    for (let ft = 0; ft <= 40; ft++) {
+      const fRatio = ft / 40;
+      const theta = fRatio * Math.PI; // 0 to PI (pole to pole)
+      // Dipole: r = R * sin^2(theta) scaled by field line index
+      const fieldR = (containR1 * 0.4 + fl * containR1 * 0.08) * Math.sin(theta) * Math.sin(theta);
+      const cosRot = Math.cos(fieldAngle);
+      const sinRot = Math.sin(fieldAngle);
+      // Map to 2D: project field line shape
+      const localX = fieldR * Math.sin(theta);
+      const localY = -poleDist * Math.cos(theta);
+      const px = cx + localX * cosRot + Math.sin(t * 0.5 + fl + fRatio * 3) * 2;
+      const py = cy + localY + Math.sin(t * 0.3 + fl * 0.7) * 2;
+      if (ft === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = `rgba(80, 180, 255, ${fieldAlpha})`;
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+
+  // === CONTAINMENT RINGS (3 rotating ellipses) ===
+  ctx.globalCompositeOperation = 'lighter';
+  const containmentWarning = beat > 0.7;
+  plasmaReactorContainShake = plasmaReactorContainShake * 0.9 + (containmentWarning ? beat * 6 : 0);
+  const rings = [
+    { r: containR1, speed: 0.3, tilt: 0.7, color: containmentWarning ? [255, 60, 60] : [0, 200, 255] },
+    { r: containR2, speed: -0.2, tilt: 0.5, color: containmentWarning ? [255, 40, 40] : [50, 150, 255] },
+    { r: containR3, speed: 0.15, tilt: 0.6, color: containmentWarning ? [255, 80, 80] : [0, 180, 230] }
+  ];
+  for (let ri = 0; ri < rings.length; ri++) {
+    const ring = rings[ri];
+    const angle = t * ring.speed + ri * 2.1;
+    const scaleX = 0.6 + Math.sin(t * ring.speed * 1.5 + ri) * 0.3 * ring.tilt;
+    const scaleY = 0.6 + Math.cos(t * ring.speed * 1.5 + ri + 1) * 0.3 * ring.tilt;
+    const shakeOX = (Math.random() - 0.5) * plasmaReactorContainShake;
+    const shakeOY = (Math.random() - 0.5) * plasmaReactorContainShake;
+
+    ctx.save();
+    ctx.translate(cx + shakeOX, cy + shakeOY);
+    ctx.rotate(angle);
+    ctx.scale(scaleX, scaleY);
+    ctx.beginPath();
+    ctx.arc(0, 0, ring.r, 0, Math.PI * 2);
+    const ringAlpha = 0.25 + energy * 0.35 + beat * 0.2;
+    ctx.strokeStyle = `rgba(${ring.color[0]}, ${ring.color[1]}, ${ring.color[2]}, ${ringAlpha})`;
+    ctx.lineWidth = containmentWarning ? 2 + beat * 3 : 1.2 + beat * 1.5;
+    ctx.shadowColor = `rgba(${ring.color[0]}, ${ring.color[1]}, ${ring.color[2]}, ${ringAlpha * 0.8})`;
+    ctx.shadowBlur = containmentWarning ? 20 + beat * 15 : 12 + beat * 10;
+    ctx.stroke();
+    ctx.restore();
+  }
+  ctx.shadowBlur = 0;
+
+  // === ENERGY FIELD between rings ===
+  for (let fi = 0; fi < 3; fi++) {
+    const fieldR = containR1 + (containR3 - containR1) * (fi / 2);
+    const fieldGrad = ctx.createRadialGradient(cx, cy, fieldR * 0.8, cx, cy, fieldR * 1.1);
+    const pulse = Math.sin(t * 2 + fi * 1.5) * 0.5 + 0.5;
+    const fAlpha = (0.02 + energy * 0.04) * pulse;
+    const offset = 2 + beat * 4;
+    fieldGrad.addColorStop(0, `rgba(100, 150, 255, ${fAlpha})`);
+    fieldGrad.addColorStop(0.5, `rgba(200, 100, 255, ${fAlpha * 0.7})`);
+    fieldGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = fieldGrad;
+    ctx.fillRect(0, 0, w, h);
+    const rGrad = ctx.createRadialGradient(cx + offset, cy, fieldR * 0.85, cx + offset, cy, fieldR * 1.05);
+    rGrad.addColorStop(0, `rgba(255, 50, 50, ${fAlpha * 0.3})`);
+    rGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = rGrad;
+    ctx.fillRect(0, 0, w, h);
+    const bGrad = ctx.createRadialGradient(cx - offset, cy, fieldR * 0.85, cx - offset, cy, fieldR * 1.05);
+    bGrad.addColorStop(0, `rgba(50, 50, 255, ${fAlpha * 0.3})`);
+    bGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = bGrad;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  // === ORBITING DEBRIS ===
+  if (!plasmaReactorDebris) {
+    plasmaReactorDebris = [];
+    for (let i = 0; i < 25; i++) {
+      plasmaReactorDebris.push({
+        angle: Math.random() * Math.PI * 2,
+        orbitR: containR1 * 0.6 + Math.random() * (containR3 * 1.1 - containR1 * 0.6),
+        speed: (0.1 + Math.random() * 0.4) * (Math.random() < 0.5 ? 1 : -1),
+        size: 1.5 + Math.random() * 4,
+        eccX: 0.8 + Math.random() * 0.4,
+        eccY: 0.8 + Math.random() * 0.4,
+        tilt: Math.random() * Math.PI,
+        shape: Math.floor(Math.random() * 3)
+      });
+    }
+  }
+  for (let i = 0; i < plasmaReactorDebris.length; i++) {
+    const d = plasmaReactorDebris[i];
+    d.angle += d.speed * 0.016 * (0.5 + energy * 0.5);
+    const dx = cx + Math.cos(d.angle + d.tilt) * d.orbitR * d.eccX;
+    const dy = cy + Math.sin(d.angle) * d.orbitR * d.eccY;
+    // Glow on side facing core
+    const toCoreAngle = Math.atan2(cy - dy, cx - dx);
+    const facingCore = Math.cos(d.angle - toCoreAngle);
+    const glowAlpha = Math.max(0, facingCore) * 0.6 + 0.2;
+    ctx.beginPath();
+    ctx.arc(dx, dy, d.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${Math.floor(120 + facingCore * 135)}, ${Math.floor(60 + facingCore * 80)}, ${Math.floor(30 + facingCore * 50)}, ${glowAlpha})`;
+    ctx.fill();
+    // Hot glow
+    if (facingCore > 0.3) {
+      ctx.beginPath();
+      ctx.arc(dx, dy, d.size * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 150, 50, ${(facingCore - 0.3) * 0.15})`;
+      ctx.fill();
+    }
+  }
+
+  // === ORBITING PARTICLES ===
+  if (!plasmaReactorParticles) {
+    plasmaReactorParticles = [];
+    for (let i = 0; i < 80; i++) {
+      const orbitR = containR1 * 0.5 + Math.random() * (containR3 - containR1) * 0.8;
+      plasmaReactorParticles.push({
+        angle: Math.random() * Math.PI * 2,
+        orbitR: orbitR,
+        speed: (0.3 + Math.random() * 0.8) * (Math.random() < 0.5 ? 1 : -1),
+        size: 0.8 + Math.random() * 2,
+        eccX: 0.7 + Math.random() * 0.5,
+        eccY: 0.7 + Math.random() * 0.5,
+        tilt: Math.random() * Math.PI,
+        hue: Math.random() * 60 + 180,
+        trail: []
+      });
+    }
+  }
+  for (let i = 0; i < plasmaReactorParticles.length; i++) {
+    const p = plasmaReactorParticles[i];
+    p.angle += p.speed * 0.016 * (0.5 + energy);
+    const px = cx + Math.cos(p.angle + p.tilt) * p.orbitR * p.eccX;
+    const py = cy + Math.sin(p.angle) * p.orbitR * p.eccY;
+    p.trail.push({ x: px, y: py });
+    if (p.trail.length > 8) p.trail.shift();
+    for (let ti = 0; ti < p.trail.length - 1; ti++) {
+      const ta = (ti / p.trail.length) * 0.4;
+      ctx.beginPath();
+      ctx.moveTo(p.trail[ti].x, p.trail[ti].y);
+      ctx.lineTo(p.trail[ti + 1].x, p.trail[ti + 1].y);
+      ctx.strokeStyle = `hsla(${p.hue}, 100%, 70%, ${ta})`;
+      ctx.lineWidth = p.size * 0.5;
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(px, py, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${p.hue}, 100%, 80%, ${0.5 + energy * 0.4})`;
+    ctx.fill();
+  }
+
+  // === LIGHTNING ARCS (8-10 simultaneous, some between rings) ===
+  if (!plasmaReactorArcs || time - plasmaReactorArcTimer > 100) {
+    plasmaReactorArcTimer = time;
+    plasmaReactorArcs = [];
+    const numArcs = 6 + Math.floor(beat * 4);
+    for (let a = 0; a < numArcs; a++) {
+      const isRingArc = a > numArcs * 0.6; // Some arc between rings
+      let startX, startY, tx, ty;
+      if (isRingArc) {
+        const sa = Math.random() * Math.PI * 2;
+        const sr = containR1 + Math.random() * (containR2 - containR1);
+        startX = cx + Math.cos(sa) * sr;
+        startY = cy + Math.sin(sa) * sr;
+        const ta2 = sa + (Math.random() - 0.5) * 1.5;
+        const tr = containR2 + Math.random() * (containR3 - containR2);
+        tx = cx + Math.cos(ta2) * tr;
+        ty = cy + Math.sin(ta2) * tr;
+      } else {
+        startX = cx; startY = cy;
+        const targetAngle = Math.random() * Math.PI * 2;
+        const targetR = containR1 + Math.random() * (containR3 - containR1);
+        tx = cx + Math.cos(targetAngle) * targetR;
+        ty = cy + Math.sin(targetAngle) * targetR;
+      }
+      const points = [{ x: startX, y: startY }];
+      const segments = 8 + Math.floor(Math.random() * 6);
+      for (let s = 1; s <= segments; s++) {
+        const ratio = s / segments;
+        const baseX = startX + (tx - startX) * ratio;
+        const baseY = startY + (ty - startY) * ratio;
+        const jitter = (1 - ratio * 0.5) * 25;
+        points.push({ x: baseX + (Math.random() - 0.5) * jitter, y: baseY + (Math.random() - 0.5) * jitter });
+      }
+      plasmaReactorArcs.push({ points: points, hue: 270 + Math.random() * 60, endX: tx, endY: ty });
+    }
+  }
+  for (let a = 0; a < plasmaReactorArcs.length; a++) {
+    const arc = plasmaReactorArcs[a];
+    const arcAlpha = 0.3 + beat * 0.5 + energy * 0.2;
+    ctx.beginPath();
+    ctx.moveTo(arc.points[0].x, arc.points[0].y);
+    for (let p = 1; p < arc.points.length; p++) {
+      ctx.lineTo(arc.points[p].x + (Math.random() - 0.5) * 3, arc.points[p].y + (Math.random() - 0.5) * 3);
+    }
+    ctx.strokeStyle = `hsla(${arc.hue}, 100%, 85%, ${arcAlpha})`;
+    ctx.lineWidth = 1 + beat * 2;
+    ctx.shadowColor = `hsla(${arc.hue}, 100%, 70%, ${arcAlpha})`;
+    ctx.shadowBlur = 10 + beat * 15;
+    ctx.stroke();
+    ctx.strokeStyle = `rgba(255, 255, 255, ${arcAlpha * 0.6})`;
+    ctx.lineWidth = 0.5 + beat;
+    ctx.stroke();
+    // Sparks at arc endpoint
+    if (beat > 0.4 && Math.random() < 0.3 && plasmaReactorSparks.length < 80) {
+      for (let sp = 0; sp < 3; sp++) {
+        plasmaReactorSparks.push({
+          x: arc.endX || arc.points[arc.points.length - 1].x,
+          y: arc.endY || arc.points[arc.points.length - 1].y,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.5) * 6,
+          life: 0.5 + Math.random() * 0.5,
+          size: 0.5 + Math.random() * 1.5,
+          hue: arc.hue
+        });
+      }
+    }
+  }
+  ctx.shadowBlur = 0;
+
+  // === SPARKS flying off containment rings ===
+  for (let i = plasmaReactorSparks.length - 1; i >= 0; i--) {
+    const sp = plasmaReactorSparks[i];
+    sp.x += sp.vx;
+    sp.y += sp.vy;
+    sp.vy += 0.05;
+    sp.life -= 0.025;
+    if (sp.life <= 0) { plasmaReactorSparks.splice(i, 1); continue; }
+    ctx.beginPath();
+    ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${sp.hue}, 100%, 90%, ${sp.life})`;
+    ctx.fill();
+  }
+
+  // === PLASMA JETS on heavy beats ===
+  if (beat > 0.65 && plasmaReactorJets.length < 40) {
+    for (let j = 0; j < 8; j++) {
+      const dir = Math.random() < 0.5 ? -1 : 1; // up or down
+      plasmaReactorJets.push({
+        x: cx + (Math.random() - 0.5) * coreRadius * 0.8,
+        y: cy,
+        vx: (Math.random() - 0.5) * 2,
+        vy: dir * (5 + Math.random() * 8 + beat * 6),
+        life: 1,
+        size: 1.5 + Math.random() * 3,
+        hue: 280 + Math.random() * 50
+      });
+    }
+  }
+  for (let i = plasmaReactorJets.length - 1; i >= 0; i--) {
+    const j = plasmaReactorJets[i];
+    j.x += j.vx;
+    j.y += j.vy;
+    j.life -= 0.02;
+    if (j.life <= 0 || j.y < 0 || j.y > h) { plasmaReactorJets.splice(i, 1); continue; }
+    ctx.beginPath();
+    ctx.arc(j.x, j.y, j.size * j.life, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${j.hue}, 100%, 80%, ${j.life * 0.6})`;
+    ctx.shadowColor = `hsla(${j.hue}, 100%, 60%, ${j.life * 0.4})`;
+    ctx.shadowBlur = 8;
+    ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+
+  // === EMP SHOCKWAVE on big beats ===
+  if (beat > 0.7 && plasmaReactorShockwaves.length < 3) {
+    plasmaReactorShockwaves.push({ r: coreRadius, maxR: minDim * 0.6, life: 1 });
+  }
+  for (let i = plasmaReactorShockwaves.length - 1; i >= 0; i--) {
+    const sw = plasmaReactorShockwaves[i];
+    sw.r += (sw.maxR - sw.r) * 0.06;
+    sw.life -= 0.02;
+    if (sw.life <= 0) { plasmaReactorShockwaves.splice(i, 1); continue; }
+    ctx.beginPath();
+    ctx.arc(cx, cy, sw.r, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(180, 150, 255, ${sw.life * 0.3})`;
+    ctx.lineWidth = 2 + sw.life * 4;
+    ctx.shadowColor = `rgba(180, 150, 255, ${sw.life * 0.2})`;
+    ctx.shadowBlur = 15;
+    ctx.stroke();
+    // Inner distortion ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, sw.r * 0.95, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(255, 255, 255, ${sw.life * 0.15})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
+
+  // === BEAT TENDRILS ===
+  if (beat > 0.5 && plasmaReactorTendrils.length < 12) {
+    const tendrilAngle = Math.random() * Math.PI * 2;
+    plasmaReactorTendrils.push({
+      angle: tendrilAngle,
+      extend: 0,
+      maxExtend: containR2 * (0.5 + Math.random() * 0.8),
+      life: 1,
+      hue: 300 + Math.random() * 40,
+      cp1a: tendrilAngle + (Math.random() - 0.5) * 1.2,
+      cp2a: tendrilAngle + (Math.random() - 0.5) * 0.8
+    });
+  }
+  for (let i = plasmaReactorTendrils.length - 1; i >= 0; i--) {
+    const td = plasmaReactorTendrils[i];
+    td.extend = Math.min(td.maxExtend, td.extend + td.maxExtend * 0.08);
+    td.life -= 0.015;
+    if (td.life <= 0) { plasmaReactorTendrils.splice(i, 1); continue; }
+    const startX = cx + Math.cos(td.angle) * coreRadius;
+    const startY = cy + Math.sin(td.angle) * coreRadius;
+    const endX = cx + Math.cos(td.angle) * (coreRadius + td.extend);
+    const endY = cy + Math.sin(td.angle) * (coreRadius + td.extend);
+    const cp1x = cx + Math.cos(td.cp1a) * td.extend * 0.5;
+    const cp1y = cy + Math.sin(td.cp1a) * td.extend * 0.5;
+    const cp2x = cx + Math.cos(td.cp2a) * td.extend * 0.8;
+    const cp2y = cy + Math.sin(td.cp2a) * td.extend * 0.8;
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+    ctx.strokeStyle = `hsla(${td.hue}, 100%, 75%, ${td.life * 0.7})`;
+    ctx.lineWidth = 2 + td.life * 2;
+    ctx.shadowColor = `hsla(${td.hue}, 100%, 60%, ${td.life * 0.5})`;
+    ctx.shadowBlur = 15;
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
+
+  // === PLASMA CORE ===
+  const outerGlow = ctx.createRadialGradient(cx, cy, coreRadius * 0.5, cx, cy, coreRadius * 3);
+  outerGlow.addColorStop(0, `rgba(200, 100, 255, ${0.2 + bass * 0.3})`);
+  outerGlow.addColorStop(0.3, `rgba(255, 80, 180, ${0.1 + bass * 0.15})`);
+  outerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = outerGlow;
+  ctx.beginPath();
+  ctx.arc(cx, cy, coreRadius * 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreRadius);
+  coreGrad.addColorStop(0, `rgba(255, 255, 255, ${0.9 + energy * 0.1})`);
+  coreGrad.addColorStop(0.2, `rgba(255, 200, 150, ${0.8})`);
+  coreGrad.addColorStop(0.5, `rgba(255, 100, 200, 0.6)`);
+  coreGrad.addColorStop(0.8, `rgba(180, 50, 255, 0.4)`);
+  coreGrad.addColorStop(1, 'rgba(80, 0, 150, 0)');
+  ctx.fillStyle = coreGrad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, coreRadius, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Swirl detail inside core
+  for (let si = 0; si < 30; si++) {
+    const sa = t * 3 + si * 0.5 + Math.sin(t + si * 0.3) * 0.5;
+    const sr = coreRadius * (0.1 + Math.random() * 0.8) * (0.5 + Math.sin(t * 2 + si) * 0.5);
+    const sx = cx + Math.cos(sa) * sr;
+    const sy = cy + Math.sin(sa) * sr;
+    const ss = 1 + Math.random() * 3;
+    ctx.beginPath();
+    ctx.arc(sx, sy, ss, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${0.1 + Math.random() * 0.2})`;
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // Vignette
+  const vig = ctx.createRadialGradient(cx, cy, minDim * 0.2, cx, cy, w * 0.65);
+  vig.addColorStop(0, 'transparent');
+  vig.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, w, h);
+}
+
+// ============ XENOMORPH HIVE (HR Giger alien organic horror) ============
+let xenoHiveInit = false;
+let xenoHiveSpores = null;
+let xenoHiveVeinPhase = 0;
+let xenoHiveBreathPhase = 0;
+
+function drawXenomorphHive(ctx, w, h, time) {
+  const t = time * 0.001;
+  const bass = bands.bass, mid = bands.mid, treble = bands.treble, energy = bands.energy;
+  const beat = beatIntensity;
+  const cx = w * 0.5, cy = h * 0.42; // Vanishing point slightly above center
+
+  // Full clear
+  ctx.fillStyle = '#050510';
+  ctx.fillRect(0, 0, w, h);
+
+  // Breathing effect — hive contracts on beat
+  xenoHiveBreathPhase = xenoHiveBreathPhase * 0.92 + beat * 0.4;
+  const breathScale = 1 - xenoHiveBreathPhase * 0.08;
+
+  // Vein pulse wave (travels from back to front)
+  xenoHiveVeinPhase += 0.02 + bass * 0.04;
+
+  // === DISTANT LIGHT SOURCE ===
+  ctx.globalCompositeOperation = 'lighter';
+  const lightIntensity = 0.15 + energy * 0.35 + Math.sin(t * 1.5) * 0.05;
+  const lightGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.35);
+  lightGrad.addColorStop(0, `rgba(100, 255, 200, ${lightIntensity})`);
+  lightGrad.addColorStop(0.2, `rgba(50, 200, 150, ${lightIntensity * 0.5})`);
+  lightGrad.addColorStop(0.5, `rgba(0, 80, 60, ${lightIntensity * 0.2})`);
+  lightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = lightGrad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Volumetric light rays
+  const numRays = 8;
+  for (let ri = 0; ri < numRays; ri++) {
+    const rayAngle = (ri / numRays) * Math.PI * 2 + t * 0.1;
+    const rayLen = w * 0.3 + Math.sin(t + ri) * w * 0.05;
+    const rayWidth = 0.15 + Math.sin(t * 0.7 + ri * 0.5) * 0.08;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(rayAngle - rayWidth) * rayLen, cy + Math.sin(rayAngle - rayWidth) * rayLen);
+    ctx.lineTo(cx + Math.cos(rayAngle + rayWidth) * rayLen, cy + Math.sin(rayAngle + rayWidth) * rayLen);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(50, 255, 180, ${0.01 + energy * 0.02})`;
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // === ORGANIC RIBS ===
+  const numRibs = 18;
+  for (let ri = 0; ri < numRibs; ri++) {
+    const depth = ri / numRibs; // 0=nearest, 1=farthest
+    const perspective = 0.15 + depth * 0.85;
+
+    // Rib arch — bezier curve from bottom-left to bottom-right through top
+    const ribY = cy + (h - cy) * (1 - depth) * breathScale;
+    const ribWidth = w * (1 - depth * 0.85) * breathScale;
+    const ribHeight = h * 0.4 * (1 - depth * 0.7);
+    const ribLeft = cx - ribWidth / 2;
+    const ribRight = cx + ribWidth / 2;
+    const ribTop = ribY - ribHeight;
+
+    const ribAlpha = (1 - depth * 0.7) * 0.6;
+    const ribThickness = (3 - depth * 2) * breathScale;
+
+    // Bioluminescent edge color
+    const veinWave = Math.sin(xenoHiveVeinPhase - depth * 6) * 0.5 + 0.5;
+    const biolumAlpha = veinWave * (0.2 + bass * 0.5);
+    const biolumColor = ri % 2 === 0 ? [57, 255, 20] : [0, 240, 255]; // green or blue
+
+    // Draw rib structure
+    ctx.beginPath();
+    ctx.moveTo(ribLeft, h * 0.95);
+    ctx.bezierCurveTo(
+      ribLeft + ribWidth * 0.1, ribTop + ribHeight * 0.3,
+      cx - ribWidth * 0.1, ribTop,
+      cx, ribTop
+    );
+    ctx.bezierCurveTo(
+      cx + ribWidth * 0.1, ribTop,
+      ribRight - ribWidth * 0.1, ribTop + ribHeight * 0.3,
+      ribRight, h * 0.95
+    );
+
+    // Dark biomechanical fill
+    ctx.strokeStyle = `rgba(26, 26, 42, ${ribAlpha})`;
+    ctx.lineWidth = ribThickness + 4;
+    ctx.stroke();
+
+    // Bioluminescent edge
+    ctx.strokeStyle = `rgba(${biolumColor[0]}, ${biolumColor[1]}, ${biolumColor[2]}, ${biolumAlpha})`;
+    ctx.lineWidth = ribThickness * 0.6;
+    ctx.shadowColor = `rgba(${biolumColor[0]}, ${biolumColor[1]}, ${biolumColor[2]}, ${biolumAlpha * 0.8})`;
+    ctx.shadowBlur = 8 + bass * 12;
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
+
+  // === BIOLUMINESCENT VEINS between ribs ===
+  ctx.globalCompositeOperation = 'lighter';
+  for (let vi = 0; vi < 24; vi++) {
+    const veinX = cx + (vi - 12) * (w / 26);
+    const veinWave = Math.sin(xenoHiveVeinPhase - vi * 0.3) * 0.5 + 0.5;
+    const vColor = vi % 3 === 0 ? [57, 255, 20] : [0, 240, 255];
+    const vAlpha = veinWave * (0.1 + bass * 0.3);
+
+    ctx.beginPath();
+    const startY = h * 0.95;
+    const endY = cy + (h - cy) * 0.1;
+
+    // Vein runs from near bottom toward vanishing point with organic curves
+    const segments = 10;
+    for (let s = 0; s <= segments; s++) {
+      const ratio = s / segments;
+      const vx = veinX + (cx - veinX) * ratio * 0.9 + Math.sin(t * 0.8 + vi + ratio * 4) * 8 * (1 - ratio);
+      const vy = startY + (endY - startY) * ratio;
+      if (s === 0) ctx.moveTo(vx, vy);
+      else ctx.lineTo(vx, vy);
+    }
+
+    ctx.strokeStyle = `rgba(${vColor[0]}, ${vColor[1]}, ${vColor[2]}, ${vAlpha})`;
+    ctx.lineWidth = 0.8 + veinWave * 1.5;
+    ctx.shadowColor = `rgba(${vColor[0]}, ${vColor[1]}, ${vColor[2]}, ${vAlpha * 0.6})`;
+    ctx.shadowBlur = 6 + bass * 8;
+    ctx.stroke();
+
+    // Pulse dot traveling along vein
+    const dotPos = (xenoHiveVeinPhase * 0.3 + vi * 0.2) % 1;
+    const dotX = veinX + (cx - veinX) * dotPos * 0.9 + Math.sin(t * 0.8 + vi + dotPos * 4) * 8 * (1 - dotPos);
+    const dotY = startY + (endY - startY) * dotPos;
+    ctx.beginPath();
+    ctx.arc(dotX, dotY, 1.5 + bass * 2, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${vColor[0]}, ${vColor[1]}, ${vColor[2]}, ${vAlpha * 2})`;
+    ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+
+  // === FLOATING SPORES ===
+  if (!xenoHiveSpores) {
+    xenoHiveSpores = [];
+    for (let i = 0; i < 50; i++) {
+      xenoHiveSpores.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        z: 0.2 + Math.random() * 0.8,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: -0.2 - Math.random() * 0.5,
+        size: 0.5 + Math.random() * 2,
+        phase: Math.random() * Math.PI * 2,
+        hue: Math.random() < 0.5 ? 130 : 185 // green or cyan
+      });
+    }
+  }
+  for (let i = 0; i < xenoHiveSpores.length; i++) {
+    const sp = xenoHiveSpores[i];
+    sp.x += sp.vx + Math.sin(t * 0.5 + sp.phase) * 0.3;
+    sp.y += sp.vy * sp.z; // Parallax — closer = faster
+    sp.phase += 0.01;
+
+    // Wrap around
+    if (sp.y < -10) { sp.y = h + 10; sp.x = Math.random() * w; }
+    if (sp.x < -10) sp.x = w + 10;
+    if (sp.x > w + 10) sp.x = -10;
+
+    // Size grows as it approaches camera (y increases toward bottom = closer)
+    const apparentSize = sp.size * (0.5 + (1 - sp.y / h) * sp.z);
+    const spAlpha = Math.min(0.6, 0.1 + sp.z * 0.3 + treble * 0.2) * (1 - Math.abs(sp.y - h / 2) / (h / 2) * 0.3);
+
+    ctx.beginPath();
+    ctx.arc(sp.x, sp.y, Math.max(0.5, apparentSize), 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${sp.hue}, 100%, 70%, ${spAlpha})`;
+    ctx.shadowColor = `hsla(${sp.hue}, 100%, 60%, ${spAlpha * 0.5})`;
+    ctx.shadowBlur = 4;
+    ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+
+  // === AMBIENT ORGANIC NOISE ===
+  const noiseCount = 200 + Math.floor(energy * 100);
+  for (let ni = 0; ni < noiseCount; ni++) {
+    const nx = Math.random() * w;
+    const ny = Math.random() * h;
+    ctx.fillStyle = `rgba(20, 30, 25, ${0.03 + Math.random() * 0.04})`;
+    ctx.fillRect(nx, ny, 1, 1);
+  }
+
+  // === BEAT FLASH — bioluminescent surge ===
+  if (beat > 0.5) {
+    const flashAlpha = (beat - 0.5) * 0.15;
+    const flashGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.5);
+    flashGrad.addColorStop(0, `rgba(57, 255, 20, ${flashAlpha})`);
+    flashGrad.addColorStop(0.5, `rgba(0, 240, 255, ${flashAlpha * 0.5})`);
+    flashGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = flashGrad;
+    ctx.fillRect(0, 0, w, h);
+  }
+  ctx.globalCompositeOperation = 'source-over';
+
+  // === FLOOR REFLECTION ===
+  const floorY = h * 0.85;
+  const floorGrad = ctx.createLinearGradient(0, floorY, 0, h);
+  floorGrad.addColorStop(0, 'rgba(10, 20, 15, 0)');
+  floorGrad.addColorStop(0.3, `rgba(10, 40, 30, ${0.1 + energy * 0.1})`);
+  floorGrad.addColorStop(1, `rgba(5, 15, 10, 0.3)`);
+  ctx.fillStyle = floorGrad;
+  ctx.fillRect(0, floorY, w, h - floorY);
+
+  // Vignette — heavy, dark, claustrophobic
+  const vig = ctx.createRadialGradient(cx, cy, w * 0.15, cx, cy, w * 0.55);
+  vig.addColorStop(0, 'transparent');
+  vig.addColorStop(0.7, 'rgba(0, 0, 0, 0.3)');
+  vig.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, w, h);
+}
+
+// ============ HACKER TERMINAL (lyrics as code in a cyberpunk terminal) ============
+let hackerTermLines = [];
+let hackerTermLastWord = 0;
+let hackerTermCursor = 0;
+let hackerTermScrollY = 0;
+let hackerTermGlitchUntil = 0;
+let hackerTermPromptPrefixes = [
+  'root@aether:~$ ',
+  'phantom@nexus:~/music$ ',
+  'sys.audio.stream > ',
+  'AETHER::core > ',
+  '[SIGNAL] > ',
+  'decrypt(lyric) => ',
+  'audio.pipe | ',
+  '0xFFAE > ',
+  'kernel.sound > ',
+  'proc/music/out > '
+];
+let hackerTermLastBeat = 0;
+let hackerTermScanline = 0;
+
+function drawHackerTerminal(ctx, w, h, time) {
+  // Semi-transparent black for trail effect
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+  ctx.fillRect(0, 0, w, h);
+
+  const fontSize = Math.max(10, Math.min(14, w / 55));
+  const lineH = fontSize * 1.6;
+  const maxVisibleLines = Math.floor(h / lineH) + 2;
+  const margin = 12;
+  const bass = bands.bass || 0;
+  const energy = bands.energy || 0;
+  const bi = beatIntensity || 0;
+  const mid = bands.mid || 0;
+
+  // Beat detection — add new lines on beats
+  if (bi > 0.25 && time - hackerTermLastBeat > 150) {
+    hackerTermLastBeat = time;
+    hackerTermGlitchUntil = time + 80 + bi * 120;
+
+    // Get lyric words from the existing lyric system
+    let word = '';
+    if (lyricRainLyrics && lyricRainLyricWords.length > 0) {
+      word = lyricRainLyricWords[hackerTermCursor % lyricRainLyricWords.length] || '';
+      hackerTermCursor++;
+    }
+
+    const prefix = hackerTermPromptPrefixes[Math.floor(Math.random() * hackerTermPromptPrefixes.length)];
+    const timestamp = new Date().toISOString().slice(11, 23);
+
+    if (word) {
+      // Lyric line styled as code
+      const styles = [
+        `${prefix}echo "${word}"`,
+        `${prefix}println!("${word}");`,
+        `[${timestamp}] STDOUT: ${word}`,
+        `${prefix}const lyric = "${word}";`,
+        `>>> stream.write("${word}")`,
+        `${prefix}emit('audio', { text: "${word}" })`,
+        `[DECODE] 0x${Math.floor(Math.random()*0xFFFFFF).toString(16).padStart(6,'0')} => "${word}"`,
+        `${prefix}fn process() -> "${word}"`,
+      ];
+      hackerTermLines.push({
+        text: styles[Math.floor(Math.random() * styles.length)],
+        time: time,
+        type: 'lyric',
+        intensity: bi
+      });
+    } else {
+      // System/hacker flavor text when no lyrics
+      const sysLines = [
+        `[${timestamp}] audio.fft: bass=${bass.toFixed(3)} mid=${mid.toFixed(3)} energy=${energy.toFixed(3)}`,
+        `${prefix}analyzing frequency spectrum...`,
+        `[SIGNAL] beat_detected intensity=${bi.toFixed(2)}`,
+        `[${timestamp}] waveform.peak() => ${(bass * 100).toFixed(0)}%`,
+        `${prefix}ping NAVIDROME ... ${Math.floor(Math.random()*5+1)}ms`,
+        `[PROC] audio_buffer: ${Math.floor(energy * 48000)} samples/s`,
+        `${prefix}decrypt --key=0x${Math.floor(Math.random()*0xFFFF).toString(16)} --stream`,
+        `[MEM] heap: ${Math.floor(Math.random()*512+256)}MB / 1024MB`,
+        `[${timestamp}] visualizer.render(frame=${Math.floor(time/16.67)})`,
+        `${prefix}nmap -sS audio.local --beats=${Math.floor(bi*100)}`,
+      ];
+      hackerTermLines.push({
+        text: sysLines[Math.floor(Math.random() * sysLines.length)],
+        time: time,
+        type: 'system',
+        intensity: bi
+      });
+    }
+  }
+
+  // Also add lines on a slower timer for ambient activity
+  if (hackerTermLines.length === 0 || (time - (hackerTermLines[hackerTermLines.length-1]?.time || 0)) > 400) {
+    const ambient = [
+      `  ... monitoring audio stream ...`,
+      `  [OK] connection stable`,
+      `  > _`,
+      `  [IDLE] awaiting signal`,
+    ];
+    if (Math.random() < 0.3) {
+      hackerTermLines.push({
+        text: ambient[Math.floor(Math.random() * ambient.length)],
+        time: time,
+        type: 'ambient',
+        intensity: 0
+      });
+    }
+  }
+
+  // Trim old lines
+  while (hackerTermLines.length > 200) hackerTermLines.shift();
+
+  // Scroll target — always show latest lines
+  const totalH = hackerTermLines.length * lineH;
+  const targetScroll = Math.max(0, totalH - h + lineH * 2);
+  hackerTermScrollY += (targetScroll - hackerTermScrollY) * 0.12;
+
+  // Glitch effect on beats
+  const isGlitching = time < hackerTermGlitchUntil;
+
+  ctx.save();
+
+  // Screen shake on heavy bass
+  if (bi > 0.5) {
+    const shakeX = (Math.random() - 0.5) * bi * 6;
+    const shakeY = (Math.random() - 0.5) * bi * 4;
+    ctx.translate(shakeX, shakeY);
+  }
+
+  // Draw scanline overlay
+  hackerTermScanline = (hackerTermScanline + 1.5) % h;
+  ctx.fillStyle = 'rgba(0, 255, 65, 0.02)';
+  ctx.fillRect(0, hackerTermScanline - 2, w, 4);
+
+  // CRT vignette
+  const vig = ctx.createRadialGradient(w/2, h/2, Math.min(w,h)*0.3, w/2, h/2, Math.max(w,h)*0.7);
+  vig.addColorStop(0, 'transparent');
+  vig.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, w, h);
+
+  // Horizontal scan lines (CRT effect)
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+  for (let y = 0; y < h; y += 3) {
+    ctx.fillRect(0, y, w, 1);
+  }
+
+  // Draw text lines
+  ctx.font = `${fontSize}px 'JetBrains Mono', 'Consolas', monospace`;
+  ctx.textBaseline = 'top';
+
+  const startLine = Math.max(0, Math.floor(hackerTermScrollY / lineH) - 1);
+  const endLine = Math.min(hackerTermLines.length, startLine + maxVisibleLines + 2);
+
+  for (let i = startLine; i < endLine; i++) {
+    const line = hackerTermLines[i];
+    const y = i * lineH - hackerTermScrollY;
+    if (y < -lineH || y > h + lineH) continue;
+
+    const age = time - line.time;
+    const fadeIn = Math.min(1, age / 200);
+    const isNew = age < 300;
+
+    // Glitch displacement on new lines
+    let xOff = margin;
+    if (isGlitching && isNew && Math.random() < 0.3) {
+      xOff += (Math.random() - 0.5) * 20;
+    }
+
+    // Color based on type
+    let r, g, b;
+    if (line.type === 'lyric') {
+      // Bright green for lyrics, with beat-reactive brightness
+      const bright = 0.7 + line.intensity * 0.3;
+      r = Math.floor(30 * bright);
+      g = Math.floor(255 * bright);
+      b = Math.floor(65 * bright);
+    } else if (line.type === 'system') {
+      // Cyan/teal for system lines
+      r = 0; g = Math.floor(200 + mid * 55); b = Math.floor(180 + energy * 75);
+    } else {
+      // Dim gray for ambient
+      r = 60; g = 80; b = 60;
+    }
+
+    // New line glow effect
+    if (isNew) {
+      ctx.shadowColor = line.type === 'lyric' ? `rgba(30, 255, 65, ${0.6 * fadeIn})` : `rgba(0, 200, 180, ${0.3 * fadeIn})`;
+      ctx.shadowBlur = 8 + line.intensity * 12;
+    } else {
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+    }
+
+    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${fadeIn * (isNew ? 1 : 0.75)})`;
+    ctx.fillText(line.text, xOff, y);
+
+    // Chromatic aberration on beat lines
+    if (isNew && line.intensity > 0.3) {
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = `rgba(255, 0, 80, ${0.12 * line.intensity * fadeIn})`;
+      ctx.fillText(line.text, xOff - 1.5, y);
+      ctx.fillStyle = `rgba(0, 120, 255, ${0.1 * line.intensity * fadeIn})`;
+      ctx.fillText(line.text, xOff + 1.5, y);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+  }
+
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+
+  // Blinking cursor at bottom
+  if (Math.floor(time / 500) % 2 === 0) {
+    const cursorY = Math.min(hackerTermLines.length * lineH - hackerTermScrollY, h - lineH);
+    const prefix = hackerTermPromptPrefixes[0];
+    ctx.fillStyle = `rgba(30, 255, 65, ${0.6 + bass * 0.4})`;
+    ctx.font = `${fontSize}px 'JetBrains Mono', 'Consolas', monospace`;
+    ctx.fillText(prefix + '█', margin, Math.max(0, cursorY));
+  }
+
+  // Bass-reactive border glow
+  const borderGlow = bass * 0.3;
+  if (borderGlow > 0.02) {
+    ctx.strokeStyle = `rgba(30, 255, 65, ${borderGlow})`;
+    ctx.lineWidth = 1;
+    ctx.shadowColor = `rgba(30, 255, 65, ${borderGlow})`;
+    ctx.shadowBlur = 15;
+    ctx.strokeRect(2, 2, w - 4, h - 4);
+    ctx.shadowBlur = 0;
+  }
+
+  ctx.restore();
+}
+
 function drawViz(time) {
+  if (!vizW || !vizH) vizResize();
   // Scenes that use trails handle their own clearing.
   // Only clear for scenes that need a full clear each frame.
-  const trailScenes = [0, 1, 3, 5, 6, 8, 10, 11, 12, 13]; // Fractal Flame, Void Pulse, Particle Field, Aurora Borealis, Cosmic Mandala, Bio-Genesis, Neural Web II, DNA Helix II, Lyric Rain, Frequency Mountain
+  const trailScenes = [0, 1, 3, 5, 6, 8, 10, 11, 12, 13, 14, 16, 18]; // Fractal Flame, Void Pulse, Particle Field, Aurora Borealis, Cosmic Mandala, Bio-Genesis, Neural Web II, DNA Helix II, Lyric Rain, Frequency Mountain, Chrome Ocean, Plasma Reactor
   const sheepVideo = document.getElementById('sheepVideo');
   const wpVid = document.getElementById('wpVideo');
   if (currentScene === 7) {
@@ -15045,6 +16720,11 @@ function drawViz(time) {
     case 11: drawDnaHelixII(vizCtx, vizW, vizH, time); break;
     case 12: drawLyricRain(vizCtx, vizW, vizH, time); break;
     case 13: drawFrequencyMountain(vizCtx, vizW, vizH, time); break;
+    case 14: drawChromeOcean(vizCtx, vizW, vizH, time); break;
+    case 15: drawHyperspaceTunnel(vizCtx, vizW, vizH, time); break;
+    case 16: drawPlasmaReactor(vizCtx, vizW, vizH, time); break;
+    case 17: drawXenomorphHive(vizCtx, vizW, vizH, time); break;
+    case 18: drawHackerTerminal(vizCtx, vizW, vizH, time); break;
   }
   requestAnimationFrame(drawViz);
 }
@@ -15082,6 +16762,18 @@ function switchScene(index) {
   dnaHelixIIPhase = 0; // Reset DNA helix II
   dnaHelixIIBeatPulse = 0;
   dnaHelixIIAmbientParticles = null; // Reset DNA helix II particles
+  chromeOceanDroplets = []; // Reset chrome ocean
+  chromeOceanInit = false;
+  hyperTunnelRings = null; // Reset hyperspace tunnel
+  hyperTunnelStars = null;
+  plasmaReactorArcs = null; // Reset plasma reactor
+  plasmaReactorTendrils = [];
+  plasmaReactorParticles = null;
+  xenoHiveInit = false; // Reset xenomorph hive
+  xenoHiveSpores = null;
+  hackerTermLines = []; // Reset hacker terminal
+  hackerTermCursor = 0;
+  hackerTermScrollY = 0;
   // Hide/show sheep video
   const sv = document.getElementById('sheepVideo');
   if (currentScene === 7) {
