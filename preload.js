@@ -40,4 +40,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getStemPath: (opts) => ipcRenderer.invoke('get-stem-path', opts),
   // Media key events from main process
   onMediaKey: (callback) => ipcRenderer.on('media-key', (_event, action) => callback(action)),
+  // Mini Player — resize window + toggle always-on-top
+  setMiniPlayer: (active) => ipcRenderer.invoke('mini-player-toggle', active),
 });

@@ -141,7 +141,9 @@ process.on('uncaughtException', (err) => {
   console.error('UNCAUGHT:', err);
 });
 
-// Force Chromium to use the default Windows audio output (fixes silent audio on some systems)
+// Audio output: AudioServiceSandbox disabled fixes silent-audio cases on some
+// Windows systems. Everything else stays default — adding more flags has only
+// caused regressions on this user's DAC+WASAPI setup.
 app.commandLine.appendSwitch('disable-features', 'AudioServiceSandbox');
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
@@ -197,6 +199,36 @@ ipcMain.on('window-close', () => {
 
 ipcMain.handle('window-is-maximized', () => {
   return mainWindow ? mainWindow.isMaximized() : false;
+});
+
+// Mini Player — shrink + always-on-top. Saves pre-mini bounds so we can restore.
+let _preMiniBounds = null;
+ipcMain.handle('mini-player-toggle', (_event, active) => {
+  if (!mainWindow) return { active: false };
+  if (active) {
+    if (mainWindow.isMaximized()) mainWindow.unmaximize();
+    _preMiniBounds = mainWindow.getBounds();
+    const { workArea } = screen.getPrimaryDisplay();
+    const w = 380, h = 150;
+    mainWindow.setMinimumSize(360, 130);
+    mainWindow.setBounds({
+      x: workArea.x + workArea.width - w - 20,
+      y: workArea.y + workArea.height - h - 20,
+      width: w, height: h,
+    });
+    mainWindow.setAlwaysOnTop(true, 'floating');
+    mainWindow.setResizable(true);
+    return { active: true };
+  } else {
+    mainWindow.setAlwaysOnTop(false);
+    mainWindow.setMinimumSize(800, 600);
+    if (_preMiniBounds) {
+      mainWindow.setBounds(_preMiniBounds);
+    } else {
+      mainWindow.setBounds({ x: 100, y: 80, width: 1400, height: 900 });
+    }
+    return { active: false };
+  }
 });
 
 // ============ IPC HANDLERS — FOLDER PICKER ============

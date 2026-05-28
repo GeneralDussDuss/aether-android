@@ -93,6 +93,7 @@
   --magenta-vivid: #FF6BA8;
   --magenta-soft: #FFB3D4;
   --magenta-glow: 0 0 10px rgba(255, 45, 123, 0.3), 0 0 25px rgba(212, 20, 122, 0.15);
+  --selection-bg: rgba(123,47,190,0.4);
   --font-display: 'Orbitron', sans-serif;
   --font-body: 'Rajdhani', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -103,8 +104,303 @@
   --titlebar-h: 36px;
   --nowplaying-h: 90px;
 }
+
+/* ============ SKIN OVERHAULS ============
+   Each skin re-maps the three accent families (purple = primary,
+   cyan = secondary, magenta = tertiary). Background stays pure black
+   for OLED with subtle tinted surfaces. Default = "void" (no attr). */
+
+/* BLOODMOON — crimson primary / amber secondary / molten orange tertiary */
+[data-skin="bloodmoon"] {
+  --bg-surface: #0A0204;
+  --bg-raised: #14060A;
+  --bg-input: #08020A;
+  --purple-dim: #4A0F1F;
+  --purple-muted: #8A1A36;
+  --purple-core: #C82850;
+  --purple-bright: #FF3060;
+  --purple-vivid: #FF5577;
+  --purple-hot: #FF99AA;
+  --purple-white: #FFE0E5;
+  --glow-subtle: 0 0 10px rgba(255,48,96,0.18);
+  --glow-medium: 0 0 20px rgba(255,48,96,0.28), 0 0 40px rgba(200,40,80,0.18);
+  --glow-intense: 0 0 20px rgba(255,48,96,0.45), 0 0 60px rgba(200,40,80,0.28), 0 0 100px rgba(200,40,80,0.12);
+  --glow-text: 0 0 10px rgba(255,85,119,0.85), 0 0 20px rgba(255,48,96,0.35);
+  --glow-neon: 0 0 4px #FF5577, 0 0 12px rgba(255,85,119,0.55), 0 0 30px rgba(255,48,96,0.35), 0 0 60px rgba(200,40,80,0.18);
+  --cyan-dim: #4A2A0A;
+  --cyan-muted: #8A5A14;
+  --cyan-core: #D49020;
+  --cyan-bright: #FFB840;
+  --cyan-vivid: #FFD060;
+  --cyan-glow: 0 0 10px rgba(255,184,64,0.35), 0 0 25px rgba(212,144,32,0.18);
+  --magenta-dim: #3D1A05;
+  --magenta-muted: #8A4014;
+  --magenta-core: #C8601E;
+  --magenta-bright: #FF8030;
+  --magenta-vivid: #FFA050;
+  --magenta-soft: #FFD0A0;
+  --magenta-glow: 0 0 10px rgba(255,128,48,0.35), 0 0 25px rgba(200,96,30,0.18);
+  --selection-bg: rgba(255,48,96,0.45);
+}
+
+/* GLACIER — ice cyan primary / aqua secondary / silver tertiary */
+[data-skin="glacier"] {
+  --bg-surface: #02060A;
+  --bg-raised: #060B14;
+  --bg-input: #04080F;
+  --purple-dim: #0A2A3D;
+  --purple-muted: #1A5572;
+  --purple-core: #2890C8;
+  --purple-bright: #5BC0FF;
+  --purple-vivid: #8FE0FF;
+  --purple-hot: #B8EFFF;
+  --purple-white: #E0F8FF;
+  --glow-subtle: 0 0 10px rgba(91,192,255,0.18);
+  --glow-medium: 0 0 20px rgba(91,192,255,0.28), 0 0 40px rgba(40,144,200,0.18);
+  --glow-intense: 0 0 20px rgba(91,192,255,0.45), 0 0 60px rgba(40,144,200,0.28), 0 0 100px rgba(40,144,200,0.12);
+  --glow-text: 0 0 10px rgba(143,224,255,0.85), 0 0 20px rgba(91,192,255,0.35);
+  --glow-neon: 0 0 4px #8FE0FF, 0 0 12px rgba(143,224,255,0.55), 0 0 30px rgba(91,192,255,0.35), 0 0 60px rgba(40,144,200,0.18);
+  --cyan-dim: #0A3A3D;
+  --cyan-muted: #1A6A72;
+  --cyan-core: #28B0C8;
+  --cyan-bright: #5BE0F5;
+  --cyan-vivid: #8FF5FF;
+  --cyan-glow: 0 0 10px rgba(91,224,245,0.35), 0 0 25px rgba(40,176,200,0.18);
+  --magenta-dim: #2A2A35;
+  --magenta-muted: #555560;
+  --magenta-core: #888893;
+  --magenta-bright: #C0C0CC;
+  --magenta-vivid: #E0E0EE;
+  --magenta-soft: #F0F0F8;
+  --magenta-glow: 0 0 10px rgba(224,224,238,0.30), 0 0 25px rgba(192,192,204,0.15);
+  --selection-bg: rgba(91,192,255,0.42);
+}
+
+/* TOXIC — acid green primary / lime secondary / yellow tertiary */
+[data-skin="toxic"] {
+  --bg-surface: #020A02;
+  --bg-raised: #061206;
+  --bg-input: #040804;
+  --purple-dim: #0A3D15;
+  --purple-muted: #1A7228;
+  --purple-core: #28C840;
+  --purple-bright: #5BFF70;
+  --purple-vivid: #8FFF95;
+  --purple-hot: #C0FFC8;
+  --purple-white: #E5FFE8;
+  --glow-subtle: 0 0 10px rgba(91,255,112,0.18);
+  --glow-medium: 0 0 20px rgba(91,255,112,0.28), 0 0 40px rgba(40,200,64,0.18);
+  --glow-intense: 0 0 20px rgba(91,255,112,0.45), 0 0 60px rgba(40,200,64,0.28), 0 0 100px rgba(40,200,64,0.12);
+  --glow-text: 0 0 10px rgba(143,255,149,0.85), 0 0 20px rgba(91,255,112,0.35);
+  --glow-neon: 0 0 4px #8FFF95, 0 0 12px rgba(143,255,149,0.55), 0 0 30px rgba(91,255,112,0.35), 0 0 60px rgba(40,200,64,0.18);
+  --cyan-dim: #2A3D0A;
+  --cyan-muted: #5A721A;
+  --cyan-core: #B0C828;
+  --cyan-bright: #E0FF40;
+  --cyan-vivid: #F0FF6B;
+  --cyan-glow: 0 0 10px rgba(224,255,64,0.35), 0 0 25px rgba(176,200,40,0.18);
+  --magenta-dim: #3D3D0A;
+  --magenta-muted: #7A7A1A;
+  --magenta-core: #C8C828;
+  --magenta-bright: #FFFF40;
+  --magenta-vivid: #FFFF80;
+  --magenta-soft: #FFFFC0;
+  --magenta-glow: 0 0 10px rgba(255,255,64,0.35), 0 0 25px rgba(200,200,40,0.18);
+  --selection-bg: rgba(91,255,112,0.42);
+}
+
+/* ============ PER-SKIN CHARACTER ============
+   Subtle personality rules layered on top of the palette.
+   Stay light — these should add character without breaking the layout. */
+
+/* BLOODMOON: warm ember flicker on logo/titles + heavier text glow */
+@keyframes bloodmoon-flicker {
+  0%, 100% { opacity:1; filter:none; }
+  43%      { opacity:0.92; filter:brightness(1.08); }
+  47%      { opacity:1; }
+  54%      { opacity:0.96; }
+  61%      { opacity:1; }
+}
+[data-skin="bloodmoon"] .titlebar-logo,
+[data-skin="bloodmoon"] .titlebar-logo .logo-p {
+  animation: bloodmoon-flicker 5.5s ease-in-out infinite;
+}
+[data-skin="bloodmoon"] {
+  background-image: radial-gradient(ellipse at top, rgba(255,48,96,0.06) 0%, transparent 60%);
+}
+
+/* GLACIER: cleaner geometry — tighter radii, low glow, hairline borders */
+[data-skin="glacier"] .sidebar,
+[data-skin="glacier"] .titlebar,
+[data-skin="glacier"] .now-playing { border-color: rgba(91,192,255,0.18); }
+[data-skin="glacier"] .nav-item,
+[data-skin="glacier"] .visualizer-panel,
+[data-skin="glacier"] .search-bar { border-radius: 4px; }
+[data-skin="glacier"] {
+  --glow-subtle: 0 0 6px rgba(91,192,255,0.10);
+  --glow-medium: 0 0 10px rgba(91,192,255,0.15);
+  --glow-intense: 0 0 14px rgba(91,192,255,0.22);
+}
+
+/* TOXIC: faint CRT scanlines + slight chromatic edge — pure hacker vibe */
+[data-skin="toxic"]::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:9998;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(91,255,112,0.04) 2px,
+    rgba(91,255,112,0.04) 3px
+  );
+  mix-blend-mode: screen;
+}
+[data-skin="toxic"] .titlebar-logo { text-shadow: 1px 0 0 rgba(224,255,64,0.45), -1px 0 0 rgba(91,255,112,0.45), 0 0 10px rgba(143,255,149,0.7); }
+
+/* PHANTOM — monochrome white-on-black, ultra-clean reading mode */
+[data-skin="phantom"] {
+  --bg-surface: #050505;
+  --bg-raised: #0C0C0C;
+  --bg-input: #080808;
+  --purple-dim: #1F1F22;
+  --purple-muted: #555558;
+  --purple-core: #909094;
+  --purple-bright: #D4D4D8;
+  --purple-vivid: #EAEAEE;
+  --purple-hot: #F4F4F8;
+  --purple-white: #FFFFFF;
+  --glow-subtle: 0 0 10px rgba(212,212,216,0.10);
+  --glow-medium: 0 0 20px rgba(212,212,216,0.18), 0 0 40px rgba(144,144,148,0.10);
+  --glow-intense: 0 0 20px rgba(212,212,216,0.30), 0 0 60px rgba(144,144,148,0.18);
+  --glow-text: 0 0 8px rgba(234,234,238,0.55), 0 0 16px rgba(212,212,216,0.22);
+  --glow-neon: 0 0 4px #EAEAEE, 0 0 12px rgba(234,234,238,0.35), 0 0 30px rgba(212,212,216,0.22);
+  --cyan-dim: #1A2A3D;
+  --cyan-muted: #3A5572;
+  --cyan-core: #6890B8;
+  --cyan-bright: #A0C0E0;
+  --cyan-vivid: #C0DCF0;
+  --cyan-glow: 0 0 10px rgba(160,192,224,0.22), 0 0 25px rgba(104,144,184,0.12);
+  --magenta-dim: #2A1A1A;
+  --magenta-muted: #553535;
+  --magenta-core: #886060;
+  --magenta-bright: #C09090;
+  --magenta-vivid: #E0B8B8;
+  --magenta-soft: #F0D8D8;
+  --magenta-glow: 0 0 10px rgba(224,184,184,0.22), 0 0 25px rgba(192,144,144,0.12);
+  --selection-bg: rgba(212,212,216,0.30);
+}
+
+/* PHANTOM character: kill ALL glow — replace with pure thin border lines.
+   This is the "no neon" mode for sleep/work/reading. */
+[data-skin="phantom"] {
+  --glow-subtle: none;
+  --glow-medium: 0 0 0 1px rgba(212,212,216,0.12);
+  --glow-intense: 0 0 0 1px rgba(212,212,216,0.25);
+  --glow-text: none;
+  --glow-neon: none;
+  --cyan-glow: none;
+  --magenta-glow: none;
+}
+[data-skin="phantom"] .titlebar-logo { text-shadow:none; }
+
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-::selection { background:rgba(123,47,190,0.4); color:var(--purple-white); }
+::selection { background:var(--selection-bg); color:var(--purple-white); }
+
+/* ============ MINI PLAYER MODE ============
+   When body.mini-player is set, the app collapses to a compact transport bar.
+   Sidebar, main content area, and visualizer hide; now-playing strip fills the window. */
+body.mini-player .titlebar { height:22px; }
+body.mini-player .titlebar-logo { font-size:0.5rem; }
+body.mini-player .titlebar-logo .logo-p { width:14px; height:14px; font-size:0.4rem; }
+body.mini-player .tb-btn { width:34px; height:22px; }
+body.mini-player .sidebar,
+body.mini-player .main-content,
+body.mini-player .visualizer-panel,
+body.mini-player .content-header,
+body.mini-player .now-playing .np-badges,
+body.mini-player .now-playing .np-toggles,
+body.mini-player .now-playing .sleep-timer-badge,
+body.mini-player .now-playing .weather-badge { display:none !important; }
+body.mini-player .app-shell { grid-template-columns:0 1fr; grid-template-rows:0 1fr; }
+body.mini-player .now-playing {
+  grid-column:1 / -1; grid-row:1 / -1;
+  height:calc(100vh - 22px); margin-top:22px;
+  padding:8px 12px; gap:10px;
+  grid-template-columns: 64px 1fr auto !important;
+}
+body.mini-player .np-left { gap:8px; }
+body.mini-player .np-art { width:50px !important; height:50px !important; border-radius:6px; }
+body.mini-player .np-info { gap:1px; }
+body.mini-player .np-title { font-size:0.78rem; }
+body.mini-player .np-artist-album { font-size:0.62rem; }
+body.mini-player .np-center { padding:0; }
+body.mini-player .np-controls { gap:6px; }
+body.mini-player .np-controls .ctrl-btn:not(#btnPlay):not(#btnNext):not(#btnPrev) { display:none; }
+body.mini-player .np-progress { margin-top:2px; }
+body.mini-player .np-time { font-size:0.55rem; }
+body.mini-player .volume-group { display:none; }
+body.mini-player .np-right { padding-right:0; }
+
+.mini-exit-btn {
+  position:fixed; top:2px; right:140px; z-index:10000;
+  height:18px; padding:0 8px;
+  background:var(--bg-raised); border:1px solid var(--purple-dim); border-radius:4px;
+  color:var(--purple-hot); font-family:var(--font-display); font-size:0.52rem;
+  letter-spacing:0.12em; cursor:pointer; display:none;
+  -webkit-app-region:no-drag;
+}
+.mini-exit-btn:hover { border-color:var(--purple-bright); box-shadow:var(--glow-subtle); }
+body.mini-player .mini-exit-btn { display:block; }
+
+/* ============ SKIN TRANSITION OVERLAY ============
+   During a skin swap, body.skin-fading enables a brief color transition
+   on the things that change. Off by default so we don't slow normal UI. */
+body.skin-fading,
+body.skin-fading * {
+  transition: background-color 0.35s var(--ease-smooth),
+              color 0.35s var(--ease-smooth),
+              border-color 0.35s var(--ease-smooth),
+              box-shadow 0.35s var(--ease-smooth),
+              fill 0.35s var(--ease-smooth),
+              stroke 0.35s var(--ease-smooth),
+              text-shadow 0.35s var(--ease-smooth) !important;
+}
+
+/* ============ SKIN PICKER TILES ============
+   Each tile is a self-contained .skin-tile-preview that ignores its parent skin
+   and applies its own skin via [data-tile-skin] CSS scoping. This way every
+   tile actually shows what THAT skin looks like, regardless of the live theme. */
+.skin-tile { position:relative; padding:0; border:1px solid var(--purple-dim); border-radius:12px; background:var(--bg-raised); cursor:pointer; transition:all 0.25s var(--ease-smooth); display:flex; flex-direction:column; overflow:hidden; }
+.skin-tile:hover { border-color:var(--purple-bright); box-shadow:var(--glow-medium); transform:translateY(-2px); }
+.skin-tile.active { border-color:var(--purple-bright); box-shadow:var(--glow-intense); }
+.skin-tile.active::after { content:''; position:absolute; top:8px; right:8px; width:8px; height:8px; border-radius:50%; background:var(--purple-bright); box-shadow:0 0 8px var(--purple-bright); animation:skin-active-pulse 1.6s var(--ease-smooth) infinite; z-index:5; }
+@keyframes skin-active-pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.55; transform:scale(1.25); } }
+.skin-tile-footer { padding:10px 12px 12px; display:flex; flex-direction:column; gap:3px; border-top:1px solid rgba(255,255,255,0.04); }
+.skin-tile-name { font-family:var(--font-display); font-size:0.7rem; font-weight:700; letter-spacing:0.14em; color:var(--purple-hot); }
+.skin-tile-desc { font-family:var(--font-mono); font-size:0.58rem; color:var(--purple-muted); line-height:1.35; }
+
+/* Mini chrome preview inside each tile — uses the tile's own scoped vars */
+.skin-preview { position:relative; height:88px; overflow:hidden; display:flex; flex-direction:column; }
+.skin-preview-titlebar { height:14px; display:flex; align-items:center; padding:0 6px; gap:4px; background:var(--sp-surface); border-bottom:1px solid var(--sp-dim); }
+.skin-preview-logo { width:8px; height:8px; border:1px solid var(--sp-bright); border-radius:2px; background:var(--sp-void); }
+.skin-preview-title { font-family:var(--font-display); font-size:0.42rem; letter-spacing:0.15em; color:var(--sp-bright); text-shadow:0 0 4px var(--sp-bright); }
+.skin-preview-dots { margin-left:auto; display:flex; gap:3px; }
+.skin-preview-dots span { width:5px; height:5px; border-radius:50%; background:var(--sp-muted); }
+.skin-preview-body { flex:1; display:flex; background:var(--sp-void); padding:6px 6px 4px; gap:6px; }
+.skin-preview-side { width:18px; display:flex; flex-direction:column; gap:3px; padding-top:2px; }
+.skin-preview-side span { height:4px; border-radius:2px; background:var(--sp-dim); }
+.skin-preview-side span:first-child { background:var(--sp-bright); box-shadow:0 0 4px var(--sp-bright); }
+.skin-preview-main { flex:1; display:flex; flex-direction:column; gap:4px; }
+.skin-preview-btn { height:11px; background:var(--sp-raised); border:1px solid var(--sp-muted); border-radius:3px; display:flex; align-items:center; justify-content:center; }
+.skin-preview-btn span { width:60%; height:2px; background:var(--sp-bright); border-radius:1px; box-shadow:0 0 3px var(--sp-bright); }
+.skin-preview-eq { flex:1; display:flex; align-items:flex-end; gap:1.5px; padding-top:2px; }
+.skin-preview-eq i { flex:1; background:linear-gradient(180deg, var(--sp-mag) 0%, var(--sp-bright) 60%, var(--sp-cyan) 100%); border-radius:1px 1px 0 0; box-shadow:0 0 3px var(--sp-bright); }
+
+/* Per-tile palettes — each tile re-declares the scoped --sp-* vars based on its skin */
+.skin-tile[data-tile-skin="void"]      { --sp-void:#000; --sp-surface:#09090F; --sp-raised:#0F0F1A; --sp-dim:#362050; --sp-muted:#6B42A0; --sp-bright:#B76EFF; --sp-cyan:#00DCF5; --sp-mag:#FF2D7B; }
+.skin-tile[data-tile-skin="bloodmoon"] { --sp-void:#000; --sp-surface:#0A0204; --sp-raised:#14060A; --sp-dim:#4A0F1F; --sp-muted:#8A1A36; --sp-bright:#FF5577; --sp-cyan:#FFB840; --sp-mag:#FF8030; }
+.skin-tile[data-tile-skin="glacier"]   { --sp-void:#000; --sp-surface:#02060A; --sp-raised:#060B14; --sp-dim:#0A2A3D; --sp-muted:#1A5572; --sp-bright:#8FE0FF; --sp-cyan:#5BE0F5; --sp-mag:#C0C0CC; }
+.skin-tile[data-tile-skin="toxic"]     { --sp-void:#000; --sp-surface:#020A02; --sp-raised:#061206; --sp-dim:#0A3D15; --sp-muted:#1A7228; --sp-bright:#8FFF95; --sp-cyan:#E0FF40; --sp-mag:#FFFF40; }
+.skin-tile[data-tile-skin="phantom"]   { --sp-void:#000; --sp-surface:#050505; --sp-raised:#0C0C0C; --sp-dim:#1F1F22; --sp-muted:#555558; --sp-bright:#EAEAEE; --sp-cyan:#A0C0E0; --sp-mag:#C09090; }
 ::-webkit-scrollbar { width:4px; }
 ::-webkit-scrollbar-track { background:var(--bg-void); }
 ::-webkit-scrollbar-thumb { background:var(--purple-muted); border-radius:2px; }
@@ -3254,11 +3550,13 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
     <span class="beat-dot" id="beatDot"></span>
   </div>
   <div class="titlebar-controls">
+    <button class="tb-btn" id="tbMini" title="Mini Player (Ctrl+M)" onclick="toggleMiniPlayer()" style="-webkit-app-region:no-drag;"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="4" width="8" height="4" rx="0.6"/><line x1="2.5" y1="6" x2="3.5" y2="6"/><line x1="4.5" y1="6" x2="5.5" y2="6"/></svg></button>
     <button class="tb-btn" id="tbMin" title="Minimize"><svg viewBox="0 0 10 10"><line x1="0" y1="5" x2="10" y2="5"/></svg></button>
     <button class="tb-btn" id="tbMax" title="Maximize"><svg viewBox="0 0 10 10" id="tbMaxIcon"><rect x="0.5" y="0.5" width="9" height="9" rx="1" fill="none"/></svg></button>
     <button class="tb-btn close" id="tbClose" title="Close"><svg viewBox="0 0 10 10"><line x1="0" y1="0" x2="10" y2="10"/><line x1="10" y1="0" x2="0" y2="10"/></svg></button>
   </div>
 </div>
+<button class="mini-exit-btn" onclick="toggleMiniPlayer()" title="Exit mini player">EXIT MINI</button>
 
 <!-- APP SHELL -->
 <div class="app-shell" id="appShell">
@@ -3605,6 +3903,7 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
       </div>
       <div class="np-badges">
         <div class="quality-badge" id="qualityBadge">--</div>
+        <div class="quality-badge" id="rgBadge" title="ReplayGain applied to this track" style="display:none;background:var(--bg-raised);border-color:var(--cyan-muted);color:var(--cyan-bright);"></div>
         <div class="sleep-timer-badge" id="sleepTimerBadge" title="Sleep Timer active" onclick="document.getElementById('sleepTimerPanel').classList.toggle('open')"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span id="sleepTimerBadgeTime"></span></div>
         <div class="weather-badge" id="weatherBadge" title="Weather Ambient" onclick="document.getElementById('weatherPanel').classList.toggle('open')"><span id="weatherBadgeText">--</span><span class="weather-badge-pulse" id="wxBadgePulse"><span class="wb-bar"></span><span class="wb-bar"></span><span class="wb-bar"></span><span class="wb-bar"></span></span></div>
       </div>
@@ -3786,8 +4085,8 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
         <input type="text" id="settUrl" value="http://localhost:4533" placeholder="Navidrome URL" style="background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
         <div style="display:flex;gap:8px;">
-          <input type="text" id="settUser" value="phantom" placeholder="Username" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
-          <input type="password" id="settPass" value="your_password" placeholder="Password" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
+          <input type="text" id="settUser" value="" placeholder="Username" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
+          <input type="password" id="settPass" value="" placeholder="Password" style="flex:1;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.8rem;padding:8px 12px;outline:none;">
         </div>
         <button id="settTestConn" style="align-self:flex-start;background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.65rem;letter-spacing:0.1em;padding:8px 16px;cursor:pointer;transition:all 0.2s;">TEST CONNECTION</button>
       </div>
@@ -3795,6 +4094,80 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
 
     <!-- TAB: AUDIO -->
     <div class="settings-tab-content" data-settings-panel="audio">
+
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">SIGNAL PATH</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;padding:12px;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:8px;">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button id="audioBypassBtn" onclick="toggleAudioBypass()" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.65rem;letter-spacing:0.12em;padding:8px 16px;cursor:pointer;transition:all 0.2s;">PURE: OFF</button>
+          <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);">Bypasses all DSP (EQ, warmth, hearing comp). Direct source → output.</span>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);cursor:pointer;margin-top:2px;">
+          <input type="checkbox" id="gaplessChk" checked onchange="setGaplessEnabled(this.checked)" style="accent-color:var(--purple-bright);">
+          Gapless playback (pre-warm next track at 8s remaining)
+        </label>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px;">
+          <span style="font-family:var(--font-display);font-size:0.65rem;color:var(--purple-muted);letter-spacing:0.1em;min-width:96px;">MASTER GAIN</span>
+          <input type="range" id="masterGainSlider" min="0.5" max="2.5" step="0.05" value="1.35" oninput="setMasterGain(this.value)" style="flex:1;min-width:140px;accent-color:var(--purple-bright);">
+          <span id="masterGainLabel" style="font-family:var(--font-mono);font-size:0.72rem;color:var(--cyan-bright);min-width:60px;text-align:right;">+2.6 dB</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;">
+          <button onclick="playTestTone()" title="440 Hz sine through the full chain" style="background:var(--bg-raised);border:1px solid var(--cyan-bright);border-radius:6px;color:var(--cyan-bright);font-family:var(--font-display);font-size:0.62rem;letter-spacing:0.12em;padding:6px 12px;cursor:pointer;">TEST TONE (A4)</button>
+          <button onclick="resetAudioStack()" title="Clear all audio prefs and reload" style="background:var(--bg-raised);border:1px solid var(--magenta-muted);border-radius:6px;color:var(--magenta-bright);font-family:var(--font-display);font-size:0.62rem;letter-spacing:0.12em;padding:6px 12px;cursor:pointer;">RESET AUDIO STACK</button>
+          <span style="font-family:var(--font-mono);font-size:0.62rem;color:var(--purple-muted);">Hear the tone = chain works. Don't hear it = Windows default device problem.</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px;">
+          <span style="font-family:var(--font-display);font-size:0.65rem;color:var(--purple-muted);letter-spacing:0.1em;min-width:96px;">REPLAYGAIN</span>
+          <select id="rgModeSelect" onchange="setReplayGainMode(this.value)" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.75rem;padding:6px 10px;outline:none;cursor:pointer;">
+            <option value="off">Off</option>
+            <option value="track">Track (per-song)</option>
+            <option value="album">Album (preserves dynamics)</option>
+          </select>
+          <label style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);cursor:pointer;">
+            <input type="checkbox" id="rgClipChk" checked onchange="replayGainPreventClip=this.checked;try{localStorage.setItem('aether_rg_clip',this.checked?'1':'0')}catch(e){}" style="accent-color:var(--purple-bright);">
+            Prevent clipping
+          </label>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px;">
+          <span style="font-family:var(--font-display);font-size:0.65rem;color:var(--purple-muted);letter-spacing:0.1em;min-width:96px;">CROSSFEED</span>
+          <button id="crossfeedBtn" onclick="toggleCrossfeed()" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.65rem;letter-spacing:0.1em;padding:6px 14px;cursor:pointer;">CROSSFEED: OFF</button>
+          <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--purple-muted);">Intensity</span>
+          <input type="range" id="crossfeedSlider" min="0" max="100" value="35" oninput="setCrossfeedIntensity(this.value)" style="flex:1;min-width:140px;accent-color:var(--purple-bright);">
+          <span id="crossfeedAmtLabel" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan-bright);min-width:36px;text-align:right;">35%</span>
+        </div>
+        <span style="font-family:var(--font-mono);font-size:0.62rem;color:var(--purple-muted);">Reduces stereo fatigue on headphones (Bauer-style — low-passed delayed bleed between ears).</span>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px;">
+          <span style="font-family:var(--font-display);font-size:0.65rem;color:var(--purple-muted);letter-spacing:0.1em;min-width:96px;">OUTPUT DEVICE</span>
+          <select id="outputDeviceSelect" onchange="setOutputDevice(this.value)" style="flex:1;min-width:200px;background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.75rem;padding:6px 10px;outline:none;cursor:pointer;">
+            <option value="">System Default</option>
+          </select>
+          <button onclick="populateOutputDevices()" title="Refresh device list" style="background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-muted);font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.08em;padding:6px 12px;cursor:pointer;">REFRESH</button>
+        </div>
+      </div>
+
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">AUTOEQ — HEADPHONE CORRECTION</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;padding:12px;background:var(--bg-input);border:1px solid var(--purple-dim);border-radius:8px;">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <span style="font-family:var(--font-display);font-size:0.65rem;color:var(--purple-muted);letter-spacing:0.1em;min-width:96px;">PRESET</span>
+          <select id="autoEqSelect" onchange="applyAutoEq(this.value)" style="flex:1;min-width:200px;background:var(--bg-raised);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.75rem;padding:6px 10px;outline:none;cursor:pointer;">
+            <option value="off">Off (flat)</option>
+            <option value="generic-planar">Generic Planar</option>
+            <option value="harman-target">Harman 2018 (V-shape)</option>
+            <option value="diffuse-field">Diffuse Field (neutral)</option>
+            <option value="vocal-forward">Vocal Forward</option>
+            <option value="custom">Custom (pasted)</option>
+          </select>
+        </div>
+        <div id="autoEqStatus" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan-bright);">Disabled</div>
+        <details style="margin-top:6px;">
+          <summary style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple-muted);cursor:pointer;outline:none;">Paste AutoEq config for your headphones</summary>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+            <span style="font-family:var(--font-mono);font-size:0.62rem;color:var(--purple-muted);line-height:1.4;">Grab your model's <span style="color:var(--cyan-bright);">ParametricEQ.txt</span> from github.com/jaakkopasanen/AutoEq → results → [headphone] folder. Paste the whole file below and hit APPLY.</span>
+            <textarea id="autoEqCustomText" placeholder="Preamp: -6.5 dB&#10;Filter 1: ON PK Fc 20 Hz Gain 6.6 dB Q 0.6&#10;Filter 2: ON LSC Fc 105 Hz Gain 4.6 dB Q 0.7&#10;..." style="min-height:120px;background:var(--bg-void);border:1px solid var(--purple-dim);border-radius:6px;color:var(--purple-white);font-family:var(--font-mono);font-size:0.7rem;padding:8px 10px;outline:none;resize:vertical;"></textarea>
+            <button onclick="applyAutoEqCustom()" style="align-self:flex-start;background:var(--bg-raised);border:1px solid var(--purple-bright);border-radius:6px;color:var(--purple-hot);font-family:var(--font-display);font-size:0.65rem;letter-spacing:0.12em;padding:8px 16px;cursor:pointer;">APPLY CUSTOM</button>
+          </div>
+        </details>
+      </div>
+
       <div class="hearing-profile-section">
         <div class="hearing-profile-title">HEARING PROFILE EQ</div>
         <div class="hearing-test-controls" id="hearingTestControls">
@@ -3837,6 +4210,10 @@ body.pomodoro-focus .sidebar, body.pomodoro-focus .content-header, body.pomodoro
 
     <!-- TAB: DISPLAY -->
     <div class="settings-tab-content" data-settings-panel="display">
+
+      <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">SKIN</div>
+      <div id="skinPicker" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px;"></div>
+
       <div style="font-family:var(--font-display);font-size:0.7rem;color:var(--cyan-bright);letter-spacing:0.12em;margin-bottom:12px;">LAYOUT</div>
       <div style="display:flex;gap:8px;margin-bottom:16px;">
         <button id="settLayoutH" onclick="setOrientation('horizontal')" style="flex:1;background:var(--bg-raised);border:1px solid var(--cyan-bright);border-radius:6px;color:var(--purple-hot);font-family:var(--font-mono);font-size:0.7rem;padding:8px 12px;cursor:pointer;transition:all 0.2s;">HORIZONTAL</button>
@@ -4385,7 +4762,7 @@ function md5(str) {
 // Saved settings are loaded from localStorage on startup (see loadSavedSettings).
 const SUBSONIC = {
   baseUrl: 'http://localhost:4533',
-  user: 'phantom',
+  user: 'your_username',
   password: 'your_password',
   auth() {
     const salt = Math.random().toString(36).slice(2, 10);
@@ -4400,7 +4777,9 @@ const SUBSONIC = {
     return data['subsonic-response'];
   },
   streamUrl(id) {
-    return `${this.baseUrl}/rest/stream?id=${id}&${this.auth()}`;
+    // format=raw + maxBitRate=0 → Navidrome streams the source file bit-exact
+    // instead of transcoding to MP3 192. Required to actually hear FLAC as FLAC.
+    return `${this.baseUrl}/rest/stream?id=${id}&format=raw&maxBitRate=0&${this.auth()}`;
   },
   coverUrl(id, size = 300) {
     // Stable auth for cover art so browser can cache images
@@ -4460,7 +4839,7 @@ let allPlaylists = [];
 let currentView = 'library';
 let vizGlowIntensity = 0;
 let currentScene = 0;
-const SCENES = ['FRACTAL FLAME', 'VOID PULSE', 'TRON GRID', 'PARTICLE FIELD', 'WAVEFORM BARS', 'AURORA BOREALIS', 'COSMIC MANDALA', 'ELECTRIC SHEEP', 'BIO-GENESIS', 'COMMAND DECK', 'NEURAL WEB II', 'DNA HELIX II', 'LYRIC RAIN', 'FREQUENCY MOUNTAIN', 'CHROME OCEAN', 'HYPERSPACE TUNNEL', 'PLASMA REACTOR', 'XENOMORPH HIVE', 'HACKER TERMINAL'];
+const SCENES = ['FRACTAL FLAME', 'VOID PULSE', 'TRON GRID', 'PARTICLE FIELD', 'WAVEFORM BARS', 'AURORA BOREALIS', 'COSMIC MANDALA', 'ELECTRIC SHEEP', 'BIO-GENESIS', 'COMMAND DECK', 'NEURAL WEB II', 'DNA HELIX II', 'LYRIC RAIN', 'FREQUENCY MOUNTAIN', 'CHROME OCEAN', 'HYPERSPACE TUNNEL', 'PLASMA REACTOR', 'XENOMORPH HIVE', 'HACKER TERMINAL', 'EVENT HORIZON', 'MERCURY', 'PRISM', 'ATTRACTOR'];
 let vizAutoRotate = false;
 let vizAutoRotateInterval = 60000;
 let vizAutoRotateTimer = null;
@@ -4471,11 +4850,124 @@ const audio = new Audio();
 audio.crossOrigin = 'anonymous';
 audio.volume = 0.75;
 
+// Gapless playback — a hidden secondary element pre-warms the HTTP cache for the next
+// track when the current is within 8s of end. When `ended` fires, audio.src=nextUrl
+// hits the cache and the time-to-first-frame is typically <100ms instead of 1-3s.
+let audioPreloader = null;
+let preloadedTrackId = null;
+let gaplessEnabled = true;
+try { if (localStorage.getItem('aether_gapless') === '0') gaplessEnabled = false; } catch(e) {}
+
+function _initGaplessPreloader() {
+  if (audioPreloader || !gaplessEnabled) return;
+  audioPreloader = new Audio();
+  audioPreloader.crossOrigin = 'anonymous';
+  audioPreloader.preload = 'auto';
+  audioPreloader.muted = true;  // never produces sound — only warms the HTTP/decode cache
+}
+
+function maybePreloadNext() {
+  if (!gaplessEnabled || !audio.duration) return;
+  const remaining = audio.duration - audio.currentTime;
+  if (remaining > 8 || remaining < 0) return;
+  let nextIdx = currentQueueIndex + 1;
+  if (typeof currentQueue === 'undefined' || !currentQueue) return;
+  if (nextIdx >= currentQueue.length) {
+    if (repeatMode === 1) nextIdx = 0;
+    else return;
+  }
+  const next = currentQueue[nextIdx];
+  if (!next || preloadedTrackId === next.id) return;
+  _initGaplessPreloader();
+  if (!audioPreloader) return;
+  preloadedTrackId = next.id;
+  try {
+    audioPreloader.src = SUBSONIC.streamUrl(next.id);
+    audioPreloader.load();
+  } catch(e) { preloadedTrackId = null; }
+}
+
+function setGaplessEnabled(on) {
+  gaplessEnabled = !!on;
+  try { localStorage.setItem('aether_gapless', gaplessEnabled ? '1' : '0'); } catch(e) {}
+  if (!gaplessEnabled && audioPreloader) {
+    try { audioPreloader.src = ''; } catch(e) {}
+    preloadedTrackId = null;
+  }
+}
+
 // ============ WEB AUDIO API + BEAT DETECTION ============
 let audioCtx = null;
 let analyser = null;
 let audioSource = null;
+let masterGain = null;     // Final node before destination. Insertion point for bypass.
+let replayGainNode = null; // First node after source. Per-track loudness compensation.
+let audioBypass = false;   // PURE mode: route audioSource straight to destination, skip all DSP.
 let freqData = null;
+let replayGainMode = 'track';        // 'off' | 'track' | 'album'
+let replayGainPreventClip = true;   // Cap gain so peak never exceeds 1.0
+
+// Crossfeed (Bauer-style): pipes a low-passed delayed copy of each channel into the
+// opposite ear, simulating loudspeaker bleed. Reduces "split between ears" fatigue
+// on old stereo mixes. Inserted between analyser and masterGain so it sits at the
+// very end of the DSP chain.
+let crossfeedNodes = null;     // { splitter, merger, gainLR, gainRL, ... }
+let crossfeedEnabled = false;
+let crossfeedIntensity = 35;   // 0-100 (UI %); mapped to ~0-0.55 linear gain
+let crossfeedCutoff = 700;     // Hz; bleed bandwidth ceiling
+
+// AutoEq — headphone correction filter bank, inserted between user 10-band EQ and analyser.
+let autoEqFilters = [];           // active BiquadFilters
+let autoEqPreampNode = null;      // GainNode for the preamp (-dB before boosts to prevent clipping)
+let autoEqCurrentId = 'off';
+
+// Built-in presets — generic correction curves. For per-headphone precision,
+// paste your model's ParametricEQ.txt from github.com/jaakkopasanen/AutoEq into the custom field.
+const AUTO_EQ_PRESETS = {
+  'off': { name: 'Off (flat)', preamp: 0, filters: [] },
+  'generic-planar': {
+    name: 'Generic Planar',
+    preamp: -3,
+    filters: [
+      { type: 'lowshelf',  freq: 105,   gain:  3.5, q: 0.7 },
+      { type: 'peaking',   freq: 250,   gain: -1.5, q: 1.1 },
+      { type: 'peaking',   freq: 3500,  gain: -3.0, q: 1.4 },
+      { type: 'peaking',   freq: 6500,  gain:  2.5, q: 1.5 },
+      { type: 'highshelf', freq: 10000, gain:  1.5, q: 0.7 },
+    ],
+  },
+  'harman-target': {
+    name: 'Harman 2018 (V-shape)',
+    preamp: -5,
+    filters: [
+      { type: 'lowshelf',  freq: 105,   gain:  6.0, q: 0.7 },
+      { type: 'peaking',   freq: 2500,  gain:  3.0, q: 1.0 },
+      { type: 'peaking',   freq: 8000,  gain:  1.5, q: 1.0 },
+      { type: 'highshelf', freq: 10000, gain: -2.0, q: 0.7 },
+    ],
+  },
+  'diffuse-field': {
+    name: 'Diffuse Field (neutral mastering)',
+    preamp: -2,
+    filters: [
+      { type: 'lowshelf',  freq: 80,    gain:  1.0, q: 0.7 },
+      { type: 'peaking',   freq: 2700,  gain:  2.5, q: 1.1 },
+      { type: 'peaking',   freq: 5000,  gain: -2.0, q: 1.4 },
+      { type: 'highshelf', freq: 12000, gain:  1.0, q: 0.7 },
+    ],
+  },
+  'vocal-forward': {
+    name: 'Vocal Forward',
+    preamp: -2,
+    filters: [
+      { type: 'peaking',   freq: 200,   gain: -2.0, q: 1.2 },
+      { type: 'peaking',   freq: 1500,  gain:  2.5, q: 1.0 },
+      { type: 'peaking',   freq: 3000,  gain:  2.0, q: 1.2 },
+      { type: 'peaking',   freq: 6000,  gain: -1.5, q: 1.4 },
+    ],
+  },
+  'custom': { name: 'Custom (pasted)', preamp: 0, filters: [] },
+};
 let beatIntensity = 0;
 let lastBeatTime = 0;
 let energyHistory = [];
@@ -4551,17 +5043,21 @@ function setEqBand(bandIndex, gainDb) {
 }
 
 // ============ EQ PRESETS & UI ============
+// Presets rebalanced for Q=1.0 octave bands. Old values stacked +5/+6 on adjacent
+// low bands which summed to ~+8 dB around 60-120 Hz on planars → mud. New curves
+// keep the character but spread gain so no neighbor sums above ~+5 dB.
 const EQ_PRESETS = {
-  'Flat':       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  'Bass Boost': [6, 5, 3, 1, 0, 0, 0, 0, 0, 0],
-  'Treble':     [0, 0, 0, 0, 0, 1, 3, 4, 5, 6],
-  'V-Shape':    [5, 4, 1, -1, -3, -3, -1, 1, 4, 5],
-  'Vocal':      [-2, -1, 0, 2, 4, 4, 2, 0, -1, -2],
-  'Loudness':   [4, 3, 0, 0, -2, 0, -1, 0, 3, 4],
-  'Rock':       [4, 3, 1, 0, -1, 0, 2, 3, 4, 3],
-  'Electronic': [5, 4, 2, 0, -2, 0, 1, 3, 4, 5],
-  'Acoustic':   [3, 2, 1, 1, 0, 1, 1, 2, 3, 2],
-  'Night':      [-3, -2, 0, 2, 3, 3, 2, 0, -2, -4],
+  'Flat':              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  'Planar Reference':  [0, 0, -1, -2, 0, 0, -2, -1, 2, 1],
+  'Bass Boost':        [4, 3, 1, 0, 0, 0, 0, 0, 0, 0],
+  'Treble':            [0, 0, 0, 0, 0, 1, 2, 3, 3, 4],
+  'V-Shape':           [4, 2, 0, -1, -2, -2, -1, 0, 2, 4],
+  'Vocal':             [-1, -1, 0, 1, 3, 3, 2, 1, 0, -1],
+  'Loudness':          [3, 1, 0, 0, -1, 0, 0, 0, 2, 3],
+  'Rock':              [3, 2, 0, 0, -1, 0, 1, 2, 3, 2],
+  'Electronic':        [4, 2, 1, 0, -1, 0, 1, 2, 3, 4],
+  'Acoustic':          [2, 1, 0, 1, 0, 1, 1, 2, 2, 2],
+  'Night':             [-2, -1, 0, 1, 2, 2, 1, 0, -1, -3],
 };
 
 let currentEqPreset = 'Flat';
@@ -4773,38 +5269,603 @@ function toggleEqPanel() {
 // Load saved EQ state before audio init
 loadEqState();
 
+// ============ SKIN SYSTEM ============
+const SKINS = [
+  { id: '',          name: 'VOID',      desc: 'Default — violet/cyan/magenta', swatches: ['#9D4EDD', '#00DCF5', '#FF2D7B'] },
+  { id: 'bloodmoon', name: 'BLOODMOON', desc: 'Crimson, amber, molten orange', swatches: ['#FF3060', '#FFB840', '#FF8030'] },
+  { id: 'glacier',   name: 'GLACIER',   desc: 'Ice cyan, aqua, silver',        swatches: ['#5BC0FF', '#5BE0F5', '#C0C0CC'] },
+  { id: 'toxic',     name: 'TOXIC',     desc: 'Acid green, lime, yellow',      swatches: ['#5BFF70', '#E0FF40', '#FFFF40'] },
+  { id: 'phantom',   name: 'PHANTOM',   desc: 'Monochrome — pure white on black', swatches: ['#D4D4D8', '#A0C0E0', '#C09090'] },
+];
+let currentSkin = '';
+
+let skinHoverTimer = null;
+let skinHoverPreviewing = false;
+
+function _setSkinAttr(id) {
+  if (id) document.documentElement.setAttribute('data-skin', id);
+  else document.documentElement.removeAttribute('data-skin');
+}
+
+function _flashSkinFade() {
+  document.body.classList.add('skin-fading');
+  clearTimeout(_flashSkinFade._t);
+  _flashSkinFade._t = setTimeout(() => document.body.classList.remove('skin-fading'), 400);
+}
+
+function applySkin(id) {
+  currentSkin = id || '';
+  skinHoverPreviewing = false;
+  _flashSkinFade();
+  _setSkinAttr(currentSkin);
+  try { localStorage.setItem('aether_skin', currentSkin); } catch(e) {}
+  refreshSkinPicker();
+  if (typeof showToast === 'function') {
+    const meta = SKINS.find(s => s.id === currentSkin);
+    if (meta) showToast('Skin: ' + meta.name);
+  }
+}
+
+function _previewSkin(id) {
+  skinHoverPreviewing = true;
+  _flashSkinFade();
+  _setSkinAttr(id || '');
+}
+
+function _endPreviewSkin() {
+  if (!skinHoverPreviewing) return;
+  skinHoverPreviewing = false;
+  _flashSkinFade();
+  _setSkinAttr(currentSkin);
+}
+
+function _makePreviewMockup(skin) {
+  // Builds the tiny mock-player inside a tile. All elements use the tile's
+  // scoped --sp-* vars (set via [data-tile-skin] in CSS), so the preview shows
+  // the actual palette of THAT skin, not the currently-applied one.
+  const wrap = document.createElement('div');
+  wrap.className = 'skin-preview';
+
+  const tb = document.createElement('div');
+  tb.className = 'skin-preview-titlebar';
+  const logo = document.createElement('div');
+  logo.className = 'skin-preview-logo';
+  const title = document.createElement('div');
+  title.className = 'skin-preview-title';
+  title.textContent = 'AETHER';
+  const dots = document.createElement('div');
+  dots.className = 'skin-preview-dots';
+  for (let i = 0; i < 3; i++) dots.appendChild(document.createElement('span'));
+  tb.appendChild(logo); tb.appendChild(title); tb.appendChild(dots);
+
+  const body = document.createElement('div');
+  body.className = 'skin-preview-body';
+  const side = document.createElement('div');
+  side.className = 'skin-preview-side';
+  for (let i = 0; i < 4; i++) side.appendChild(document.createElement('span'));
+  const main = document.createElement('div');
+  main.className = 'skin-preview-main';
+  const btn = document.createElement('div');
+  btn.className = 'skin-preview-btn';
+  const btnFill = document.createElement('span');
+  btn.appendChild(btnFill);
+  const eq = document.createElement('div');
+  eq.className = 'skin-preview-eq';
+  // Deterministic per-skin pattern so previews are stable, not jittery.
+  const seed = skin.id || 'void';
+  const heights = [];
+  for (let i = 0; i < 14; i++) {
+    let h = 0;
+    for (let j = 0; j < seed.length; j++) h = (h * 31 + seed.charCodeAt(j) + i * 7) % 100;
+    heights.push(28 + (h % 60));
+  }
+  heights.forEach(h => {
+    const bar = document.createElement('i');
+    bar.style.height = h + '%';
+    eq.appendChild(bar);
+  });
+  main.appendChild(btn); main.appendChild(eq);
+  body.appendChild(side); body.appendChild(main);
+
+  wrap.appendChild(tb); wrap.appendChild(body);
+  return wrap;
+}
+
+function refreshSkinPicker() {
+  const host = document.getElementById('skinPicker');
+  if (!host) return;
+  while (host.firstChild) host.removeChild(host.firstChild);
+  SKINS.forEach(skin => {
+    const tile = document.createElement('div');
+    tile.className = 'skin-tile' + (skin.id === currentSkin ? ' active' : '');
+    tile.setAttribute('data-tile-skin', skin.id || 'void');
+    tile.addEventListener('click', () => applySkin(skin.id));
+    tile.addEventListener('mouseenter', () => {
+      clearTimeout(skinHoverTimer);
+      skinHoverTimer = setTimeout(() => _previewSkin(skin.id), 140);
+    });
+    tile.addEventListener('mouseleave', () => {
+      clearTimeout(skinHoverTimer);
+      _endPreviewSkin();
+    });
+
+    tile.appendChild(_makePreviewMockup(skin));
+
+    const footer = document.createElement('div');
+    footer.className = 'skin-tile-footer';
+    const nm = document.createElement('div');
+    nm.className = 'skin-tile-name';
+    nm.textContent = skin.name;
+    footer.appendChild(nm);
+    const ds = document.createElement('div');
+    ds.className = 'skin-tile-desc';
+    ds.textContent = skin.desc;
+    footer.appendChild(ds);
+    tile.appendChild(footer);
+
+    host.appendChild(tile);
+  });
+}
+
+// ============ MINI PLAYER MODE ============
+let miniPlayerActive = false;
+async function toggleMiniPlayer() {
+  miniPlayerActive = !miniPlayerActive;
+  document.body.classList.toggle('mini-player', miniPlayerActive);
+  try {
+    if (window.electronAPI && window.electronAPI.setMiniPlayer) {
+      await window.electronAPI.setMiniPlayer(miniPlayerActive);
+    }
+  } catch(e) { console.error('[Mini] toggle failed:', e); }
+  try { localStorage.setItem('aether_mini', miniPlayerActive ? '1' : '0'); } catch(e) {}
+}
+// Ctrl+M toggles
+window.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'm' || e.key === 'M') && !e.shiftKey && !e.altKey) {
+    e.preventDefault();
+    toggleMiniPlayer();
+  }
+});
+
+// Quick cycle: Ctrl+Shift+T flips through skins. Great for A/B with new headphones.
+window.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
+    e.preventDefault();
+    const idx = SKINS.findIndex(s => s.id === currentSkin);
+    const next = SKINS[(idx + 1) % SKINS.length];
+    applySkin(next.id);
+  }
+});
+
+// Apply saved skin immediately on parse (before render) so there's no flash of default theme.
+try {
+  const savedSkin = localStorage.getItem('aether_skin') || '';
+  if (savedSkin) {
+    currentSkin = savedSkin;
+    document.documentElement.setAttribute('data-skin', savedSkin);
+  }
+} catch(e) {}
+
 function initAudioContext() {
   if (audioCtx) {
     if (audioCtx.state === 'suspended') audioCtx.resume();
     return;
   }
   try {
+    // Default constructor — no latencyHint. The 'playback' hint requests a larger
+    // output buffer that some DAC + WASAPI combos stall on, killing playback silently.
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
     analyser.smoothingTimeConstant = 0.82;
     if (!audioSource) audioSource = audioCtx.createMediaElementSource(audio);
-    // Build 10-band EQ chain: source → eq[0-9] → analyser → destination
+    // Original working chain (pre-Round 3): source → eq[0..9] → analyser → destination.
+    // ReplayGain / master / autoEq / crossfeed nodes are inserted on demand, NOT
+    // baked into the base chain — that way an extra always-on node can never stall it.
     eqFilters = EQ_FREQUENCIES.map((freq, i) => {
       const f = audioCtx.createBiquadFilter();
       f.type = 'peaking';
       f.frequency.value = freq;
-      f.Q.value = 1.4;
+      f.Q.value = 1.0;
       f.gain.value = eqGains[i];
       return f;
     });
     audioSource.connect(eqFilters[0]);
     for (let i = 0; i < eqFilters.length - 1; i++) eqFilters[i].connect(eqFilters[i + 1]);
     eqFilters[eqFilters.length - 1].connect(analyser);
-    analyser.connect(audioCtx.destination);
+    // Master output gain — sits at the end of the chain. Default 1.35 (~+2.6 dB)
+    // because Subsonic's raw streams tend to come out a few dB quieter than reference.
+    // User-tunable via Settings → AUDIO → MASTER GAIN slider.
+    masterGain = audioCtx.createGain();
+    let savedGain = 1.35;
+    try {
+      const g = parseFloat(localStorage.getItem('aether_master_gain'));
+      if (Number.isFinite(g) && g >= 0.5 && g <= 2.5) savedGain = g;
+    } catch(e) {}
+    masterGain.gain.value = savedGain;
+    analyser.connect(masterGain);
+    masterGain.connect(audioCtx.destination);
+    try {
+      const m = localStorage.getItem('aether_rg_mode'); if (m) replayGainMode = m;
+      const pc = localStorage.getItem('aether_rg_clip'); if (pc !== null) replayGainPreventClip = pc === '1';
+    } catch(e) {}
     freqData = new Uint8Array(analyser.frequencyBinCount);
     audioCtx.resume();
-    console.log('Web Audio API initialized with 10-band EQ, state:', audioCtx.state);
+    // Force the Web Audio destination onto the current OS default. Chromium can
+    // hold an old sink reference if a previously-default device disappeared
+    // (like the nuked VB-Cable) — pinning to '' tells it "use whatever Windows
+    // says is default RIGHT NOW", recovering from a stale cache.
+    try {
+      if (typeof audioCtx.setSinkId === 'function') {
+        audioCtx.setSinkId('').then(
+          () => console.log('[AudioCtx] sink pinned to system default'),
+          err => console.warn('[AudioCtx] setSinkId failed:', err && err.message)
+        );
+      }
+    } catch(e) { console.warn('[AudioCtx] setSinkId not supported:', e.message); }
+    console.log('Web Audio API initialized:', audioCtx.sampleRate, 'Hz, state:', audioCtx.state);
   } catch(e) {
     console.error('Web Audio init failed:', e);
     audioCtx = null;
     analyser = null;
   }
+}
+
+// Convert decibels to linear amplitude multiplier.
+function dbToLinear(db) { return Math.pow(10, db / 20); }
+function linearToDb(g) { return 20 * Math.log10(Math.max(0.0001, g)); }
+
+// Master output gain control — boosts/cuts the entire signal post-DSP.
+function setMasterGain(linearVal) {
+  const g = Math.max(0.5, Math.min(2.5, parseFloat(linearVal) || 1.0));
+  if (masterGain && audioCtx) {
+    try { masterGain.gain.setTargetAtTime(g, audioCtx.currentTime, 0.03); }
+    catch(e) { masterGain.gain.value = g; }
+  }
+  try { localStorage.setItem('aether_master_gain', String(g)); } catch(e) {}
+  const lbl = document.getElementById('masterGainLabel');
+  if (lbl) lbl.textContent = (linearToDb(g) >= 0 ? '+' : '') + linearToDb(g).toFixed(1) + ' dB';
+}
+
+// Apply ReplayGain for a track. mode determines source: trackGain vs albumGain.
+// If track has no replayGain data, fall back to neutral (1.0) so loud-war masters
+// still play, just without correction.
+function applyReplayGain(track) {
+  if (!replayGainNode || !audioCtx) return;
+  let targetGain = 1.0;
+  const rg = track && track.replayGain;
+  if (replayGainMode !== 'off' && rg) {
+    const gainDb = replayGainMode === 'album' ? (rg.albumGain ?? rg.trackGain) : (rg.trackGain ?? rg.albumGain);
+    const peak  = replayGainMode === 'album' ? (rg.albumPeak ?? rg.trackPeak ?? 1) : (rg.trackPeak ?? rg.albumPeak ?? 1);
+    if (typeof gainDb === 'number' && Number.isFinite(gainDb)) {
+      const candidate = dbToLinear(gainDb);
+      if (Number.isFinite(candidate)) {
+        targetGain = candidate;
+        if (replayGainPreventClip && typeof peak === 'number' && Number.isFinite(peak) && peak > 0) {
+          const ceiling = 1.0 / peak;
+          if (Number.isFinite(ceiling) && targetGain > ceiling) targetGain = ceiling;
+        }
+      }
+    }
+  }
+  // Final sanity: NaN/Infinity in a GainNode silently kills the chain. Clamp hard.
+  if (!Number.isFinite(targetGain) || targetGain <= 0) targetGain = 1.0;
+  if (targetGain > 4) targetGain = 4;   // never amplify more than +12 dB
+  console.log('[ReplayGain] mode=' + replayGainMode + ' rg=' + JSON.stringify(rg) + ' -> gain=' + targetGain.toFixed(3));
+  try {
+    replayGainNode.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.05);
+  } catch(e) {
+    console.warn('[ReplayGain] setTargetAtTime failed, fallback:', e.message);
+    try { replayGainNode.gain.value = targetGain; } catch(e2) { replayGainNode.gain.value = 1.0; }
+  }
+  const rgBadge = document.getElementById('rgBadge');
+  if (rgBadge) {
+    if (rg && replayGainMode !== 'off' && targetGain !== 1.0) {
+      const appliedDb = 20 * Math.log10(targetGain);
+      rgBadge.textContent = 'RG ' + (appliedDb >= 0 ? '+' : '') + appliedDb.toFixed(1) + 'dB';
+      rgBadge.style.display = '';
+    } else {
+      rgBadge.style.display = 'none';
+    }
+  }
+}
+
+function setReplayGainMode(mode) {
+  if (!['off','track','album'].includes(mode)) return;
+  replayGainMode = mode;
+  try { localStorage.setItem('aether_rg_mode', mode); } catch(e) {}
+  if (typeof currentQueue !== 'undefined' && currentQueueIndex >= 0 && currentQueue[currentQueueIndex]) {
+    applyReplayGain(currentQueue[currentQueueIndex]);
+  }
+}
+
+// PURE mode: bypass every DSP node, route source directly to destination.
+// Use to A/B whether muddiness is in the source vs the player's processing.
+function toggleAudioBypass() {
+  initAudioContext();
+  if (!audioCtx || !audioSource) return;
+  audioBypass = !audioBypass;
+  try {
+    audioSource.disconnect();
+    if (audioBypass) {
+      audioSource.connect(audioCtx.destination);
+    } else {
+      audioSource.connect(replayGainNode || eqFilters[0]);
+    }
+  } catch(e) { console.error('[Bypass] toggle failed:', e); }
+  const btn = document.getElementById('audioBypassBtn');
+  if (btn) {
+    btn.classList.toggle('active', audioBypass);
+    btn.textContent = audioBypass ? 'PURE: ON' : 'PURE: OFF';
+  }
+  try { localStorage.setItem('aether_bypass', audioBypass ? '1' : '0'); } catch(e) {}
+  if (typeof showToast === 'function') showToast(audioBypass ? 'PURE mode — DSP bypassed' : 'DSP chain active');
+  if (typeof updateSignalPathDisplay === 'function') updateSignalPathDisplay();
+}
+
+// Route AETHER's audio output to a specific device (DAC, headphone amp, etc).
+async function setOutputDevice(deviceId) {
+  try {
+    if (typeof audio.setSinkId !== 'function') {
+      showToast('setSinkId not supported in this Chromium build');
+      return false;
+    }
+    await audio.setSinkId(deviceId || '');
+    try { localStorage.setItem('aether_sinkId', deviceId || ''); } catch(e) {}
+    return true;
+  } catch (err) {
+    console.error('[Output] setSinkId failed:', err);
+    showToast('Failed to set output device');
+    return false;
+  }
+}
+
+// Nukes every audio-pipeline-related localStorage key, drops the sink back to
+// system default, and reloads. For when something weird is silenced and you
+// don't want to hunt the bad setting.
+// Plays a 1-second 440 Hz sine through the SAME chain as music, ending at masterGain → destination.
+// If you hear it, the DSP chain + output sink are fine and the silent-music bug is upstream
+// (stream URL, decode, sink ID). If you don't, the chain or sink is broken.
+function playTestTone() {
+  initAudioContext();
+  if (!audioCtx || !masterGain) { showToast('AudioContext not ready'); return; }
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 440;
+  g.gain.value = 0;
+  osc.connect(g);
+  g.connect(masterGain);  // joins the real output path right at the master node
+  const t0 = audioCtx.currentTime;
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(0.25, t0 + 0.05);
+  g.gain.setValueAtTime(0.25, t0 + 0.85);
+  g.gain.linearRampToValueAtTime(0, t0 + 1.0);
+  osc.start(t0);
+  osc.stop(t0 + 1.05);
+  console.log('[TestTone] 440 Hz, 1s, via masterGain → destination. AudioCtx sr:', audioCtx.sampleRate, 'state:', audioCtx.state);
+  showToast('Test tone: 440 Hz for 1s');
+}
+
+function resetAudioStack() {
+  const keys = [
+    'aether_sinkId','aether_bypass','aether_rg_mode','aether_rg_clip',
+    'aether_xfeed_on','aether_xfeed_amt','aether_autoeq','aether_autoeq_custom',
+    'aether_gapless','aether_migration_v2'
+  ];
+  try { keys.forEach(k => localStorage.removeItem(k)); } catch(e) {}
+  try { if (typeof audio !== 'undefined' && typeof audio.setSinkId === 'function') audio.setSinkId(''); } catch(e) {}
+  if (typeof showToast === 'function') showToast('Audio stack reset — reloading');
+  setTimeout(() => location.reload(), 600);
+}
+
+async function populateOutputDevices() {
+  const sel = document.getElementById('outputDeviceSelect');
+  if (!sel) return;
+  try {
+    // Need an active stream permission for labels — silent getUserMedia is enough on Electron.
+    try { await navigator.mediaDevices.getUserMedia({ audio: true }).then(s => s.getTracks().forEach(t => t.stop())); } catch(e) {}
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const outs = devices.filter(d => d.kind === 'audiooutput');
+    const savedId = localStorage.getItem('aether_sinkId') || '';
+    while (sel.firstChild) sel.removeChild(sel.firstChild);
+    const defOpt = document.createElement('option');
+    defOpt.value = '';
+    defOpt.textContent = 'System Default';
+    if (!savedId) defOpt.selected = true;
+    sel.appendChild(defOpt);
+    outs.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d.deviceId;
+      opt.textContent = d.label || ('Device ' + d.deviceId.slice(0, 6));
+      if (d.deviceId === savedId) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    if (savedId) { try { await audio.setSinkId(savedId); } catch(e) {} }
+  } catch (err) {
+    console.error('[Output] enumerate failed:', err);
+  }
+}
+
+// ============ AUTOEQ ============
+// AutoEq chain sits between the user 10-band EQ and the analyser. Disconnects
+// the direct lastEq→analyser link and inserts: lastEq → preampGain → biquads → analyser.
+
+function _disconnectAutoEqChain() {
+  if (!audioCtx) return;
+  const lastEq = eqFilters[eqFilters.length - 1];
+  try { if (lastEq) lastEq.disconnect(); } catch(e) {}
+  if (autoEqPreampNode) { try { autoEqPreampNode.disconnect(); } catch(e) {} }
+  autoEqFilters.forEach(f => { try { f.disconnect(); } catch(e) {} });
+  autoEqFilters = [];
+  autoEqPreampNode = null;
+}
+
+function _restoreEqDirect() {
+  // Wire lastEq → analyser, the no-AutoEq topology.
+  if (!audioCtx || !analyser) return;
+  const lastEq = eqFilters[eqFilters.length - 1];
+  if (lastEq) { try { lastEq.connect(analyser); } catch(e) {} }
+}
+
+function _buildAutoEqChain(preamp, filters) {
+  if (!audioCtx || !analyser || !eqFilters.length) return;
+  _disconnectAutoEqChain();
+  const lastEq = eqFilters[eqFilters.length - 1];
+  autoEqPreampNode = audioCtx.createGain();
+  autoEqPreampNode.gain.value = dbToLinear(preamp || 0);
+  lastEq.connect(autoEqPreampNode);
+  let prev = autoEqPreampNode;
+  filters.forEach(f => {
+    const b = audioCtx.createBiquadFilter();
+    b.type = f.type || 'peaking';
+    b.frequency.value = f.freq;
+    b.gain.value = f.gain;
+    b.Q.value = f.q;
+    prev.connect(b);
+    autoEqFilters.push(b);
+    prev = b;
+  });
+  prev.connect(analyser);
+}
+
+function applyAutoEq(presetId) {
+  initAudioContext();
+  if (!audioCtx) return;
+  const cfg = AUTO_EQ_PRESETS[presetId];
+  autoEqCurrentId = presetId;
+  if (!cfg || presetId === 'off') {
+    _disconnectAutoEqChain();
+    _restoreEqDirect();
+  } else {
+    _buildAutoEqChain(cfg.preamp, cfg.filters);
+  }
+  try { localStorage.setItem('aether_autoeq', presetId); } catch(e) {}
+  const sel = document.getElementById('autoEqSelect');
+  if (sel) sel.value = presetId;
+  const status = document.getElementById('autoEqStatus');
+  if (status) {
+    if (presetId === 'off') {
+      status.textContent = 'Disabled';
+    } else {
+      const n = autoEqFilters.length;
+      status.textContent = (cfg.name || presetId) + ' — ' + n + ' filter' + (n === 1 ? '' : 's') + ', preamp ' + cfg.preamp.toFixed(1) + ' dB';
+    }
+  }
+}
+
+// Parses AutoEq's standard ParametricEQ.txt format from github.com/jaakkopasanen/AutoEq.
+// Lines look like:
+//   Preamp: -6.5 dB
+//   Filter 1: ON PK Fc 20 Hz Gain 6.6 dB Q 0.6
+//   Filter 2: ON LSC Fc 105 Hz Gain 4.6 dB Q 0.7
+// PK = peaking, LSC = low shelf, HSC = high shelf.
+function parseAutoEqText(text) {
+  let preamp = 0;
+  const filters = [];
+  for (const line of String(text).split(/\r?\n/)) {
+    const preMatch = line.match(/Preamp:\s*(-?\d+(\.\d+)?)\s*dB/i);
+    if (preMatch) { preamp = parseFloat(preMatch[1]); continue; }
+    const m = line.match(/Filter\s+\d+:\s*ON\s+(PK|LSC?|HSC?)\s+Fc\s+(\d+(\.\d+)?)\s*Hz\s+Gain\s+(-?\d+(\.\d+)?)\s*dB\s+Q\s+(\d+(\.\d+)?)/i);
+    if (m) {
+      const t = m[1].toUpperCase();
+      let type = 'peaking';
+      if (t.startsWith('LS')) type = 'lowshelf';
+      else if (t.startsWith('HS')) type = 'highshelf';
+      filters.push({ type, freq: parseFloat(m[2]), gain: parseFloat(m[4]), q: parseFloat(m[6]) });
+    }
+  }
+  return { preamp, filters };
+}
+
+function applyAutoEqCustom() {
+  const ta = document.getElementById('autoEqCustomText');
+  if (!ta) return;
+  const text = ta.value.trim();
+  if (!text) { applyAutoEq('off'); return; }
+  const { preamp, filters } = parseAutoEqText(text);
+  if (filters.length === 0) {
+    if (typeof showToast === 'function') showToast('AutoEq: no filters parsed — check format');
+    return;
+  }
+  AUTO_EQ_PRESETS['custom'] = { name: 'Custom (pasted)', preamp, filters };
+  applyAutoEq('custom');
+  try { localStorage.setItem('aether_autoeq_custom', text); } catch(e) {}
+  if (typeof showToast === 'function') showToast('AutoEq custom: ' + filters.length + ' filters, preamp ' + preamp.toFixed(1) + ' dB');
+}
+
+// ============ CROSSFEED (Bauer-style) ============
+// Builds the splitter/merger/lowpass/delay/gain graph once; toggles via
+// connect/disconnect between analyser and masterGain. Off by default so
+// users who don't want it pay zero processing cost.
+function _buildCrossfeedNodes() {
+  if (!audioCtx || crossfeedNodes) return crossfeedNodes;
+  const splitter = audioCtx.createChannelSplitter(2);
+  const merger = audioCtx.createChannelMerger(2);
+  // Direct paths — L stays L, R stays R
+  splitter.connect(merger, 0, 0);
+  splitter.connect(merger, 1, 1);
+  // L → R crossfeed leg
+  const lpLR = audioCtx.createBiquadFilter();
+  lpLR.type = 'lowpass'; lpLR.frequency.value = crossfeedCutoff; lpLR.Q.value = 0.5;
+  const dLR = audioCtx.createDelay(0.01); dLR.delayTime.value = 0.00027; // ~0.27 ms ITD
+  const gLR = audioCtx.createGain(); gLR.gain.value = 0;
+  splitter.connect(lpLR, 0);
+  lpLR.connect(dLR); dLR.connect(gLR); gLR.connect(merger, 0, 1);
+  // R → L crossfeed leg
+  const lpRL = audioCtx.createBiquadFilter();
+  lpRL.type = 'lowpass'; lpRL.frequency.value = crossfeedCutoff; lpRL.Q.value = 0.5;
+  const dRL = audioCtx.createDelay(0.01); dRL.delayTime.value = 0.00027;
+  const gRL = audioCtx.createGain(); gRL.gain.value = 0;
+  splitter.connect(lpRL, 1);
+  lpRL.connect(dRL); dRL.connect(gRL); gRL.connect(merger, 0, 0);
+  crossfeedNodes = { splitter, merger, lpLR, lpRL, gLR, gRL };
+  _updateCrossfeedParams();
+  return crossfeedNodes;
+}
+
+function _updateCrossfeedParams() {
+  if (!crossfeedNodes || !audioCtx) return;
+  // Intensity 0-100 → linear gain 0-0.55. 35 ≈ 0.19 = a gentle ~-14 dB bleed.
+  const g = (crossfeedIntensity / 100) * 0.55;
+  const t = audioCtx.currentTime;
+  crossfeedNodes.gLR.gain.setTargetAtTime(crossfeedEnabled ? g : 0, t, 0.03);
+  crossfeedNodes.gRL.gain.setTargetAtTime(crossfeedEnabled ? g : 0, t, 0.03);
+  crossfeedNodes.lpLR.frequency.setTargetAtTime(crossfeedCutoff, t, 0.05);
+  crossfeedNodes.lpRL.frequency.setTargetAtTime(crossfeedCutoff, t, 0.05);
+}
+
+function toggleCrossfeed() {
+  initAudioContext();
+  if (!audioCtx || !analyser || !masterGain) return;
+  _buildCrossfeedNodes();
+  crossfeedEnabled = !crossfeedEnabled;
+  try {
+    if (crossfeedEnabled) {
+      analyser.disconnect(masterGain);
+      analyser.connect(crossfeedNodes.splitter);
+      crossfeedNodes.merger.connect(masterGain);
+    } else {
+      try { analyser.disconnect(crossfeedNodes.splitter); } catch(e) {}
+      try { crossfeedNodes.merger.disconnect(masterGain); } catch(e) {}
+      analyser.connect(masterGain);
+    }
+  } catch(e) { console.error('[Crossfeed] toggle failed:', e); }
+  _updateCrossfeedParams();
+  const btn = document.getElementById('crossfeedBtn');
+  if (btn) {
+    btn.classList.toggle('active', crossfeedEnabled);
+    btn.textContent = crossfeedEnabled ? 'CROSSFEED: ON' : 'CROSSFEED: OFF';
+  }
+  try { localStorage.setItem('aether_xfeed_on', crossfeedEnabled ? '1' : '0'); } catch(e) {}
+}
+
+function setCrossfeedIntensity(v) {
+  crossfeedIntensity = Math.max(0, Math.min(100, parseInt(v, 10) || 0));
+  _updateCrossfeedParams();
+  try { localStorage.setItem('aether_xfeed_amt', String(crossfeedIntensity)); } catch(e) {}
+  const lbl = document.getElementById('crossfeedAmtLabel');
+  if (lbl) lbl.textContent = crossfeedIntensity + '%';
 }
 
 // ============ DJ MODE: DUAL DECK ENGINE ============
@@ -8181,13 +9242,35 @@ function playCurrentTrack() {
   initAudioContext();
   if (currentQueueIndex < 0 || currentQueueIndex >= currentQueue.length) return;
   const t = currentQueue[currentQueueIndex];
-  audio.src = SUBSONIC.streamUrl(t.id);
+  const url = SUBSONIC.streamUrl(t.id);
+  console.log('[Stream] URL:', url);
+  // Probe the URL ourselves so we can see HTTP status + content-type without DevTools network tab
+  fetch(url, { method: 'HEAD' })
+    .then(r => console.log('[Stream] HEAD ->', r.status, 'content-type:', r.headers.get('content-type'), 'size:', r.headers.get('content-length')))
+    .catch(e => console.log('[Stream] HEAD failed:', e.message));
+  audio.src = url;
+
+  // ReplayGain — apply if track already has data, else fetch then apply.
+  if (t.replayGain || replayGainMode === 'off') {
+    applyReplayGain(t);
+  } else {
+    SUBSONIC.get('getSong', { id: t.id }).then(resp => {
+      const song = resp && resp.song;
+      if (song && song.replayGain) {
+        t.replayGain = song.replayGain;
+        // Only apply if still the active track (user may have skipped)
+        if (currentQueue[currentQueueIndex] === t) applyReplayGain(t);
+      } else {
+        applyReplayGain(t); // neutral
+      }
+    }).catch(() => applyReplayGain(t));
+  }
+
   audio.play().then(() => {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     console.log('Playing:', t.title, '| AudioCtx:', audioCtx?.state);
   }).catch(e => {
     console.error('Play failed:', e);
-    // Retry once after resuming context
     if (audioCtx && audioCtx.state === 'suspended') {
       audioCtx.resume().then(() => audio.play().catch(() => {}));
     }
@@ -8319,11 +9402,33 @@ audio.addEventListener('timeupdate', () => {
   const pct = (audio.currentTime / audio.duration) * 100;
   document.getElementById('seekCurrent').textContent = fmtDur(audio.currentTime);
   updateWaveformProgress(pct);
+  maybePreloadNext();
+});
+
+// When playCurrentTrack swaps audio.src, clear the preload marker only if we're
+// playing a track that wasn't the one we preloaded (e.g. user skipped manually).
+audio.addEventListener('loadstart', () => {
+  if (currentQueueIndex >= 0 && currentQueue && currentQueue[currentQueueIndex]) {
+    const playingId = currentQueue[currentQueueIndex].id;
+    if (playingId !== preloadedTrackId) preloadedTrackId = null;
+  }
 });
 
 audio.addEventListener('loadedmetadata', () => {
   document.getElementById('seekTotal').textContent = fmtDur(audio.duration);
+  console.log('[Audio] loadedmetadata duration:', audio.duration, 'readyState:', audio.readyState);
 });
+
+audio.addEventListener('error', () => {
+  const e = audio.error;
+  const codes = { 1: 'ABORTED', 2: 'NETWORK', 3: 'DECODE', 4: 'SRC_NOT_SUPPORTED' };
+  console.error('[Audio] ERROR:', e && (codes[e.code] || e.code), 'message:', e && e.message, 'src:', audio.src);
+});
+
+audio.addEventListener('stalled', () => console.warn('[Audio] stalled'));
+audio.addEventListener('suspend', () => console.warn('[Audio] suspend'));
+audio.addEventListener('waiting', () => console.warn('[Audio] waiting (buffering)'));
+audio.addEventListener('canplay', () => console.log('[Audio] canplay duration:', audio.duration));
 
 audio.addEventListener('ended', () => {
   // DJ MODE: Let the DJ engine handle track advancement
@@ -9446,8 +10551,112 @@ document.querySelectorAll('.settings-tab-btn').forEach(btn => {
     btn.classList.add('active');
     const panel = document.querySelector(`[data-settings-panel="${tab}"]`);
     if (panel) panel.classList.add('active');
+    if (tab === 'audio') {
+      populateOutputDevices();
+      try {
+        const m = localStorage.getItem('aether_rg_mode') || 'track';
+        const sel = document.getElementById('rgModeSelect'); if (sel) sel.value = m;
+        const pc = localStorage.getItem('aether_rg_clip');
+        const chk = document.getElementById('rgClipChk');
+        if (chk && pc !== null) chk.checked = pc === '1';
+        const xfAmt = localStorage.getItem('aether_xfeed_amt');
+        if (xfAmt !== null) {
+          crossfeedIntensity = parseInt(xfAmt, 10) || 35;
+          const sl = document.getElementById('crossfeedSlider'); if (sl) sl.value = crossfeedIntensity;
+          const lbl = document.getElementById('crossfeedAmtLabel'); if (lbl) lbl.textContent = crossfeedIntensity + '%';
+        }
+        const xfBtn = document.getElementById('crossfeedBtn');
+        if (xfBtn) {
+          xfBtn.classList.toggle('active', crossfeedEnabled);
+          xfBtn.textContent = crossfeedEnabled ? 'CROSSFEED: ON' : 'CROSSFEED: OFF';
+        }
+        const gpChk = document.getElementById('gaplessChk'); if (gpChk) gpChk.checked = gaplessEnabled;
+        const aeId = localStorage.getItem('aether_autoeq') || 'off';
+        const aeSel = document.getElementById('autoEqSelect'); if (aeSel) aeSel.value = aeId;
+        const curGain = masterGain ? masterGain.gain.value : 1.35;
+        const mgSl = document.getElementById('masterGainSlider'); if (mgSl) mgSl.value = curGain;
+        const mgLbl = document.getElementById('masterGainLabel');
+        if (mgLbl) mgLbl.textContent = (linearToDb(curGain) >= 0 ? '+' : '') + linearToDb(curGain).toFixed(1) + ' dB';
+      } catch(e) {}
+    }
+    if (tab === 'display') refreshSkinPicker();
   });
 });
+
+// Hydrate crossfeed saved state on startup (so AudioContext init builds with right config)
+try {
+  const xfAmt = localStorage.getItem('aether_xfeed_amt');
+  if (xfAmt !== null) crossfeedIntensity = parseInt(xfAmt, 10) || 35;
+  if (localStorage.getItem('aether_xfeed_on') === '1') {
+    audio.addEventListener('play', function onceForXfeed() {
+      audio.removeEventListener('play', onceForXfeed);
+      setTimeout(() => { if (!crossfeedEnabled) toggleCrossfeed(); }, 60);
+    });
+  }
+} catch(e) {}
+
+// Restore AutoEq on first track play
+try {
+  const aeId = localStorage.getItem('aether_autoeq');
+  if (aeId && aeId !== 'off') {
+    // For custom, rebuild AUTO_EQ_PRESETS.custom from saved text
+    if (aeId === 'custom') {
+      const txt = localStorage.getItem('aether_autoeq_custom');
+      if (txt) {
+        const { preamp, filters } = parseAutoEqText(txt);
+        AUTO_EQ_PRESETS['custom'] = { name: 'Custom (pasted)', preamp, filters };
+        const ta = document.getElementById('autoEqCustomText'); if (ta) ta.value = txt;
+      }
+    }
+    audio.addEventListener('play', function onceForAutoEq() {
+      audio.removeEventListener('play', onceForAutoEq);
+      setTimeout(() => applyAutoEq(aeId), 80);
+    });
+  }
+} catch(e) {}
+
+// Restore mini-player state on startup
+try {
+  if (localStorage.getItem('aether_mini') === '1') {
+    window.addEventListener('DOMContentLoaded', () => setTimeout(toggleMiniPlayer, 200));
+  }
+} catch(e) {}
+
+// One-time migration: clear sink/bypass state from the pre-VB-Cable-nuke era.
+// Old sink IDs may point to deleted CABLE devices → silent playback. Bypass
+// could also have been left ON during testing. After this migration runs once,
+// the user's choices persist normally.
+try {
+  if (!localStorage.getItem('aether_migration_v2')) {
+    localStorage.removeItem('aether_sinkId');
+    localStorage.removeItem('aether_bypass');
+    localStorage.setItem('aether_migration_v2', '1');
+    console.log('[Migration v2] Cleared stale sink + bypass state.');
+  }
+} catch(e) {}
+
+// Restore PURE bypass + saved sink on startup, with self-healing if sink is gone.
+try {
+  if (localStorage.getItem('aether_bypass') === '1') {
+    audio.addEventListener('play', function onceForBypass() {
+      audio.removeEventListener('play', onceForBypass);
+      setTimeout(() => { if (!audioBypass) toggleAudioBypass(); }, 50);
+    });
+  }
+  const savedSink = localStorage.getItem('aether_sinkId');
+  if (savedSink && typeof audio.setSinkId === 'function') {
+    audio.addEventListener('canplay', function onceForSink() {
+      audio.removeEventListener('canplay', onceForSink);
+      audio.setSinkId(savedSink).catch(err => {
+        // Device gone (e.g. nuked virtual cable). Clear and fall back to system default.
+        console.warn('[Output] saved sink unavailable, reverting to default:', err && err.message);
+        try { localStorage.removeItem('aether_sinkId'); } catch(e) {}
+        try { audio.setSinkId(''); } catch(e) {}
+        if (typeof showToast === 'function') showToast('Saved output device gone — using system default');
+      });
+    });
+  }
+} catch(e) {}
 
 // Auto-rotate
 document.getElementById('settAutoRotate').addEventListener('change', (e) => {
@@ -14101,6 +15310,31 @@ function initLyricRain(w, h) {
 }
 
 let lyricFetchInProgress = false;
+// Synced lyrics for visualizers that sync to playback (Hacker Terminal, etc).
+// Plain text lyrics still live in lyricRainLyrics — this is parallel data preserving timing.
+let syncedLyricLines = [];          // [{ time: seconds, text: string }]
+let syncedLyricCurrentIdx = -1;
+let syncedLyricTrackId = null;
+
+function parseSyncedLyrics(text) {
+  if (!text || typeof text !== 'string') return [];
+  const out = [];
+  for (const line of text.split(/\r?\n/)) {
+    // LRC format: [mm:ss.xx] text  or [mm:ss.xxx] text  — multiple timestamps OK
+    const matches = [...line.matchAll(/\[(\d{1,2}):(\d{2})[.:](\d{2,3})\]/g)];
+    if (matches.length === 0) continue;
+    const txt = line.replace(/\[\d{1,2}:\d{2}[.:]\d{2,3}\]/g, '').trim();
+    if (!txt) continue;
+    for (const m of matches) {
+      const min = parseInt(m[1], 10);
+      const sec = parseInt(m[2], 10);
+      const frac = m[3];
+      const fracMs = frac.length === 3 ? parseInt(frac, 10) : parseInt(frac, 10) * 10;
+      out.push({ time: min * 60 + sec + fracMs / 1000, text: txt });
+    }
+  }
+  return out.sort((a, b) => a.time - b.time);
+}
 
 async function fetchLyrics() {
   const t = currentQueue[currentQueueIndex];
@@ -14111,6 +15345,10 @@ async function fetchLyrics() {
   lyricRainLastTrackId = t.id;
   lyricRainLyricWords = [];
   lyricRainWordIndex = 0;
+  // Reset synced lyric state for the new track
+  syncedLyricLines = [];
+  syncedLyricCurrentIdx = -1;
+  syncedLyricTrackId = t.id;
 
   const artist = t.artist || '';
   const title = t.title || '';
@@ -14130,8 +15368,9 @@ async function fetchLyrics() {
           lyricRainLyrics = data.plainLyrics;
           source = 'LRCLIB-exact';
         } else if (data.syncedLyrics) {
-          // Strip timestamp tags from synced lyrics
+          // Strip timestamp tags for plain rendering, AND parse them for sync
           lyricRainLyrics = data.syncedLyrics.replace(/\[\d{2}:\d{2}\.\d{2,3}\]\s*/g, '');
+          syncedLyricLines = parseSyncedLyrics(data.syncedLyrics);
           source = 'LRCLIB-synced';
         }
       }
@@ -14166,6 +15405,7 @@ async function fetchLyrics() {
             source = 'LRCLIB-search';
           } else if (match?.syncedLyrics) {
             lyricRainLyrics = match.syncedLyrics.replace(/\[\d{2}:\d{2}\.\d{2,3}\]\s*/g, '');
+            syncedLyricLines = parseSyncedLyrics(match.syncedLyrics);
             source = 'LRCLIB-search-synced';
           }
         }
@@ -16748,21 +17988,71 @@ function drawHackerTerminal(ctx, w, h, time) {
 
   const fontSize = Math.max(10, Math.min(14, w / 55));
   const lineH = fontSize * 1.6;
-  const maxVisibleLines = Math.floor(h / lineH) + 2;
+  const headerH = fontSize * 2.4;   // reserved top space for track HUD
+  const footerH = fontSize * 2.0;   // reserved bottom space for progress bar
+  const contentTop = headerH;
+  const contentH = h - headerH - footerH;
+  const maxVisibleLines = Math.floor(contentH / lineH) + 2;
   const margin = 12;
   const bass = bands.bass || 0;
   const energy = bands.energy || 0;
   const bi = beatIntensity || 0;
   const mid = bands.mid || 0;
 
-  // Beat detection — add new lines on beats
-  if (bi > 0.25 && time - hackerTermLastBeat > 150) {
+  // ── SYNCED LYRIC INJECTION ──
+  // If the current track has time-coded lyrics, find the line that matches
+  // playback time and inject it into the terminal feed THE INSTANT it triggers.
+  // This makes the terminal feel alive — code-shaped lyrics arriving on-beat
+  // with the music instead of in arbitrary order.
+  if (syncedLyricLines.length > 0 && audio && audio.duration > 0 && !audio.paused) {
+    const tAudio = audio.currentTime;
+    let idx = -1;
+    for (let i = syncedLyricLines.length - 1; i >= 0; i--) {
+      if (syncedLyricLines[i].time <= tAudio + 0.05) { idx = i; break; }
+    }
+    if (idx >= 0 && idx !== syncedLyricCurrentIdx) {
+      syncedLyricCurrentIdx = idx;
+      const lyric = syncedLyricLines[idx];
+      const tsM = Math.floor(lyric.time / 60);
+      const tsS = Math.floor(lyric.time % 60);
+      const tsX = Math.floor((lyric.time * 100) % 100);
+      const ts = `${String(tsM).padStart(2,'0')}:${String(tsS).padStart(2,'0')}.${String(tsX).padStart(2,'0')}`;
+      // ALWAYS use the same banner-style prefix for the synced line — consistent visual
+      // anchor that the eye can lock onto. Variety is the enemy of "doper" here.
+      const fullText = `► [${ts}]  ${lyric.text}`;
+      hackerTermLines.push({
+        text: fullText,
+        time: time,
+        type: 'sync-lyric',
+        intensity: 1.0,
+        fullText: fullText,        // typewriter target
+        typewriterStart: time,
+        typewriterDur: Math.min(280, fullText.length * 14),  // ~14ms per char, capped
+      });
+      // Heavier glitch on lyric sync so it punches through everything else
+      hackerTermGlitchUntil = Math.max(hackerTermGlitchUntil, time + 160);
+    }
+  } else if (audio && audio.paused) {
+    // Allow the same lyric to re-fire if the user scrubs back
+    syncedLyricCurrentIdx = -1;
+  }
+
+  // When LRC sync is live, suppress most filler so lyrics own the screen.
+  // Pure track audio drives the feed; we still allow occasional flavor for atmosphere.
+  const lrcSyncActive = syncedLyricLines.length > 0;
+
+  // Beat detection — add new lines on beats. When LRC-SYNC is live, throttle hard
+  // (only every 3rd qualifying beat) so the synced lyrics stay the star, and never
+  // push word-by-word lyric flavor (which competes with the real synced text).
+  const beatThreshold = lrcSyncActive ? 0.45 : 0.25;
+  const beatCooldown = lrcSyncActive ? 600 : 150;
+  if (bi > beatThreshold && time - hackerTermLastBeat > beatCooldown) {
     hackerTermLastBeat = time;
     hackerTermGlitchUntil = time + 80 + bi * 120;
 
-    // Get lyric words from the existing lyric system
+    // Get lyric words from the existing lyric system — only when NOT synced
     let word = '';
-    if (lyricRainLyrics && lyricRainLyricWords.length > 0) {
+    if (!lrcSyncActive && lyricRainLyrics && lyricRainLyricWords.length > 0) {
       word = lyricRainLyricWords[hackerTermCursor % lyricRainLyricWords.length] || '';
       hackerTermCursor++;
     }
@@ -16811,30 +18101,33 @@ function drawHackerTerminal(ctx, w, h, time) {
     }
   }
 
-  // Also add lines on a slower timer for ambient activity
-  if (hackerTermLines.length === 0 || (time - (hackerTermLines[hackerTermLines.length-1]?.time || 0)) > 400) {
-    const ambient = [
-      `  ... monitoring audio stream ...`,
-      `  [OK] connection stable`,
-      `  > _`,
-      `  [IDLE] awaiting signal`,
-    ];
-    if (Math.random() < 0.3) {
-      hackerTermLines.push({
-        text: ambient[Math.floor(Math.random() * ambient.length)],
-        time: time,
-        type: 'ambient',
-        intensity: 0
-      });
+  // Ambient filler — skip entirely when LRC-SYNC is live (lyrics ARE the ambient).
+  // For non-synced tracks, fire occasionally to keep the feed feeling alive.
+  if (!lrcSyncActive) {
+    if (hackerTermLines.length === 0 || (time - (hackerTermLines[hackerTermLines.length-1]?.time || 0)) > 400) {
+      const ambient = [
+        `  ... monitoring audio stream ...`,
+        `  [OK] connection stable`,
+        `  > _`,
+        `  [IDLE] awaiting signal`,
+      ];
+      if (Math.random() < 0.3) {
+        hackerTermLines.push({
+          text: ambient[Math.floor(Math.random() * ambient.length)],
+          time: time,
+          type: 'ambient',
+          intensity: 0
+        });
+      }
     }
   }
 
   // Trim old lines
   while (hackerTermLines.length > 200) hackerTermLines.shift();
 
-  // Scroll target — always show latest lines
+  // Scroll target — always show latest lines (using the reserved content area, not full h)
   const totalH = hackerTermLines.length * lineH;
-  const targetScroll = Math.max(0, totalH - h + lineH * 2);
+  const targetScroll = Math.max(0, totalH - contentH + lineH * 2);
   hackerTermScrollY += (targetScroll - hackerTermScrollY) * 0.12;
 
   // Glitch effect on beats
@@ -16867,17 +18160,25 @@ function drawHackerTerminal(ctx, w, h, time) {
     ctx.fillRect(0, y, w, 1);
   }
 
-  // Draw text lines
-  ctx.font = `${fontSize}px 'JetBrains Mono', 'Consolas', monospace`;
+  // Draw text lines — base font, sync-lyrics override with a larger bold variant
+  const baseFont = `${fontSize}px 'JetBrains Mono', 'Consolas', monospace`;
+  const lyricFont = `bold ${Math.round(fontSize * 1.25)}px 'JetBrains Mono', 'Consolas', monospace`;
+  ctx.font = baseFont;
   ctx.textBaseline = 'top';
 
   const startLine = Math.max(0, Math.floor(hackerTermScrollY / lineH) - 1);
   const endLine = Math.min(hackerTermLines.length, startLine + maxVisibleLines + 2);
 
+  // Clip text drawing to the content area so HUD + progress bar don't get overdrawn
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, contentTop, w, contentH);
+  ctx.clip();
+
   for (let i = startLine; i < endLine; i++) {
     const line = hackerTermLines[i];
-    const y = i * lineH - hackerTermScrollY;
-    if (y < -lineH || y > h + lineH) continue;
+    const y = contentTop + i * lineH - hackerTermScrollY;
+    if (y < contentTop - lineH || y > contentTop + contentH + lineH) continue;
 
     const age = time - line.time;
     const fadeIn = Math.min(1, age / 200);
@@ -16891,8 +18192,14 @@ function drawHackerTerminal(ctx, w, h, time) {
 
     // Color based on type
     let r, g, b;
-    if (line.type === 'lyric') {
-      // Bright green for lyrics, with beat-reactive brightness
+    if (line.type === 'sync-lyric') {
+      // PRIMO: bright cyan-white for synced lyrics — they get the spotlight
+      const bright = 0.85 + bi * 0.15;
+      r = Math.floor(140 * bright);
+      g = Math.floor(240 * bright);
+      b = Math.floor(255 * bright);
+    } else if (line.type === 'lyric') {
+      // Bright green for word-by-word beat lyrics, beat-reactive brightness
       const bright = 0.7 + line.intensity * 0.3;
       r = Math.floor(30 * bright);
       g = Math.floor(255 * bright);
@@ -16907,37 +18214,172 @@ function drawHackerTerminal(ctx, w, h, time) {
 
     // New line glow effect
     if (isNew) {
-      ctx.shadowColor = line.type === 'lyric' ? `rgba(30, 255, 65, ${0.6 * fadeIn})` : `rgba(0, 200, 180, ${0.3 * fadeIn})`;
-      ctx.shadowBlur = 8 + line.intensity * 12;
+      if (line.type === 'sync-lyric') {
+        ctx.shadowColor = `rgba(140, 240, 255, ${0.85 * fadeIn})`;
+        ctx.shadowBlur = 16 + line.intensity * 18;
+      } else if (line.type === 'lyric') {
+        ctx.shadowColor = `rgba(30, 255, 65, ${0.6 * fadeIn})`;
+        ctx.shadowBlur = 8 + line.intensity * 12;
+      } else {
+        ctx.shadowColor = `rgba(0, 200, 180, ${0.3 * fadeIn})`;
+        ctx.shadowBlur = 8 + line.intensity * 12;
+      }
     } else {
       ctx.shadowColor = 'transparent';
       ctx.shadowBlur = 0;
     }
 
-    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${fadeIn * (isNew ? 1 : 0.75)})`;
-    ctx.fillText(line.text, xOff, y);
+    // Sync-lyric: big bold font + typewriter reveal + persistent halo
+    let drawText = line.text;
+    if (line.type === 'sync-lyric') {
+      ctx.font = lyricFont;
+      // Typewriter — reveal characters progressively over typewriterDur
+      const elapsed = time - (line.typewriterStart || line.time);
+      const progress = Math.min(1, elapsed / (line.typewriterDur || 280));
+      const revealedChars = Math.floor((line.fullText || line.text).length * progress);
+      drawText = (line.fullText || line.text).slice(0, revealedChars);
+      // Mid-type: append a flicker char to hint at the in-progress reveal
+      if (progress < 1 && Math.floor(time / 60) % 2 === 0) {
+        const glyphs = '▓▒░█▌';
+        drawText += glyphs[Math.floor(Math.random() * glyphs.length)];
+      }
+    } else {
+      ctx.font = baseFont;
+    }
 
-    // Chromatic aberration on beat lines
-    if (isNew && line.intensity > 0.3) {
+    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${fadeIn * (isNew ? 1 : (line.type === 'sync-lyric' ? 0.95 : 0.75))})`;
+    ctx.fillText(drawText, xOff, y);
+
+    // Sync-lyric: glowing rule under the line so it visually anchors
+    if (line.type === 'sync-lyric') {
+      const ruleY = y + fontSize * 1.45;
+      const ruleW = Math.min(w - margin * 2, ctx.measureText(drawText).width + 40);
+      const ruleAlpha = Math.max(0, 1 - (time - line.time) / 2400);
+      ctx.fillStyle = `rgba(140, 240, 255, ${0.4 * ruleAlpha + bi * 0.2})`;
+      ctx.fillRect(xOff, ruleY, ruleW, 1);
+      ctx.fillStyle = `rgba(140, 240, 255, ${0.15 * ruleAlpha})`;
+      ctx.fillRect(xOff, ruleY + 1, ruleW * 0.4, 1);
+    }
+
+    // Chromatic aberration on beat lines (and sync-lyrics get it always for ~1s)
+    const aberrationOn = isNew && (line.intensity > 0.3 || line.type === 'sync-lyric');
+    if (aberrationOn) {
       ctx.globalCompositeOperation = 'lighter';
       ctx.fillStyle = `rgba(255, 0, 80, ${0.12 * line.intensity * fadeIn})`;
-      ctx.fillText(line.text, xOff - 1.5, y);
+      ctx.fillText(drawText, xOff - 1.5, y);
       ctx.fillStyle = `rgba(0, 120, 255, ${0.1 * line.intensity * fadeIn})`;
-      ctx.fillText(line.text, xOff + 1.5, y);
+      ctx.fillText(drawText, xOff + 1.5, y);
       ctx.globalCompositeOperation = 'source-over';
     }
   }
+  // Reset font in case last line set it
+  ctx.font = baseFont;
 
+  ctx.restore();  // end content clip
   ctx.shadowColor = 'transparent';
   ctx.shadowBlur = 0;
 
-  // Blinking cursor at bottom
+  // Blinking cursor — sits just below the last visible line within content area
   if (Math.floor(time / 500) % 2 === 0) {
-    const cursorY = Math.min(hackerTermLines.length * lineH - hackerTermScrollY, h - lineH);
+    const cursorY = Math.min(
+      contentTop + hackerTermLines.length * lineH - hackerTermScrollY,
+      contentTop + contentH - lineH
+    );
     const prefix = hackerTermPromptPrefixes[0];
     ctx.fillStyle = `rgba(30, 255, 65, ${0.6 + bass * 0.4})`;
     ctx.font = `${fontSize}px 'JetBrains Mono', 'Consolas', monospace`;
-    ctx.fillText(prefix + '█', margin, Math.max(0, cursorY));
+    ctx.fillText(prefix + '█', margin, Math.max(contentTop, cursorY));
+  }
+
+  // ── TOP HUD — Track info + sync status ──
+  ctx.fillStyle = 'rgba(0, 20, 15, 0.85)';
+  ctx.fillRect(0, 0, w, headerH);
+  ctx.fillStyle = `rgba(30, 255, 65, ${0.15 + bass * 0.15})`;
+  ctx.fillRect(0, headerH - 1, w, 1);
+
+  const npTrack = currentQueue[currentQueueIndex];
+  const titleStr = npTrack ? (npTrack.title || 'NO SIGNAL').toUpperCase() : 'NO SIGNAL';
+  const artistStr = npTrack ? (npTrack.artist || '--') : '--';
+  const syncStatus = syncedLyricLines.length > 0 ? `LRC-SYNC` : (lyricRainLyrics ? 'PLAIN' : 'NONE');
+  const syncColor = syncedLyricLines.length > 0 ? 'rgba(140, 240, 255, 0.95)' : (lyricRainLyrics ? 'rgba(30, 255, 65, 0.85)' : 'rgba(120, 120, 120, 0.7)');
+
+  ctx.font = `bold ${Math.floor(fontSize * 0.9)}px 'JetBrains Mono', monospace`;
+  ctx.fillStyle = 'rgba(30, 255, 65, 0.95)';
+  ctx.fillText('AETHER://', margin, fontSize * 0.4);
+  ctx.fillStyle = `rgba(220, 250, 220, ${0.9 + bi * 0.1})`;
+  ctx.fillText(`${artistStr} — ${titleStr}`.slice(0, Math.floor((w - margin * 2) / (fontSize * 0.62))), margin + fontSize * 5.8, fontSize * 0.4);
+
+  // Right side: live sync badge
+  ctx.font = `${Math.floor(fontSize * 0.72)}px 'JetBrains Mono', monospace`;
+  const badgeText = `[${syncStatus}]`;
+  const badgeW = ctx.measureText(badgeText).width;
+  ctx.fillStyle = syncColor;
+  ctx.shadowColor = syncColor;
+  ctx.shadowBlur = 6 + bi * 8;
+  ctx.fillText(badgeText, w - margin - badgeW, fontSize * 0.55);
+  ctx.shadowBlur = 0;
+
+  // Subline: stream metrics
+  ctx.font = `${Math.floor(fontSize * 0.7)}px 'JetBrains Mono', monospace`;
+  ctx.fillStyle = 'rgba(0, 200, 180, 0.65)';
+  const ctxState = (typeof audioCtx !== 'undefined' && audioCtx) ? audioCtx.state : 'idle';
+  const sr = (typeof audioCtx !== 'undefined' && audioCtx) ? audioCtx.sampleRate : 0;
+  const metricLine = `STREAM ${ctxState.toUpperCase()} @ ${sr}Hz · BPM ${(60 / Math.max(0.001, time - hackerTermLastBeat) * 1000).toFixed(0).padStart(3,'0').slice(0,3)} · ENERGY ${(energy * 100).toFixed(0).padStart(2,'0')}%`;
+  ctx.fillText(metricLine.slice(0, Math.floor((w - margin * 2) / (fontSize * 0.5))), margin, fontSize * 1.5);
+
+  // ── BOTTOM PROGRESS BAR ──
+  const footerY = h - footerH;
+  ctx.fillStyle = 'rgba(0, 20, 15, 0.85)';
+  ctx.fillRect(0, footerY, w, footerH);
+  ctx.fillStyle = `rgba(30, 255, 65, ${0.15 + bass * 0.15})`;
+  ctx.fillRect(0, footerY, w, 1);
+
+  if (audio && audio.duration > 0) {
+    const progress = Math.min(1, audio.currentTime / audio.duration);
+    const barY = footerY + footerH * 0.55;
+    const barH = 3;
+    const barX = margin;
+    const barW = w - margin * 2;
+
+    // Track
+    ctx.fillStyle = 'rgba(30, 60, 30, 0.6)';
+    ctx.fillRect(barX, barY, barW, barH);
+    // Fill
+    ctx.fillStyle = `rgba(30, 255, 65, ${0.85 + bi * 0.15})`;
+    ctx.shadowColor = 'rgba(30, 255, 65, 0.6)';
+    ctx.shadowBlur = 6;
+    ctx.fillRect(barX, barY, barW * progress, barH);
+    ctx.shadowBlur = 0;
+    // Playhead
+    const phX = barX + barW * progress;
+    ctx.fillStyle = `rgba(180, 255, 200, ${0.9 + bi * 0.1})`;
+    ctx.fillRect(phX - 1, barY - 4, 2, barH + 8);
+
+    // Time labels
+    const fmt = (s) => {
+      const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+      return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    };
+    ctx.font = `${Math.floor(fontSize * 0.72)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = 'rgba(30, 255, 65, 0.7)';
+    ctx.fillText(fmt(audio.currentTime), margin, footerY + footerH * 0.25);
+    const totStr = fmt(audio.duration);
+    ctx.fillStyle = 'rgba(0, 200, 180, 0.6)';
+    ctx.fillText(totStr, w - margin - ctx.measureText(totStr).width, footerY + footerH * 0.25);
+
+    // Next synced lyric preview — shows what's coming up
+    if (syncedLyricLines.length > 0 && syncedLyricCurrentIdx + 1 < syncedLyricLines.length) {
+      const next = syncedLyricLines[syncedLyricCurrentIdx + 1];
+      const tDelta = next.time - audio.currentTime;
+      if (tDelta > 0 && tDelta < 30) {
+        const preview = `NEXT [-${tDelta.toFixed(1)}s] ${next.text}`.slice(0, Math.floor((w - margin * 2 - 80) / (fontSize * 0.5)));
+        ctx.fillStyle = `rgba(140, 240, 255, ${0.35 + (1 - tDelta / 30) * 0.4})`;
+        ctx.font = `${Math.floor(fontSize * 0.7)}px 'JetBrains Mono', monospace`;
+        ctx.textAlign = 'center';
+        ctx.fillText(preview, w / 2, footerY + footerH * 0.25);
+        ctx.textAlign = 'start';
+      }
+    }
   }
 
   // Bass-reactive border glow
@@ -16954,11 +18396,657 @@ function drawHackerTerminal(ctx, w, h, time) {
   ctx.restore();
 }
 
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  NEW VISUALIZERS — Event Horizon, Mercury, Prism                 ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+// State for star field used by Event Horizon — initialized lazily on first draw.
+let _eh_stars = null;
+let _eh_particles = [];
+let _eh_lastBeat = 0;
+
+function drawEventHorizon(ctx, w, h, time) {
+  // Light trail — radial darkening that hints at gravitational pull toward center
+  const cx = w / 2, cy = h / 2;
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+  ctx.fillRect(0, 0, w, h);
+
+  // Lazy-init star field
+  if (!_eh_stars || _eh_stars._w !== w) {
+    _eh_stars = [];
+    _eh_stars._w = w;
+    for (let i = 0; i < 220; i++) {
+      _eh_stars.push({
+        x: Math.random() * w, y: Math.random() * h,
+        r: Math.random() * 1.4 + 0.3,
+        twinkle: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  const horizonR = Math.min(w, h) * 0.085 * (1 + bands.sub * 0.6);
+  const innerDiskR = horizonR * 2.4;
+  const outerDiskR = horizonR * 5.8;
+
+  // Star field with gravitational lensing — stars near the singularity bend toward it
+  for (const s of _eh_stars) {
+    const dx = s.x - cx, dy = s.y - cy;
+    const dist = Math.hypot(dx, dy);
+    if (dist < horizonR * 0.95) continue; // swallowed
+    const lensStrength = Math.min(1, (horizonR * 4) / Math.max(dist, 1));
+    const angle = Math.atan2(dy, dx);
+    const distortion = lensStrength * 8 * (1 + bands.bass * 0.6);
+    const dx2 = Math.cos(angle) * (dist - distortion);
+    const dy2 = Math.sin(angle) * (dist - distortion);
+    const sx = cx + dx2, sy = cy + dy2;
+    const tw = 0.5 + 0.5 * Math.sin(time * 0.002 + s.twinkle);
+    const a = 0.4 + 0.6 * tw + bands.high * 0.4;
+    ctx.fillStyle = `rgba(220, 230, 255, ${a})`;
+    ctx.beginPath();
+    ctx.arc(sx, sy, s.r * (1 + beatIntensity * 0.5), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Outer accretion disk — slow rotation, dimmer cyan
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(time * 0.00018);
+  ctx.scale(1, 0.32); // perspective foreshortening — looking at disk near edge-on
+  for (let r = innerDiskR; r < outerDiskR; r += 2) {
+    const t = (r - innerDiskR) / (outerDiskR - innerDiskR);
+    const hueShift = bands.mid * 60 + bands.energy * 30;
+    const alpha = (1 - t) * 0.18 * (0.6 + bands.bass * 0.7);
+    ctx.strokeStyle = `hsla(${190 + hueShift}, 80%, 60%, ${alpha})`;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Inner accretion disk — faster, hotter, brighter; offset rotation
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(-time * 0.00045);
+  ctx.scale(1, 0.34);
+  for (let r = horizonR * 1.1; r < innerDiskR; r += 1.5) {
+    const t = (r - horizonR * 1.1) / (innerDiskR - horizonR * 1.1);
+    const hue = 18 + t * 50; // red → orange → amber
+    const alpha = (1 - t * 0.6) * 0.55 * (0.7 + bands.energy * 0.8);
+    ctx.strokeStyle = `hsla(${hue}, 95%, ${55 + bands.bass * 25}%, ${alpha})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Photon ring — thin blazing ring just outside the event horizon
+  ctx.save();
+  ctx.shadowBlur = 30 + bands.energy * 40;
+  ctx.shadowColor = 'rgba(255, 200, 80, 0.9)';
+  ctx.strokeStyle = `rgba(255, 230, 160, ${0.7 + bands.high * 0.3})`;
+  ctx.lineWidth = 2 + beatIntensity * 4;
+  ctx.beginPath();
+  ctx.arc(cx, cy, horizonR * 1.05, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+
+  // Event horizon — pure void disk
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(cx, cy, horizonR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Particle infall on beats — spawn at random angles outside disk, spiral inward
+  if (beatIntensity > 0.4 && time - _eh_lastBeat > 80) {
+    _eh_lastBeat = time;
+    for (let i = 0; i < 6; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const r0 = outerDiskR + Math.random() * 80;
+      _eh_particles.push({
+        angle: ang, r: r0, vr: -1.4 - Math.random() * 1.2,
+        va: 0.018 + Math.random() * 0.03,
+        hue: 30 + Math.random() * 40,
+      });
+    }
+  }
+  for (let i = _eh_particles.length - 1; i >= 0; i--) {
+    const p = _eh_particles[i];
+    p.r += p.vr;
+    p.angle += p.va;
+    p.va *= 1.018; // accelerate as it falls (closer = faster orbit)
+    if (p.r < horizonR * 0.95) { _eh_particles.splice(i, 1); continue; }
+    const px = cx + Math.cos(p.angle) * p.r;
+    const py = cy + Math.sin(p.angle) * p.r * 0.34;
+    ctx.fillStyle = `hsla(${p.hue}, 100%, 70%, 0.9)`;
+    ctx.shadowBlur = 8; ctx.shadowColor = `hsla(${p.hue}, 100%, 60%, 0.7)`;
+    ctx.beginPath();
+    ctx.arc(px, py, 1.6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  if (_eh_particles.length > 200) _eh_particles.length = 200;
+}
+
+// State for Mercury droplet ripples + floating glow orbs above the surface
+let _mc_ripples = [];
+let _mc_lastDrop = 0;
+let _mc_orbs = [];
+let _mc_lastOrb = 0;
+let _mc_lightShafts = [];
+
+function drawMercury(ctx, w, h, time) {
+  // Background — dark void with subtle vignette + audio-reactive horizon glow
+  const horizonHue = 200 + bands.mid * 60 - bands.bass * 25;
+  const grad = ctx.createRadialGradient(w/2, h*0.35, 10, w/2, h*0.35, h*0.7);
+  grad.addColorStop(0, `hsl(${horizonHue}, 35%, ${4 + bands.energy * 8}%)`);
+  grad.addColorStop(1, '#000');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+
+  const surfaceY = h * 0.52;
+  const horizonLine = h * 0.48;
+
+  // ── HORIZON GLOW — pulses harder on energy ──
+  const glowGrad = ctx.createRadialGradient(w/2, horizonLine, 10, w/2, horizonLine, w * 0.5);
+  glowGrad.addColorStop(0, `hsla(${horizonHue}, 80%, 70%, ${0.25 + bands.energy * 0.45})`);
+  glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = glowGrad;
+  ctx.fillRect(0, 0, w, surfaceY);
+
+  // ── DESCENDING LIGHT SHAFTS — spawn on high-frequency content ──
+  if (bands.high > 0.35 && Math.random() < bands.high * 0.6) {
+    _mc_lightShafts.push({
+      x: Math.random() * w,
+      width: 8 + Math.random() * 24,
+      alpha: 0.18 + bands.high * 0.3,
+      decay: 0.96 + Math.random() * 0.025,
+      hue: horizonHue + (Math.random() - 0.5) * 40,
+    });
+  }
+  for (let i = _mc_lightShafts.length - 1; i >= 0; i--) {
+    const s = _mc_lightShafts[i];
+    s.alpha *= s.decay;
+    if (s.alpha < 0.01) { _mc_lightShafts.splice(i, 1); continue; }
+    const shaftGrad = ctx.createLinearGradient(s.x, 0, s.x, surfaceY);
+    shaftGrad.addColorStop(0, `hsla(${s.hue}, 90%, 80%, 0)`);
+    shaftGrad.addColorStop(0.5, `hsla(${s.hue}, 90%, 75%, ${s.alpha * 0.7})`);
+    shaftGrad.addColorStop(1, `hsla(${s.hue}, 100%, 90%, ${s.alpha})`);
+    ctx.fillStyle = shaftGrad;
+    ctx.fillRect(s.x - s.width/2, 0, s.width, surfaceY);
+  }
+
+  // ── FLOATING GLOW ORBS above the surface (reflected below) ──
+  if (time - _mc_lastOrb > 1100 && bands.mid > 0.18) {
+    _mc_lastOrb = time;
+    _mc_orbs.push({
+      x: w * (0.1 + Math.random() * 0.8),
+      y: surfaceY - 30 - Math.random() * (h * 0.3),
+      r: 4 + Math.random() * 8,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: -0.15 - Math.random() * 0.3,
+      hue: horizonHue + (Math.random() - 0.5) * 80,
+      life: 1.0,
+    });
+  }
+  for (let i = _mc_orbs.length - 1; i >= 0; i--) {
+    const o = _mc_orbs[i];
+    o.x += o.vx;
+    o.y += o.vy * (1 + bands.energy * 0.4);
+    o.life -= 0.004;
+    if (o.life <= 0 || o.y < 0) { _mc_orbs.splice(i, 1); continue; }
+    const a = o.life * (0.7 + bands.energy * 0.3);
+    // Orb glow
+    const orbGrad = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r * 4);
+    orbGrad.addColorStop(0, `hsla(${o.hue}, 100%, 85%, ${a})`);
+    orbGrad.addColorStop(0.4, `hsla(${o.hue}, 90%, 60%, ${a * 0.5})`);
+    orbGrad.addColorStop(1, `hsla(${o.hue}, 90%, 40%, 0)`);
+    ctx.fillStyle = orbGrad;
+    ctx.beginPath();
+    ctx.arc(o.x, o.y, o.r * 4, 0, Math.PI * 2);
+    ctx.fill();
+    // Bright core
+    ctx.fillStyle = `hsla(${o.hue}, 100%, 95%, ${a})`;
+    ctx.beginPath();
+    ctx.arc(o.x, o.y, o.r * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // ── UPDATE RIPPLES ──
+  for (let i = _mc_ripples.length - 1; i >= 0; i--) {
+    const r = _mc_ripples[i];
+    r.radius += r.speed * (1 + bands.bass * 0.4);
+    r.alpha *= 0.984;
+    if (r.alpha < 0.02 || r.radius > w * 1.2) _mc_ripples.splice(i, 1);
+  }
+
+  // ── SPAWN DROPS — much more reactive: multiple per beat, also on sustained bass ──
+  if (beatIntensity > 0.35 && time - _mc_lastDrop > 110) {
+    _mc_lastDrop = time;
+    const dropCount = 1 + Math.floor(beatIntensity * 3);
+    for (let k = 0; k < dropCount; k++) {
+      _mc_ripples.push({
+        x: w * (0.1 + Math.random() * 0.8),
+        radius: 3, speed: 2.6 + Math.random() * 1.8 + beatIntensity * 1.5,
+        alpha: 0.7 + beatIntensity * 0.3,
+        hue: horizonHue + (Math.random() - 0.5) * 80,
+        maxR: 80 + Math.random() * 140,
+      });
+    }
+  }
+  // Continuous sub-bass shimmer — small ripples while bass is sustained
+  if (bands.sub > 0.4 && Math.random() < bands.sub * 0.3) {
+    _mc_ripples.push({
+      x: Math.random() * w,
+      radius: 2, speed: 1.4 + Math.random() * 0.8,
+      alpha: 0.35 + bands.sub * 0.3,
+      hue: horizonHue + (Math.random() - 0.5) * 30,
+      maxR: 60,
+    });
+  }
+
+  // ── SURFACE — much more aggressive FFT-driven displacement ──
+  const cols = 96;
+  const stride = w / cols;
+  const pts = [];
+  const bassAmp = 1 + bands.bass * 2.5;  // bass really moves the surface
+  const energyAmp = 1 + bands.energy * 1.8;
+  for (let i = 0; i <= cols; i++) {
+    const x = i * stride;
+    let freqAmp = 0;
+    if (freqData) {
+      const bin = Math.floor((i / cols) * Math.min(160, freqData.length));
+      freqAmp = (freqData[bin] || 0) / 255;
+    }
+    const baseWave = Math.sin(x * 0.014 + time * 0.0022) * 5 * bassAmp
+                   + Math.sin(x * 0.04 + time * 0.0033) * 3.5 * energyAmp
+                   + Math.sin(x * 0.075 + time * 0.0055) * 2 * (1 + bands.high * 1.5);
+    let rippleDisp = 0;
+    for (const r of _mc_ripples) {
+      const d = Math.abs(x - r.x);
+      if (d < r.radius && d > r.radius - 60) {
+        rippleDisp += Math.sin((r.radius - d) * 0.2) * r.alpha * (14 + bands.bass * 8);
+      }
+    }
+    const y = surfaceY + baseWave - freqAmp * 22 * bassAmp - rippleDisp;
+    pts.push({ x, y, freqAmp });
+  }
+
+  // ── REFLECTION below surface — orbs + shafts mirror with chromatic tint ──
+  const reflectGrad = ctx.createLinearGradient(0, surfaceY, 0, h);
+  reflectGrad.addColorStop(0, `hsla(${horizonHue}, 60%, 35%, ${0.3 + bands.energy * 0.25})`);
+  reflectGrad.addColorStop(0.35, `hsla(${horizonHue + 20}, 50%, 20%, 0.22)`);
+  reflectGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = reflectGrad;
+  ctx.beginPath();
+  ctx.moveTo(0, h);
+  ctx.lineTo(0, surfaceY);
+  for (const p of pts) ctx.lineTo(p.x, p.y);
+  ctx.lineTo(w, h);
+  ctx.closePath();
+  ctx.fill();
+
+  // Reflected orbs — mirror them below the surface, distorted by surface wave
+  for (const o of _mc_orbs) {
+    const reflY = surfaceY + (surfaceY - o.y) * 0.7;
+    if (reflY > h) continue;
+    const distort = 1 + bands.bass * 1.2 + Math.sin(o.x * 0.05 + time * 0.003) * 0.3;
+    const a = o.life * 0.35;
+    const rGrad = ctx.createRadialGradient(o.x, reflY, 0, o.x, reflY, o.r * 5 * distort);
+    rGrad.addColorStop(0, `hsla(${o.hue}, 80%, 65%, ${a})`);
+    rGrad.addColorStop(1, `hsla(${o.hue}, 80%, 40%, 0)`);
+    ctx.fillStyle = rGrad;
+    ctx.beginPath();
+    ctx.ellipse(o.x, reflY, o.r * 5 * distort, o.r * 2.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // ── SURFACE STROKES ──
+  // Outer chrome highlight (catches all light, brightest)
+  ctx.lineWidth = 1.6 + bands.bass * 1.5;
+  ctx.shadowBlur = 18 + bands.energy * 16;
+  ctx.shadowColor = `hsla(${horizonHue}, 80%, 75%, ${0.55 + bands.energy * 0.3})`;
+  ctx.beginPath();
+  pts.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+  ctx.strokeStyle = `hsla(${horizonHue}, 100%, 92%, ${0.85 + bands.high * 0.15})`;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Inner cyan accent line
+  ctx.beginPath();
+  pts.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y - 0.8); else ctx.lineTo(p.x, p.y - 0.8); });
+  ctx.strokeStyle = `hsla(${horizonHue + 15}, 90%, 65%, ${0.55 + bands.mid * 0.35})`;
+  ctx.lineWidth = 0.9;
+  ctx.stroke();
+
+  // Crest highlights — sparkle where waves peak (high freq dependent)
+  for (let i = 2; i < pts.length - 2; i++) {
+    const p = pts[i];
+    const isPeak = p.y < pts[i-1].y && p.y < pts[i+1].y && p.freqAmp > 0.4;
+    if (isPeak && bands.high > 0.2) {
+      const sparkR = 1.5 + bands.high * 3;
+      ctx.fillStyle = `hsla(${horizonHue + 30}, 100%, 95%, ${0.6 + bands.high * 0.4})`;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = `hsla(${horizonHue}, 100%, 80%, 0.8)`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, sparkR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  // ── RIPPLE RINGS overlay on surface (flattened ellipses) ──
+  for (const r of _mc_ripples) {
+    ctx.save();
+    ctx.translate(r.x, surfaceY);
+    ctx.scale(1, 0.18);
+    const ringGlow = 1 + bands.bass * 0.5;
+    ctx.strokeStyle = `hsla(${r.hue}, 90%, 75%, ${r.alpha * ringGlow})`;
+    ctx.lineWidth = 1.6 + bands.bass * 0.8;
+    ctx.beginPath();
+    ctx.arc(0, 0, r.radius, 0, Math.PI * 2);
+    ctx.stroke();
+    // Inner secondary ring
+    if (r.radius > 18) {
+      ctx.strokeStyle = `hsla(${r.hue}, 100%, 90%, ${r.alpha * 0.5})`;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.arc(0, 0, r.radius * 0.6, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Drop point highlight
+    if (r.radius < 100) {
+      const flash = 1 - r.radius / 100;
+      ctx.fillStyle = `hsla(${r.hue}, 100%, 95%, ${r.alpha * 0.9 * flash})`;
+      ctx.shadowBlur = 24 * flash;
+      ctx.shadowColor = `hsla(${r.hue}, 100%, 70%, ${r.alpha})`;
+      ctx.beginPath();
+      ctx.arc(r.x, surfaceY, 3 + flash * 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+}
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  CLIFFORD ATTRACTOR — chaotic dynamical system rendered as a    ║
+// ║  density map. Audio modulates the four ODE parameters so the    ║
+// ║  fundamental SHAPE of the attractor morphs to the music.        ║
+// ║  Conceptually adjacent to Fractal Flame (math-driven beauty),   ║
+// ║  visually distinct (filamentary curves vs flame cloud).         ║
+// ╚══════════════════════════════════════════════════════════════════╝
+let _cliff_buf = null;       // Float32 density buffer
+let _cliff_w = 0;
+let _cliff_h = 0;
+let _cliff_x = 0.1;
+let _cliff_y = 0.0;
+let _cliff_params = { a: -1.7, b: 1.8, c: -1.9, d: -0.4 };
+let _cliff_targetParams = { a: -1.7, b: 1.8, c: -1.9, d: -0.4 };
+let _cliff_imageData = null;
+let _cliff_lastShape = 0;
+
+function drawAttractor(ctx, w, h, time) {
+  // Lazy init density buffer at canvas resolution (downsampled for perf)
+  const scale = 2;   // density buffer is w/scale × h/scale
+  const bw = Math.floor(w / scale);
+  const bh = Math.floor(h / scale);
+  if (!_cliff_buf || _cliff_w !== bw || _cliff_h !== bh) {
+    _cliff_buf = new Float32Array(bw * bh);
+    _cliff_imageData = ctx.createImageData(bw, bh);
+    _cliff_w = bw; _cliff_h = bh;
+  }
+
+  // Fade the density buffer slowly so trails persist (Fractal-Flame-style)
+  const fadeRate = 0.94 - bands.energy * 0.025 + beatIntensity * 0.01;
+  for (let i = 0; i < _cliff_buf.length; i++) _cliff_buf[i] *= fadeRate;
+
+  // Smoothly interpolate params toward audio-driven targets.
+  // Each band controls a different ODE constant — the *shape itself* responds.
+  _cliff_targetParams.a = -1.7 + bands.bass * 1.4;
+  _cliff_targetParams.b =  1.8 - bands.mid * 1.2;
+  _cliff_targetParams.c = -1.9 + bands.high * 1.1;
+  _cliff_targetParams.d = -0.4 + bands.energy * 0.9 + Math.sin(time * 0.0004) * 0.3;
+  const lerp = 0.04 + beatIntensity * 0.06;  // beats snap params faster
+  _cliff_params.a += (_cliff_targetParams.a - _cliff_params.a) * lerp;
+  _cliff_params.b += (_cliff_targetParams.b - _cliff_params.b) * lerp;
+  _cliff_params.c += (_cliff_targetParams.c - _cliff_params.c) * lerp;
+  _cliff_params.d += (_cliff_targetParams.d - _cliff_params.d) * lerp;
+
+  const { a, b, c, d } = _cliff_params;
+
+  // Sample the attractor with MANY independent short orbits per frame, not one long one.
+  // A single orbit converges to a fixed point or limit cycle when params drift into a
+  // stable basin — visually a "white dot bouncing." Many random starts fill the full
+  // attractor geometry every frame, even when the dynamics are nearly periodic.
+  const cx = bw / 2, cy = bh / 2;
+  const span = Math.min(bw, bh) * 0.36;
+  const orbitsPerFrame = 14;
+  const itersPerOrbit = 900 + Math.floor(bands.energy * 700);
+  const settle = 25;
+
+  for (let o = 0; o < orbitsPerFrame; o++) {
+    // Each orbit seeded fresh — sample the basin from a random nearby point.
+    let x = (Math.random() - 0.5) * 1.2;
+    let y = (Math.random() - 0.5) * 1.2;
+    for (let n = 0; n < itersPerOrbit; n++) {
+      const nx = Math.sin(a * y) - c * Math.cos(a * x);
+      const ny = Math.sin(b * x) - d * Math.cos(b * y);
+      x = nx; y = ny;
+      // Skip while the orbit settles onto the attractor
+      if (n < settle) continue;
+      const px = Math.floor(cx + x * span);
+      const py = Math.floor(cy + y * span);
+      if (px >= 0 && px < bw && py >= 0 && py < bh) {
+        _cliff_buf[py * bw + px] += 0.55;
+      }
+    }
+  }
+
+  // Beat kick — extra orbits from far-flung seeds inject fresh tendrils into the density map
+  if (beatIntensity > 0.55 && time - _cliff_lastShape > 280) {
+    _cliff_lastShape = time;
+    for (let o = 0; o < 6; o++) {
+      let x = (Math.random() - 0.5) * 2.5;
+      let y = (Math.random() - 0.5) * 2.5;
+      for (let n = 0; n < 600; n++) {
+        const nx = Math.sin(a * y) - c * Math.cos(a * x);
+        const ny = Math.sin(b * x) - d * Math.cos(b * y);
+        x = nx; y = ny;
+        if (n < settle) continue;
+        const px = Math.floor(cx + x * span);
+        const py = Math.floor(cy + y * span);
+        if (px >= 0 && px < bw && py >= 0 && py < bh) {
+          _cliff_buf[py * bw + px] += 0.9;  // beat tendrils punch brighter
+        }
+      }
+    }
+  }
+
+  // Render density buffer to ImageData with an audio-colored palette
+  // Palette anchors: low density → deep violet, mid → cyan/magenta, high → white-hot
+  const data = _cliff_imageData.data;
+  const hueShift = (time * 0.012) % 360;
+  const baseHue1 = (270 + hueShift) % 360;  // violet
+  const baseHue2 = (200 + hueShift + bands.mid * 60) % 360;  // cyan/aqua
+  const baseHue3 = (330 + hueShift + bands.bass * 40) % 360; // magenta/pink
+
+  for (let i = 0; i < _cliff_buf.length; i++) {
+    const v = _cliff_buf[i];
+    if (v < 0.02) {
+      const j = i * 4;
+      data[j] = 0; data[j+1] = 0; data[j+2] = 0; data[j+3] = 0;
+      continue;
+    }
+    // Log-compress density for better dynamic range
+    const t = Math.min(1, Math.log10(1 + v * 8) * 0.55);
+    let r, g, bcol;
+    if (t < 0.4) {
+      // Low → mid: violet to cyan
+      const u = t / 0.4;
+      const hue = baseHue1 * (1 - u) + baseHue2 * u;
+      [r, g, bcol] = _hslToRgb(hue, 90, 55 + u * 15);
+    } else if (t < 0.75) {
+      // Mid → high: cyan to magenta
+      const u = (t - 0.4) / 0.35;
+      const hue = baseHue2 * (1 - u) + baseHue3 * u;
+      [r, g, bcol] = _hslToRgb(hue, 95, 60 + u * 20);
+    } else {
+      // High: blow out to white-hot
+      const u = (t - 0.75) / 0.25;
+      [r, g, bcol] = _hslToRgb(baseHue3, 80 * (1 - u), 75 + u * 25);
+    }
+    const j = i * 4;
+    data[j] = r; data[j+1] = g; data[j+2] = bcol;
+    data[j+3] = Math.floor(t * 255);
+  }
+
+  // Clear canvas with a tiny trail (additional fade), then paint upsampled
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+  ctx.fillRect(0, 0, w, h);
+
+  // putImageData doesn't scale, so blit to an offscreen then drawImage to scale
+  // For perf we just putImageData at 1× and then drawImage to scale up
+  if (!drawAttractor._tmp || drawAttractor._tmp.width !== bw) {
+    drawAttractor._tmp = document.createElement('canvas');
+    drawAttractor._tmp.width = bw;
+    drawAttractor._tmp.height = bh;
+    drawAttractor._tmpCtx = drawAttractor._tmp.getContext('2d');
+  }
+  drawAttractor._tmpCtx.putImageData(_cliff_imageData, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(drawAttractor._tmp, 0, 0, w, h);
+
+  // Glow pass — additive blur for the bright tendrils on heavy energy
+  if (bands.energy > 0.25) {
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha = 0.25 + bands.energy * 0.4;
+    ctx.filter = `blur(${2 + bands.energy * 6}px)`;
+    ctx.drawImage(drawAttractor._tmp, 0, 0, w, h);
+    ctx.filter = 'none';
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // Subtle parameter readout in corner — geek flavor
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.fillStyle = 'rgba(180, 220, 255, 0.35)';
+  ctx.fillText(`a:${a.toFixed(2)} b:${b.toFixed(2)} c:${c.toFixed(2)} d:${d.toFixed(2)}`, 10, h - 12);
+}
+
+// HSL → RGB helper, returns [r, g, b] in 0-255. Used by Attractor palette.
+function _hslToRgb(h, s, l) {
+  h = h / 360; s = s / 100; l = l / 100;
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1; if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+function drawPrism(ctx, w, h, time) {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+  ctx.fillRect(0, 0, w, h);
+  const cx = w / 2, cy = h / 2;
+
+  // 60-band radial spectrum
+  const bands_n = 64;
+  const innerR = Math.min(w, h) * 0.12;
+  const baseLen = Math.min(w, h) * 0.32;
+  const rotation = time * 0.00015;
+
+  for (let i = 0; i < bands_n; i++) {
+    const ang = rotation + (i / bands_n) * Math.PI * 2;
+    let amp = 0;
+    if (freqData) {
+      const bin = Math.floor((i / bands_n) * Math.min(192, freqData.length));
+      amp = (freqData[bin] || 0) / 255;
+    }
+    const len = baseLen * (0.18 + amp * 1.1 + bands.energy * 0.25);
+    const x1 = cx + Math.cos(ang) * innerR;
+    const y1 = cy + Math.sin(ang) * innerR;
+    const x2 = cx + Math.cos(ang) * (innerR + len);
+    const y2 = cy + Math.sin(ang) * (innerR + len);
+    const hue = (i / bands_n) * 360;
+    const lightness = 50 + amp * 30 + beatIntensity * 15;
+    ctx.strokeStyle = `hsla(${hue}, 100%, ${lightness}%, ${0.65 + amp * 0.35})`;
+    ctx.lineWidth = 2.5 + amp * 3;
+    ctx.shadowBlur = 8 + amp * 18;
+    ctx.shadowColor = `hsla(${hue}, 100%, 60%, 0.7)`;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 0;
+
+  // Inner light core — pulses with bass
+  const coreR = innerR * 0.75 * (1 + bands.bass * 0.35);
+  const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+  coreGrad.addColorStop(0, `hsla(${(time * 0.05) % 360}, 100%, 85%, 0.95)`);
+  coreGrad.addColorStop(0.5, `hsla(${(time * 0.05 + 60) % 360}, 100%, 60%, 0.4)`);
+  coreGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = coreGrad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // The prism itself — rotating triangle with iridescent faces
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(rotation * 3);
+  const triR = innerR * 0.6;
+  const tilt = Math.sin(time * 0.0008) * 0.3;
+  for (let face = 0; face < 3; face++) {
+    const a1 = (face / 3) * Math.PI * 2;
+    const a2 = ((face + 1) / 3) * Math.PI * 2;
+    const x1 = Math.cos(a1) * triR, y1 = Math.sin(a1) * triR * (1 + tilt);
+    const x2 = Math.cos(a2) * triR, y2 = Math.sin(a2) * triR * (1 + tilt);
+    const faceHue = ((face * 120) + time * 0.04) % 360;
+    const faceGrad = ctx.createLinearGradient(x1, y1, x2, y2);
+    faceGrad.addColorStop(0, `hsla(${faceHue}, 90%, 70%, ${0.5 + bands.mid * 0.4})`);
+    faceGrad.addColorStop(1, `hsla(${(faceHue + 60) % 360}, 90%, 70%, ${0.5 + bands.high * 0.4})`);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.closePath();
+    ctx.fillStyle = faceGrad;
+    ctx.fill();
+    ctx.strokeStyle = `hsla(${faceHue}, 100%, 90%, 0.85)`;
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Outer guide ring — soft, expands on beats
+  ctx.strokeStyle = `rgba(220, 230, 255, ${0.12 + beatIntensity * 0.25})`;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(cx, cy, innerR + baseLen * 1.2 + beatIntensity * 20, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
 function drawViz(time) {
   if (!vizW || !vizH) vizResize();
   // Scenes that use trails handle their own clearing.
   // Only clear for scenes that need a full clear each frame.
-  const trailScenes = [0, 1, 3, 5, 6, 8, 10, 11, 12, 13, 14, 16, 18]; // Fractal Flame, Void Pulse, Particle Field, Aurora Borealis, Cosmic Mandala, Bio-Genesis, Neural Web II, DNA Helix II, Lyric Rain, Frequency Mountain, Chrome Ocean, Plasma Reactor
+  const trailScenes = [0, 1, 3, 5, 6, 8, 10, 11, 12, 13, 14, 16, 18, 19, 21, 22]; // Fractal Flame, Void Pulse, Particle Field, Aurora Borealis, Cosmic Mandala, Bio-Genesis, Neural Web II, DNA Helix II, Lyric Rain, Frequency Mountain, Chrome Ocean, Plasma Reactor, Event Horizon, Prism, Attractor
   const sheepVideo = document.getElementById('sheepVideo');
   const wpVid = document.getElementById('wpVideo');
   if (currentScene === 7) {
@@ -17006,6 +19094,10 @@ function drawViz(time) {
     case 16: drawPlasmaReactor(vizCtx, vizW, vizH, time); break;
     case 17: drawXenomorphHive(vizCtx, vizW, vizH, time); break;
     case 18: drawHackerTerminal(vizCtx, vizW, vizH, time); break;
+    case 19: drawEventHorizon(vizCtx, vizW, vizH, time); break;
+    case 20: drawMercury(vizCtx, vizW, vizH, time); break;
+    case 21: drawPrism(vizCtx, vizW, vizH, time); break;
+    case 22: drawAttractor(vizCtx, vizW, vizH, time); break;
   }
   requestAnimationFrame(drawViz);
 }

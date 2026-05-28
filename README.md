@@ -1,246 +1,166 @@
+<div align="center">
+
 ```
     ___    ________________  __________
    /   |  / ____/_  __/ / / / ____/ __ \
   / /| | / __/   / / / /_/ / __/ / /_/ /
  / ___ |/ /___  / / / __  / /___/ _, _/
 /_/  |_/_____/ /_/ /_/ /_/_____/_/ |_|
-                        for Android
 ```
 
-<p align="center">
-  <img src="https://img.shields.io/badge/v1.0.0-ANDROID-9D4EDD?style=for-the-badge&labelColor=000000" alt="v1.0.0" />
-  <img src="https://img.shields.io/badge/Capacitor-8-119EFF?style=for-the-badge&logo=capacitor&logoColor=white" alt="Capacitor 8" />
-  <img src="https://img.shields.io/badge/Kotlin-Media3-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin" />
-  <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android" />
-  <img src="https://img.shields.io/badge/Subsonic-API-FF6B00?style=for-the-badge" alt="Subsonic" />
-  <img src="https://img.shields.io/badge/License-MIT-00FF41?style=for-the-badge" alt="MIT" />
-</p>
+**Audio Engine for Total Harmonic Experience & Rendering**
 
-<p align="center">
-  <strong>Your music. Your server. Your visualizers. In your pocket.</strong><br/>
-  A premium music player for Android that streams from Navidrome/Subsonic with beat-reactive OLED visualizers, 10-band EQ, and Android Auto support.
-</p>
+![v2.1](https://img.shields.io/badge/v2.1-MAY%202026-9D4EDD?style=for-the-badge&labelColor=000000)
+![Electron](https://img.shields.io/badge/Electron-Desktop-47848F?style=for-the-badge&logo=electron&logoColor=white)
+![Capacitor](https://img.shields.io/badge/Capacitor-Android-119EFF?style=for-the-badge&logo=capacitor&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-Media3-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
+![Android Auto](https://img.shields.io/badge/Android-Auto-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![Subsonic](https://img.shields.io/badge/Subsonic-API-FF6B00?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-00FF41?style=for-the-badge)
 
-<p align="center">
-  <em>OLED-optimized. Beat-reactive. Zero compromise.</em>
-</p>
+**Your music. Your server. Your visualizers. Bit-perfect.**
+
+A premium Navidrome/Subsonic client for desktop *and* Android — 23 beat-reactive OLED visualizers, 5 swappable color skins, AutoEq headphone correction, ReplayGain, gapless playback, Bauer crossfeed, Android Auto with a Tron-style HUD map. Single-file architecture, zero frameworks.
+
+[**Website**](https://emperorbadussy.github.io/aether/) · [**Releases**](https://github.com/EmperorBadussy/aether-android/releases) · [**Skins**](#5-oled-skins) · [**Visualizers**](#23-beat-reactive-visualizers)
+
+</div>
 
 ---
 
-## Features
+## What's New in v2.1
 
-### Music Streaming
+- **Master gain control** — global output trim, +2.6 dB default, slider-tunable
+- **5 OLED skins** with live preview — Void, Bloodmoon, Glacier, Toxic, Phantom (Ctrl+Shift+T cycles)
+- **AutoEq headphone correction** — 5 built-in presets + paste-your-own ParametricEQ.txt
+- **ReplayGain** — track/album modes, peak-clipping protection
+- **Bauer-style crossfeed** — tunable intensity, kills planar headphone fatigue
+- **Gapless playback** — pre-warms next track 8s before end, near-instant transitions
+- **Mini Player mode** — Ctrl+M shrinks to 380×150 floating always-on-top window
+- **PURE bypass** — single-button A/B against the entire DSP chain
+- **4 new visualizers** — Event Horizon, Mercury, Prism, Attractor
+- **Hacker Terminal LRC sync** — terminal feed types out actual synced lyric lines from LRCLIB on time, with progress bar + track HUD
+- **Galaxy S26 Ultra polish** — edge-to-edge, punch-hole-aware, 120Hz-tuned, proper safe-area handling
+
+---
+
+## Music Streaming
+
 - **Navidrome / Subsonic API** — stream your entire library from your own server
-- **Tailscale / VPN support** — access your home library from anywhere
-- **Offline fallback** — local device library via Android MediaStore when server unreachable
-- **FLAC, MP3, OGG, AAC, WAV, OPUS** format support
-- **Gapless playback** with crossfade
+- **`format=raw` + `maxBitRate=0`** — no transcoding, your FLACs stay FLAC
+- **Tailscale / VPN ready** — same client works on LAN or off-network
+- **Offline fallback** — local Android MediaStore returned in Subsonic-shaped JSON
+- **FLAC, MP3, OGG, AAC, WAV, OPUS** decoded natively
 
-### 14 Beat-Reactive OLED Visualizers
+## Audio Engine
+
+```
+audio → MediaElementSource → eqFilters[0..9] → analyser → masterGain → destination
+                                       ↑                          ↑
+                            AutoEq (on-demand)         Crossfeed (on-demand)
+                                       ↓
+                              ReplayGain (lazy)
+```
+
+- **10-band parametric EQ** — 11 presets including Planar Reference, Harman, Diffuse Field, Vocal Forward
+- **AutoEq** — load any headphone's measured PEQ correction from `github.com/jaakkopasanen/AutoEq`
+- **Bauer crossfeed** — channel-split → lowpass at 700 Hz → 0.27 ms ITD → merge
+- **ReplayGain** — parses Subsonic's `replayGain` field, applies pre-DSP with clipping protection
+- **Master gain** — final-stage output trim, -6 to +8 dB range
+- **PURE bypass** — direct source → destination, skipping every DSP node
+- **Output device picker** — `setSinkId` routes AETHER to a specific DAC
+- **AudioContext sink pinning** — auto-recovers from stale sink references
+
+## 5 OLED Skins
+
+| Skin | Palette | Character |
+|------|---------|-----------|
+| **VOID** | Violet / Cyan / Magenta | Default cyberpunk |
+| **BLOODMOON** | Crimson / Amber / Molten Orange | Ember-flicker logo, warm radial vignette |
+| **GLACIER** | Ice Cyan / Aqua / Silver | Minimalist, sharp 4px radii, dialed-back glow |
+| **TOXIC** | Acid Green / Lime / Yellow | Matrix CRT scanlines + chromatic aberration |
+| **PHANTOM** | Monochrome White-on-Black | Zero glow, replaced with hairline borders |
+
+Each skin re-maps every accent variable (primary, secondary, tertiary, glow shadows, selection color, surface tints). Live-preview by hovering tile. Click commits. Settings → DISPLAY → SKIN.
+
+## 23 Beat-Reactive Visualizers
+
 Every visualizer is designed for AMOLED — true blacks, vivid neon, maximum contrast.
 
-| Visualizer | Description |
-|-----------|-------------|
-| **Fractal Flame** | IFS fractal algorithm with 30K+ iterations per frame |
-| **Void Pulse** | Pulsing core with spiral arms and expanding rings |
-| **Tron Grid** | Outrun landscape with planet and perspective grid |
-| **Particle Field** | 400 particles in orbital spiral galaxy |
-| **Waveform Bars** | Circular frequency EQ with mirror bars |
-| **Aurora Borealis** | 5-layer curtains with 200 twinkling stars |
-| **Cosmic Mandala** | Sacred geometry — nested rings of polygons |
-| **Electric Sheep** | Audio-reactive video overlay (load your own fractals) |
-| **Bio-Genesis** | Bioluminescent organisms with mitochondria and flagella |
-| **Command Deck** | HUD dashboard with frequency gauges and oscilloscope |
-| **Neural Web II** | 80 interconnected nodes with nebula depth background |
-| **DNA Helix II** | Double helix with ambient particles and depth sorting |
-| **Lyric Rain** | Matrix rain that reveals actual song lyrics (LRCLIB API) |
-| **Frequency Mountain** | Synthwave terrain from live FFT — sun, grid, particles |
+| # | Visualizer | Description |
+|---|------------|-------------|
+| 1 | **Fractal Flame** | IFS chaos game with 30K+ iterations per frame |
+| 2 | **Void Pulse** | Pulsing core with spiral arms and expanding rings |
+| 3 | **Tron Grid** | Outrun landscape with planet and perspective grid |
+| 4 | **Particle Field** | 400 particles in orbital spiral galaxy |
+| 5 | **Waveform Bars** | Circular frequency EQ with mirror bars |
+| 6 | **Aurora Borealis** | 5-layer curtains with 200 twinkling stars |
+| 7 | **Cosmic Mandala** | Sacred geometry — nested rings of polygons |
+| 8 | **Electric Sheep** | Audio-reactive video overlay (load your own fractals) |
+| 9 | **Bio-Genesis** | Bioluminescent organisms with mitochondria and flagella |
+| 10 | **Command Deck** | HUD dashboard with frequency gauges and oscilloscope |
+| 11 | **Neural Web II** | 80 interconnected nodes with nebula depth background |
+| 12 | **DNA Helix II** | Double helix with ambient particles and depth sorting |
+| 13 | **Lyric Rain** | Matrix rain that reveals actual song lyrics (LRCLIB API) |
+| 14 | **Frequency Mountain** | Synthwave terrain from live FFT — sun, grid, particles |
+| 15 | **Chrome Ocean** | Mercury wave grid + horizon glow |
+| 16 | **Hyperspace Tunnel** | Perspective ring tunnel with warp particles |
+| 17 | **Plasma Reactor** | Containment field with vorticity |
+| 18 | **Xenomorph Hive** | Organic biomechanical clusters |
+| 19 | **Hacker Terminal** | CRT terminal with **live LRC-sync lyrics**, track HUD, progress bar |
+| 20 | **Event Horizon** ⭐ | Black hole with counter-rotating accretion disks + gravitational lensing |
+| 21 | **Mercury** ⭐ | Reactive liquid metal pool with floating glow orbs and light shafts |
+| 22 | **Prism** ⭐ | Rotating iridescent triangle with 64-bar radial spectrum dispersion |
+| 23 | **Attractor** ⭐ | Clifford strange attractor — audio modulates the ODE parameters |
 
-### Audio Engine
-- **10-band parametric EQ** with 10 presets
-- **Web Audio API** pipeline: MediaElement → EQ → Compressor → Destination
-- **Beat detection** via FFT frequency analysis
-- **Master limiter** (DynamicsCompressor prevents clipping)
+⭐ = new in v2.1
 
-### Android Auto
-- **Media3 MediaLibraryService** — browse Albums, Artists, Playlists, Genres, Recently Added, Random
-- **ExoPlayer** native playback for car head unit
-- **Tron GPS Map** — cyberpunk navigation HUD with perspective grid, speed display, now-playing overlay
-- **Album art** in media notifications
+## Android
 
-### Mobile Optimizations
-- **Adaptive FPS** — 60fps charging, 30fps battery, 15fps low battery, stops when screen off
-- **OLED black** backgrounds everywhere (black pixels = off = battery saved)
-- **Connection monitor** — Navidrome status indicator, auto-recovery on reconnect
-- **Background audio** — keeps playing when screen off or app backgrounded
-- **Lock screen controls** — MediaSession API with album art, play/pause/next/prev
-- **Swipe gestures** — left/right on now-playing bar for next/prev
-- **Touch-optimized** — 48dp minimum touch targets, no hover states
+- **Capacitor** WebView shell wrapping the same `player.html`
+- **Media3 MediaLibraryService** with `MediaSession` for lock-screen + notification controls
+- **Local library plugin** — Android MediaStore queries returned in Subsonic-shaped JSON (UI doesn't know if it's local or remote)
+- **Android Auto** — Car App Service with **Tron-style GPS map**: perspective grid, speed display, now-playing overlay
+- **Edge-to-edge** — content extends behind punch-hole + nav bar, status bar transparent over OLED black
+- **Adaptive FPS** — 60 charging, 30 battery, 15 low-battery, stops when screen off
+- **Galaxy S26 Ultra-tuned** — 2-column skin picker, chunky 44px tap targets, 120 Hz-friendly `will-change`
 
-### Interface
-- **OLED-optimized** — true #000000 black, AMOLED sweet spot
-- **Monochromatic purple palette** — neon purple (#9D4EDD) + cyan (#00DCFF) accents
-- **Glassmorphism** — frosted glass panels with backdrop-filter blur
-- **Slide-out sidebar** — overlay navigation, not permanent column
-- **Bottom-sheet panels** — EQ, queue, settings as mobile-friendly bottom sheets
-- **Floating hamburger** — quick access to library navigation
+## Build
 
----
-
-## Architecture
-
-```
-┌─────────────────────────────────────┐
-│  Android (Capacitor 8 WebView)      │
-│  ┌───────────────────────────────┐  │
-│  │ player.html (17K lines)       │  │  ← The App
-│  │ + mobile-bridge.js            │  │  ← Mobile adaptations
-│  │ + mobile-tweaks.css (1.3K)    │  │  ← Premium mobile UI
-│  └───────────────────────────────┘  │
-│  ┌───────────────────────────────┐  │
-│  │ Kotlin Native Layer           │  │
-│  │ • AetherMediaService (Media3) │  │  ← Android Auto
-│  │ • SubsonicClient              │  │  ← REST API
-│  │ • AetherMapScreen             │  │  ← Tron GPS HUD
-│  │ • AetherLocalLibraryPlugin    │  │  ← Offline fallback
-│  │ • AetherFileServer            │  │  ← Local audio serving
-│  │ • AetherCredentialPlugin      │  │  ← WebView ↔ Native bridge
-│  └───────────────────────────────┘  │
-└──────────────┬──────────────────────┘
-               │ Subsonic API (REST)
-┌──────────────▼──────────────────────┐
-│  Navidrome Server                   │
-│  (your music, your server)          │
-└─────────────────────────────────────┘
-```
-
----
-
-## Getting Started
-
-### Prerequisites
-- **Android device** (API 26+ / Android 8.0+, optimized for Galaxy S-series AMOLED)
-- **Navidrome server** running on your network ([navidrome.org](https://www.navidrome.org/))
-- **Node.js** 18+ and npm (for building)
-- **Android Studio** with SDK 35+ (for APK builds)
-- **JDK 17** for Gradle
-
-### Quick Start
+### Desktop (Electron)
 
 ```bash
-# Clone
-git clone https://github.com/EmperorBadussy/aether-android.git
-cd aether-android
+npm install
+npm start                  # dev
+npm run dist               # build Windows NSIS installer
+```
 
-# Configure your Navidrome server
-# Edit player.html line ~4387:
-#   baseUrl: 'http://your-server-ip:4533'
-#   user: 'your_username'
-#   password: 'your_password'
+### Android (Capacitor + Kotlin)
 
-# Build mobile web assets
+```bash
 cd mobile
-bash build-www.sh
-
-# Sync to Android
-npx cap sync android
-
-# Build APK
-cd android
-./gradlew assembleDebug
-
-# Install
+./build-www.sh             # copy player.html → www, inject mobile bridge
+npx cap sync android       # push to Capacitor project
+cd android && ./gradlew assembleDebug
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### Remote Access (Tailscale)
-For accessing your music library outside your home network:
-1. Install [Tailscale](https://tailscale.com/) on your server and phone
-2. Use your server's Tailscale IP as the `baseUrl` (e.g., `http://100.x.x.x:4533`)
+Requires JDK 17 + Android SDK 34+.
 
----
+## Stack
 
-## Project Structure
-
-```
-aether-android/
-├── player.html                          # THE APP (17K lines)
-├── main.js                              # Electron main (desktop)
-├── preload.js                           # Electron preload (desktop)
-├── mobile/
-│   ├── build-www.sh                     # Build pipeline
-│   ├── capacitor.config.ts              # Capacitor config
-│   ├── www/
-│   │   ├── index.html                   # Transformed player.html
-│   │   ├── mobile-bridge.js             # Swipe, MediaSession, offline, adaptive viz
-│   │   └── mobile-tweaks.css            # 1,313 lines of premium mobile CSS
-│   └── android/
-│       └── app/src/main/java/com/aether/player/
-│           ├── SubsonicClient.kt        # REST client
-│           ├── AetherMediaService.kt    # Media3 service (Android Auto)
-│           ├── AetherCredentialPlugin.kt # WebView ↔ native bridge
-│           ├── AetherLocalLibraryPlugin.kt # MediaStore fallback
-│           ├── AetherFileServer.kt      # Local file serving
-│           ├── AetherCarAppService.kt   # Android Auto entry
-│           ├── AetherNavigationSession.kt # Auto session
-│           ├── AetherMapScreen.kt       # Tron GPS HUD (496 lines)
-│           └── TronMapStyle.kt          # Google Maps styling
-```
-
----
-
-## Visualizer Gallery
-
-All 14 scenes are OLED-optimized with true black backgrounds and vivid neon accents. Tap the visualizer panel to cycle through scenes.
-
-| | | |
-|:---:|:---:|:---:|
-| Fractal Flame | Void Pulse | Tron Grid |
-| Waveform Bars | Aurora Borealis | Cosmic Mandala |
-| Bio-Genesis | Command Deck | Lyric Rain |
-| Neural Web II | DNA Helix II | Frequency Mountain |
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| **Runtime** | Capacitor 8 WebView |
-| **UI** | Vanilla HTML/CSS/JS (17K lines, no frameworks) |
-| **Audio** | Web Audio API + MediaElement pipeline |
-| **Visualizers** | Canvas 2D, 14 scenes, 30-60fps adaptive |
-| **Native** | Kotlin, Media3 ExoPlayer, Car App Library |
-| **Maps** | Google Maps SDK + custom Tron styling |
-| **Backend** | Navidrome (Subsonic API v1.16.1) |
-| **Build** | Gradle + Capacitor CLI |
-
----
-
-## Legal
-
-```
-This software is for personal use with your own music library.
-Requires a self-hosted Navidrome or Subsonic-compatible server.
-No music is included or distributed with this application.
-```
-
----
+| Layer | Tech |
+|-------|------|
+| **Desktop shell** | Electron 33 (frameless, OLED-black, tray) |
+| **Mobile shell** | Capacitor 8 (WebView, native MediaSession bridge) |
+| **Android native** | Kotlin + Media3 + ExoPlayer + Car App Service |
+| **UI** | Single 21K-line `player.html` — zero frameworks, zero npm runtime deps |
+| **Audio** | Web Audio API — BiquadFilter chain, DynamicsCompressor, GainNode pipeline |
+| **Fonts** | Orbitron + Rajdhani + JetBrains Mono |
+| **Lyrics** | LRCLIB (free, no key) → Subsonic getLyrics fallback |
+| **Library** | Subsonic API + Android MediaStore (parallel paths, same shape) |
+| **Persistence** | localStorage for all user state (skins, EQ, AutoEq, gain, sink, etc.) |
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
-
----
-
-## Credits
-
-Built with **[Claude Code](https://claude.ai/claude-code)** — AI-assisted development from Anthropic.
-
-Part of the **PHANTOM Suite** ecosystem.
-
----
-
-<p align="center">
-  <sub>OLED-optimized. Beat-reactive. Zero compromise.</sub>
-</p>
+MIT
